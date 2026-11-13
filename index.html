@@ -418,6 +418,20 @@ a.btn{text-decoration:none;color:var(--ink);display:inline-block}a.btn.pri{color
 .sync{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none;margin-left:2px}
 .sync.ok{background:var(--ok)}.sync.busy,.sync.wait{background:var(--warn)}.sync.ro,.sync.full,.sync.err{background:var(--bad)}
 .am-sync{margin:0 8px 8px;font-size:12px;color:var(--muted)}
+
+/* chat and people (website only) */
+.pdot{width:10px;height:10px;border-radius:50%;background:var(--muted);opacity:.35;flex:none}
+.pdot.on{background:var(--ok);opacity:1;box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 22%,transparent)}
+.chat{display:grid;gap:10px}
+.chat-log{height:min(56vh,520px);overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px}
+.cmsg{max-width:min(78%,560px);display:grid;gap:2px;align-self:flex-start}
+.cmsg.me{align-self:flex-end;justify-items:end}
+.cmeta{font-size:11.5px;color:var(--muted)}
+.cbub{padding:8px 12px;border-radius:16px;background:var(--glass2);box-shadow:inset 0 1px 0 var(--rim),0 0 0 .5px var(--edge);overflow-wrap:anywhere;white-space:pre-wrap}
+.cmsg.me .cbub{background:var(--accent);color:#fff;box-shadow:none}
+.cdel{border:0;background:none;color:var(--muted);font-size:11.5px;text-decoration:underline;cursor:pointer;padding:0 0 0 4px}
+.chat-form{display:flex;gap:8px}
+.chat-form input{flex:1;min-width:0;border:0;border-radius:999px;padding:9px 14px;font:inherit;color:var(--ink);background:var(--glass2);box-shadow:inset 0 1px 0 var(--rim),0 0 0 .5px var(--edge)}
 </style>
 <div class="app">
 <aside class="side">
@@ -663,6 +677,7 @@ function refreshChrome(){SUBJ.forEach(s=>{const g=$('.sgrp[data-s="'+s.id+'"]');
 const cur=()=>(location.hash||'#home').slice(1)||'home';
 function route(){const c=cur();$('.app').classList.remove('nav-open');
   $$('.tlist a').forEach(a=>a.classList.toggle('on',a.dataset.t===c));$$('.nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+c));
+  if(window.SITE&&SITE.leave)SITE.leave();if(window.SITE&&SITE.pages&&SITE.pages[c]){SITE.pages[c]();return}
   if(TMAP[c]){const g=$('.sgrp[data-s="'+TMAP[c].s+'"]');g.classList.add('open');pageTopic(TMAP[c]);const a=$('.tlist a.on');if(a&&a.scrollIntoView)a.scrollIntoView({block:'nearest'});return}
   if(c.startsWith('s-')&&SMAP[c.slice(2)]){$('.sgrp[data-s="'+c.slice(2)+'"]').classList.add('open');pageSubject(SMAP[c.slice(2)])}
   else if(c==='index')pageIndex();
@@ -3159,8 +3174,38 @@ Object.assign(IMG,{"av19": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAA
     profiles:async ids=>{if(Date.now()-namesAt>30000){const s=await fs.collection('names').limit(1000).get();names={};s.docs.forEach(d=>{names[d.id]=String((d.data()||{}).name||'').slice(0,20)});namesAt=Date.now()}
       const out={};ids.forEach(i=>{out[i]={id:i,name:names[i]||''}});return out}};
   window.claude={use:async n=>{await ready;return n==='db'?db:n==='user'?user:null}};
-  window.SITE={signOut:()=>{acc.cur=null;saveAcc();const go=()=>location.reload();auth.signOut().then(go,go)}};
+  /* ----- presence: a heartbeat on the names doc ----- */
+  const ACTIVE=5*60000;let unsub=null,tick=null,people={};
+  function beat(){const u=auth.currentUser;if(!u||document.hidden)return;fs.doc('names/'+u.uid).set({name:u.displayName||'',seen:Date.now()}).catch(()=>{})}
+  ready.then(()=>{beat();setInterval(beat,120000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)beat()})});
+  function leave(){if(unsub){unsub();unsub=null}clearInterval(tick);tick=null}
+  function ago(t){if(!t)return 'not seen yet';const s=Math.max(0,(Date.now()-t)/1000);if(s<90)return 'just now';if(s<3600)return Math.round(s/60)+' min ago';if(s<86400)return Math.round(s/3600)+' h ago';return Math.round(s/86400)+' d ago'}
+  const need=title=>{view().className='page';view().innerHTML='<div class="thead"><div class="eyebrow">Community</div><h1>'+title+'</h1><p class="lead">Sign in to use this.</p></div>'};
+  function pagePeople(){if(!CL.on)return need('People');
+    view().className='page';view().innerHTML='<div class="thead"><div class="eyebrow">Community</div><h1>People</h1><p class="lead">Who is studying right now. Active means the app has been open in the last 5 minutes.</p></div><div id="ppl"></div>';
+    const draw=()=>{const el=$('#ppl');if(!el)return leave();const now=Date.now(),all=Object.keys(people).map(id=>Object.assign({id},people[id])).sort((a,b)=>(b.seen||0)-(a.seen||0)),on=all.filter(p=>now-(p.seen||0)<ACTIVE),off=all.filter(p=>now-(p.seen||0)>=ACTIVE);
+      const row=(p,a)=>'<div class="lb-row'+(p.id===CL.uid?' me':'')+'"><span class="av">'+esc(initials(p.name||'?'))+'</span><span class="lb-name"><b>'+esc(p.name||'Someone')+(p.id===CL.uid?' <em>you</em>':'')+'</b><small>'+(a?'Active now':'Last active '+ago(p.seen))+'</small></span><i class="pdot'+(a?' on':'')+'"></i></div>';
+      el.innerHTML='<h2 class="sec">Active now · '+on.length+'</h2><div class="card lb">'+(on.map(p=>row(p,1)).join('')||'<p class="mut">Nobody is active right now.</p>')+'</div><h2 class="sec">Inactive · '+off.length+'</h2><div class="card lb">'+(off.map(p=>row(p,0)).join('')||'<p class="mut">Nobody is inactive.</p>')+'</div>'};
+    unsub=fs.collection('names').limit(500).onSnapshot(s=>{people={};s.docs.forEach(d=>{const x=d.data()||{};people[d.id]={name:String(x.name||'').slice(0,20),seen:+x.seen||0}});draw()},()=>{const el=$('#ppl');if(el)el.innerHTML='<p class="mut">Could not load people. Check your connection.</p>'});
+    tick=setInterval(draw,30000)}
+  /* ----- chat: one shared room ----- */
+  let lastSend=0;
+  function pageChat(){if(!CL.on)return need('Chat');
+    view().className='page';view().innerHTML='<div class="thead"><div class="eyebrow">Community</div><h1>Chat</h1><p class="lead">One shared room for everyone with an account. Be kind, and do not post anything private.</p></div><div class="card chat"><div class="chat-log" id="clog"><p class="mut">Loading…</p></div><form class="chat-form" id="cform"><input type="text" id="cmsg" maxlength="300" placeholder="Write a message" autocomplete="off"><button class="btn pri" type="submit">Send</button></form><div class="auth-err" id="cerr" hidden></div></div>';
+    const log=$('#clog'),err=m=>{const e=$('#cerr');if(e){e.textContent=m;e.hidden=!m}};
+    const draw=async docs=>{const ids=[...new Set(docs.map(d=>d.uid))];let ps={};try{ps=await user.profiles(ids)}catch(e){}
+      if(!$('#clog'))return;const near=log.scrollHeight-log.scrollTop-log.clientHeight<80;
+      log.innerHTML=docs.length?docs.map(m=>{const me=m.uid===CL.uid,n=me?'You':((ps[m.uid]||{}).name||'Someone');return '<div class="cmsg'+(me?' me':'')+'"><div class="cmeta">'+esc(n)+' · '+new Date(m.at).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})+(me?' <button class="cdel" data-del="'+esc(m.id)+'" aria-label="Delete message">Delete</button>':'')+'</div><div class="cbub">'+esc(m.text)+'</div></div>'}).join(''):'<p class="mut">No messages yet. Say hello.</p>';
+      $$('[data-del]',log).forEach(b=>b.onclick=()=>fs.doc('chat/'+b.dataset.del).delete().catch(()=>err('Could not delete that message.')));
+      if(near)log.scrollTop=log.scrollHeight};
+    unsub=fs.collection('chat').orderBy('at','desc').limit(100).onSnapshot(s=>{const docs=s.docs.map(d=>{const x=d.data()||{};return {id:d.id,uid:String(x.uid||''),text:String(x.text||'').slice(0,500),at:+x.at||0}}).reverse();draw(docs)},()=>{log.innerHTML='<p class="mut">Could not load the chat. Check your connection.</p>'});
+    $('#cform').onsubmit=ev=>{ev.preventDefault();const i=$('#cmsg'),t=i.value.trim();if(!t)return;if(Date.now()-lastSend<1500)return err('Slow down a little.');lastSend=Date.now();err('');i.value='';
+      fs.collection('chat').add({uid:CL.uid,text:t.slice(0,300),at:Date.now()}).then(()=>{log.scrollTop=log.scrollHeight},()=>{i.value=t;err('Could not send. Check your connection.')})};
+    setTimeout(()=>{log.scrollTop=log.scrollHeight},300)}
+  const nav=$('.nav');if(nav){nav.insertAdjacentHTML('beforeend','<a href="#chat">Chat</a><a href="#people">People</a>')}
+  window.SITE={pages:{chat:pageChat,people:pagePeople},leave,signOut:()=>{acc.cur=null;saveAcc();const go=()=>location.reload();auth.signOut().then(go,go)}};
 })();
+
 
 boot();
 </script>
