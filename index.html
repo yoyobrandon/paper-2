@@ -511,14 +511,19 @@ select.tm-pill{max-width:190px;padding-right:10px}select.tm-pill option{color:#1
 .tm-open{justify-self:start;color:#a9c1ff;font-size:13.5px;text-decoration:none}.tm-open:hover{text-decoration:underline}
 @media (max-width:640px){.tm-card{padding:22px 18px 16px;border-radius:24px}.tm-act .pri{margin-left:0}.tm-brand{display:none}.tm-ctl{justify-content:center;width:100%}.tm-mid{justify-content:flex-start;padding-top:26px}.tm-left{margin-left:0;width:100%}}
 @media (prefers-reduced-motion:reduce){.tm-bg i,.tm.low .tm-bar i{animation:none}.tm-card.in,.tm-rev,.tm-sheet-in{animation-duration:.01s}}
+
+/* reset a question's result */
+.rst{appearance:none;font:inherit;font-size:11px;font-weight:600;letter-spacing:0;text-transform:none;margin-left:8px;padding:2px 9px;border-radius:999px;border:0;background:transparent;color:var(--muted);box-shadow:0 0 0 1px var(--edge);cursor:pointer;vertical-align:middle}
+.rst:hover{color:var(--ink)}
+.rst.sure{color:var(--bad);box-shadow:0 0 0 1px var(--bad);background:var(--bad-bg)}
 </style>
 <div class="app">
 <aside class="side">
   <div class="brand"><b>Paper 2 Study App</b><span>DS4102 finals · teach, test, close gaps</span></div>
   <nav class="nav">
-    <a href="#home">Home</a><a href="#gaps">My gaps <span class="badge" id="gbadge" hidden>0</span></a>
+    <a href="#home">Home</a><a href="#timer">Study timer</a><a href="#gaps">My gaps <span class="badge" id="gbadge" hidden>0</span></a>
     <a href="#drill">Mixed drill</a><a href="#paper">Practice paper</a><a href="#index">A to Z</a>
-    <a href="#numbers">Numbers</a><a href="#traps">Traps</a><a href="#leaderboard">Leaderboard</a><a href="#timer">Study timer</a>
+    <a href="#numbers">Numbers</a><a href="#traps">Traps</a><a href="#leaderboard">Leaderboard</a>
   </nav>
   <div class="slist" id="slist"></div>
 </aside>
@@ -621,6 +626,11 @@ function mountBlocks(root,t){
 function findItem(id){const k=id.lastIndexOf(':'),t=TMAP[id.slice(0,k)],i=+id.slice(k+1);return {id,t,i,b:t.b[i]}}
 function stBadge(r){if(!r)return '';const v=r.mx?r.sc/r.mx:0;return '<span class="st '+(v>=.8?'ok':v>0?'part':'no')+'">'+(r.t==='s'?r.sc+' / '+r.mx:(v?'Correct':'Missed'))+'</span>'}
 function record(id,r){r.at=Date.now();st.r[id]=r;save();refreshChrome()}
+function stB(r){return stBadge(r)+(r?'<button class="rst" data-rst title="Clear your result for this question, as if you had never answered it">Reset</button>':'')}
+function resetItem(id){delete st.r[id];st.z=st.z||{};st.z[id]=Date.now();save();refreshChrome()}
+document.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest('[data-rst]');if(!b)return;const el=b.closest('[data-item]');if(!el)return;
+  if(!b.classList.contains('sure')){b.classList.add('sure');b.textContent='Reset this question?';setTimeout(()=>{if(b.isConnected){b.classList.remove('sure');b.textContent='Reset'}},3500);return}
+  resetItem(el.dataset.item);el.classList.remove('open');mountCheck(el)});
 
 const QIMG={};
 const HINT={};
@@ -629,19 +639,19 @@ function qfig(id){const x=QIMG[id];return x&&IMG[x[0]]?'<figure class="qfig"><im
 function mountCheck(el){const it=findItem(el.dataset.item),b=it.b;
   if(b[0]==='mcq')mountMCQ(el,it);else if(b[0]==='saq')mountSAQ(el,it);else mountRC(el,it)}
 function mountMCQ(el,it){const b=it.b,r=st.r[it.id];
-  el.innerHTML='<div class="lab">Quick check'+stBadge(r)+'</div><div class="q">'+fmt(b[1])+'</div>'+qfig(it.id)+qhint(it.id)+'<div class="opts">'+b[2].map((o,j)=>'<button class="opt" data-j="'+j+'"><span class="l">'+'ABCDE'[j]+'</span><span>'+fmt(o)+'</span></button>').join('')+'</div><div class="exp" hidden></div>';
+  el.innerHTML='<div class="lab">Quick check'+stB(r)+'</div><div class="q">'+fmt(b[1])+'</div>'+qfig(it.id)+qhint(it.id)+'<div class="opts">'+b[2].map((o,j)=>'<button class="opt" data-j="'+j+'"><span class="l">'+'ABCDE'[j]+'</span><span>'+fmt(o)+'</span></button>').join('')+'</div><div class="exp" hidden></div>';
   const show=(j)=>{$$('.opt',el).forEach((o,x)=>{o.disabled=true;if(x===b[3])o.classList.add('right');else if(x===j)o.classList.add('wrong')});const e=$('.exp',el);e.hidden=false;e.innerHTML=(j===b[3]?'<b style="color:var(--ok)">Correct.</b> ':'<b style="color:var(--bad)">Not quite.</b> ')+fmt(b[4]||'')+' <button class="btn sm" data-re>Retry</button>';$('[data-re]',el).onclick=()=>{mountMCQ(el,it);$$('.opt',el).forEach(o=>{o.disabled=false;o.classList.remove('right','wrong')});$('.exp',el).hidden=true}};
-  $$('.opt',el).forEach(o=>o.onclick=()=>{const j=+o.dataset.j;record(it.id,{t:'m',sc:j===b[3]?1:0,mx:1,ch:j});$('.lab',el).innerHTML='Quick check'+stBadge(st.r[it.id]);show(j)});
+  $$('.opt',el).forEach(o=>o.onclick=()=>{const j=+o.dataset.j;record(it.id,{t:'m',sc:j===b[3]?1:0,mx:1,ch:j});$('.lab',el).innerHTML='Quick check'+stB(st.r[it.id]);show(j)});
 }
 function mountRC(el,it){const b=it.b,r=st.r[it.id];
   el.classList.add('rc');
-  el.innerHTML='<div class="lab">Recall'+stBadge(r)+'</div><div class="q">'+fmt(b[1])+'</div>'+qhint(it.id)+'<button class="btn sm" data-sh>Say it out loud, then reveal</button><div class="a">'+fmt(b[2])+'<div class="row" style="margin-top:8px"><button class="btn sm" data-g="1">I had it</button><button class="btn sm" data-g="0">I missed it</button></div></div>';
+  el.innerHTML='<div class="lab">Recall'+stB(r)+'</div><div class="q">'+fmt(b[1])+'</div>'+qhint(it.id)+'<button class="btn sm" data-sh>Say it out loud, then reveal</button><div class="a">'+fmt(b[2])+'<div class="row" style="margin-top:8px"><button class="btn sm" data-g="1">I had it</button><button class="btn sm" data-g="0">I missed it</button></div></div>';
   $('[data-sh]',el).onclick=()=>el.classList.add('open');
-  $$('[data-g]',el).forEach(x=>x.onclick=()=>{record(it.id,{t:'r',sc:+x.dataset.g,mx:1});$('.lab',el).innerHTML='Recall'+stBadge(st.r[it.id])});
+  $$('[data-g]',el).forEach(x=>x.onclick=()=>{record(it.id,{t:'r',sc:+x.dataset.g,mx:1});$('.lab',el).innerHTML='Recall'+stB(st.r[it.id])});
 }
 function modelAns(d,mx){return '<div class="fbg model ma"><h5>Model answer</h5>'+(d.model?fmt(d.model):'<ol>'+d.pts.map(p=>'<li>'+fmt(p[0])+'</li>').join('')+'</ol>')+'<div class="muted" style="font-size:12px;margin-top:6px">'+(d.pts.length>mx?'Any '+mx+' of these '+d.pts.length+' points earns full marks.':'A full-mark answer makes '+(d.pts.length>1?'all '+d.pts.length+' of these points.':'this point.'))+' Taken from the answer key built from your lecture slides.</div></div>'}
 function mountSAQ(el,it){const d=it.b[1],r=st.r[it.id],mx=d.m||d.pts.length;
-  el.innerHTML='<div class="lab">Short answer · '+mx+' mark'+(mx>1?'s':'')+stBadge(r)+'</div><div class="q">'+fmt(d.q)+'</div>'+qfig(it.id)+qhint(it.id)+'<textarea class="ans" placeholder="Type your answer from memory, as you would in the exam. Dot points are fine."></textarea><div class="row" style="margin-top:8px"><button class="btn pri" data-mark>Mark my answer</button><button class="btn" data-show>Show answer key</button><span class="muted" style="font-size:12px" data-hint></span></div><div class="fb" hidden></div>';
+  el.innerHTML='<div class="lab">Short answer · '+mx+' mark'+(mx>1?'s':'')+stB(r)+'</div><div class="q">'+fmt(d.q)+'</div>'+qfig(it.id)+qhint(it.id)+'<textarea class="ans" placeholder="Type your answer from memory, as you would in the exam. Dot points are fine."></textarea><div class="row" style="margin-top:8px"><button class="btn pri" data-mark>Mark my answer</button><button class="btn" data-show>Show answer key</button><span class="muted" style="font-size:12px" data-hint></span></div><div class="fb" hidden></div>';
   const ta=$('.ans',el),fb=$('.fb',el);
   if(r&&r.a)ta.value=r.a;
   function render(res,shown){
@@ -660,7 +670,7 @@ function mountSAQ(el,it){const d=it.b[1],r=st.r[it.id],mx=d.m||d.pts.length;
     fb.hidden=false;fb.innerHTML=h;
     $$('[data-ov]',fb).forEach(x=>x.onclick=()=>{res.ov=(res.ov||[]).concat(+x.dataset.ov);commit(res,false);render(res,false)});
   }
-  function commit(res,shown){const ov=res.ov||[];const hits=res.hit.length+ov.length;record(it.id,{t:'s',sc:shown?0:Math.min(hits,mx),mx,miss:shown?d.pts.map((_,i)=>i):res.miss.filter(x=>!ov.includes(x)),mis:res.mis,a:ta.value.slice(0,2500)});$('.lab',el).innerHTML='Short answer · '+mx+' mark'+(mx>1?'s':'')+stBadge(st.r[it.id])}
+  function commit(res,shown){const ov=res.ov||[];const hits=res.hit.length+ov.length;record(it.id,{t:'s',sc:shown?0:Math.min(hits,mx),mx,miss:shown?d.pts.map((_,i)=>i):res.miss.filter(x=>!ov.includes(x)),mis:res.mis,a:ta.value.slice(0,2500)});$('.lab',el).innerHTML='Short answer · '+mx+' mark'+(mx>1?'s':'')+stB(st.r[it.id])}
   $('[data-mark]',el).onclick=()=>{const tx=ta.value.trim();if(tx.split(/\s+/).length<3){$('[data-hint]',el).textContent='Write at least a few words first so there is something to mark.';ta.focus();return}$('[data-hint]',el).textContent='';const res=markSAQ(d,tx);commit(res,false);render(res,false)};
   $('[data-show]',el).onclick=()=>{const res={hit:[],miss:d.pts.map((_,i)=>i),mis:[]};if(!st.r[it.id])commit(res,true);render(res,true)};
 }
@@ -915,14 +925,14 @@ function setSync(s){CL.status=s;const d=$('#acct .sync');if(d){d.className='sync
 function subjOf(id){const k=id.lastIndexOf(':'),t=TMAP[id.slice(0,k)];return t?t.s:null}
 function splitR(){const o={};SUBJ.forEach(s=>o[s.id]={});Object.keys(st.r).forEach(id=>{const s=subjOf(id);if(s)o[s][id]=st.r[id]});return o}
 function slim(part){let str=stable({r:part});if(str.length<200000)return {r:part};const r={};Object.keys(part).forEach(k=>{r[k]=Object.assign({},part[k]);if(r[k].a)r[k].a=r[k].a.slice(0,300)});return {r}}
-function metaBody(){return {papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0,metaAt:st.metaAt||0}}
+function metaBody(){return {papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0,metaAt:st.metaAt||0,z:st.z||{}}}
 function localSave(){try{localStorage.setItem(ukey(acc.cur),JSON.stringify(st))}catch(e){storeWarn()}}
 function cloudQueue(){if(!CL.on||CL.ro)return;clearTimeout(CL.t);CL.t=setTimeout(cloudFlush,2500)}
 async function cloudFlush(){if(!CL.on||CL.ro||!CL.ready)return;if(CL.busy){CL.again=true;return}CL.busy=true;clearTimeout(CL.t);setSync('busy');
   try{const base=CL.db.collection('data/users/'+CL.uid),parts=splitR();
     for(const s of SUBJ){const body=slim(parts[s.id]),str=stable(body);if(str!==(CL.cloudStr[s.id]||stable({r:{}}))){await base.doc('p_'+s.id).set(body);CL.cloudStr[s.id]=str}}
     const core=stable({papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0});if(core!==CL.coreStr){if(CL.coreStr!==undefined){st.metaAt=Date.now();localSave()}CL.coreStr=core}
-    const mb=metaBody(),ms=stable(mb);if(ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms}
+    const mb=metaBody(),ms=stable(mb);if(ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||Object.keys(mb.z).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms}
     const sc=scoreFrom(st.r),sb={p:+sc.p.toFixed(4),done:sc.done,full:sc.full,n:sc.n,subj:sc.subj},ss=stable(sb);
     if(ss!==CL.scoreStr){await CL.db.doc('scores/'+CL.uid).set(Object.assign({at:new Date().toISOString().slice(0,10)},sb));CL.scoreStr=ss}
     setSync('ok')}
@@ -933,8 +943,10 @@ function cloudMerge(snap){let changed=false,meta=null;const cloudR={};
   snap.docs.forEach(d=>{const x=d.data();if(!x)return;if(d.id==='meta'){meta=JSON.parse(JSON.stringify(x));CL.cloudStr.meta=stable(meta)}else if(d.id.indexOf('p_')===0){const r=JSON.parse(JSON.stringify(x.r||{}));CL.cloudStr[d.id.slice(2)]=stable({r});Object.assign(cloudR,r)}});
   const resetAt=Math.max(st.resetAt||0,meta&&meta.resetAt||0);
   if(resetAt>(st.resetAt||0)){st.resetAt=resetAt;changed=true}
-  Object.keys(st.r).forEach(id=>{if((st.r[id].at||0)<resetAt){delete st.r[id];changed=true}});
-  Object.keys(cloudR).forEach(id=>{const c=cloudR[id];if((c.at||0)<resetAt||!subjOf(id))return;const l=st.r[id];if(!l||(c.at||0)>(l.at||0)){st.r[id]=c;changed=true}});
+  const z=st.z=st.z||{};if(meta&&meta.z)Object.keys(meta.z).forEach(id=>{if((+meta.z[id]||0)>(z[id]||0)){z[id]=+meta.z[id];changed=true}});
+  Object.keys(z).forEach(id=>{if(z[id]<resetAt)delete z[id]});
+  Object.keys(st.r).forEach(id=>{if((st.r[id].at||0)<resetAt||(st.r[id].at||0)<=(z[id]||0)){delete st.r[id];changed=true}});
+  Object.keys(cloudR).forEach(id=>{const c=cloudR[id];if((c.at||0)<resetAt||(c.at||0)<=(z[id]||0)||!subjOf(id))return;const l=st.r[id];if(!l||(c.at||0)>(l.at||0)){st.r[id]=c;changed=true}});
   if(meta){const seen=new Set((st.papers||[]).map(p=>p.at));(meta.papers||[]).forEach(p=>{if(!seen.has(p.at)&&p.at>=resetAt){st.papers=(st.papers||[]).concat([p]);changed=true}});
     if(st.papers){st.papers=st.papers.filter(p=>p.at>=resetAt).sort((a,b)=>a.at-b.at).slice(-30)}
     if((meta.metaAt||0)>(st.metaAt||0)){const typing=document.activeElement&&document.activeElement.matches&&document.activeElement.matches('textarea.ans[data-id]');if(!typing){st.paper=meta.paper||null;st.metaAt=meta.metaAt;changed=true}}}
