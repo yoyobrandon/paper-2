@@ -654,6 +654,10 @@ div#intro{position:fixed;inset:0;z-index:1000;background:#05060d;color:#f5f6fb;f
 .tm-rev h5+ul,.tm-rev h5+p{margin-top:0}
 .tm-rev ul+h5,.tm-rev .tm-score+h5{margin-top:10px}
 .tm-ov{appearance:none;font:inherit;font-size:12px;color:#f5f6fb;border:0;border-radius:999px;padding:2px 9px;margin-left:4px;background:rgba(255,255,255,.14);cursor:pointer}
+
+.med-d{background:var(--hover);border-radius:12px;padding:8px 10px;margin:6px 0}
+.med-d p{font-weight:600}
+.med-d.med-nd p{font-weight:400;color:var(--muted)}
 </style>
 <div class="app">
 <aside class="side">
@@ -1266,17 +1270,48 @@ const MEDS=[
 {g:'Tooth whitening',h:240,items:[
  {n:'Carbamide peroxide and hydrogen peroxide',use:'Carbamide peroxide in trays at home, usually for 4 weeks. Hydrogen peroxide at high strength in the chair.',dose:'Carbamide peroxide breaks down to about one third its strength in hydrogen peroxide.',watch:'Wait at least 1 week before bonding, or use 10% sodium ascorbate for 10 minutes.',s:'wh'},
  {n:'Sodium perborate (walking bleach)',use:'Whitening a root-filled tooth from the inside.',dose:'',watch:'35% hydrogen peroxide with heat is no longer recommended because of cervical resorption.',s:'wh'}]}];
+/* Adult and child doses, split out. Only what the slides state. */
+const NCD='Not given on the slides.';
+Object.assign(MSRC,{af:'Antimicrobials in Clinical Practice (DS3101 Wk 9); Bacterial and Fungal Infections of the Mucosa (DS3102 Wk 6)',lm:'Antimicrobials in Clinical Practice (DS3101 Wk 9); Labial Mucosa (DS3101 Wk 10)',m3:'Medically Compromised Patient 3 (DS3101 Wk 6)',abp:'Antimicrobials in Clinical Practice (DS3101 Wk 9); Maxillofacial Infections in Children (DS4101 Wk 8)'});
+const MDOSE={
+'Paracetamol':{ad:'500 mg to 1000 mg every 6 to 8 hours. Maximum 4 g a day.',ch:NCD},
+'NSAIDs (ibuprofen, diclofenac)':{ad:NCD,ch:NCD},
+'Celecoxib (COX-2 selective NSAID)':{ad:NCD,ch:NCD},
+'Opioids (for example oxycodone, morphine)':{ad:NCD,ch:NCD},
+'Phenoxymethylpenicillin (penicillin V)':{ad:'500 mg every 6 hours for 5 days.',ch:'12.5 mg/kg, up to 500 mg, every 6 hours for 5 days.',s:'abp'},
+'Amoxicillin':{ad:'500 mg every 8 hours for 5 days.',ch:'15 mg/kg, up to 500 mg, every 8 hours for 5 days. A 20 kg child gets 300 mg.',s:'abp'},
+'Metronidazole':{ad:'400 mg three times a day for 5 days (Antimicrobials lecture). The paediatric infections lecture gives 400 mg every 12 hours, with a penicillin.',ch:'10 mg/kg, up to 400 mg, every 12 hours for 5 days, with a penicillin.',s:'abp'},
+'Amoxicillin with clavulanic acid':{ad:'500/125 mg three times a day for 5 days (Antimicrobials lecture). The paediatric infections lecture gives 875+125 mg every 12 hours.',ch:'From 2 months old: 22.5+3.2 mg/kg, up to 875+125 mg, every 12 hours for 5 days.',s:'abp'},
+'Clindamycin':{ad:'150 to 300 mg four times a day for 5 days (Antimicrobials lecture). The paediatric infections lecture gives 300 mg every 8 hours.',ch:'7.5 mg/kg, up to 300 mg, every 8 hours for 5 days.',s:'abp'},
+'Endocarditis prophylaxis':{ad:'Amoxicillin 2 g by mouth, 1 hour before (4 capsules of 500 mg). Penicillin allergy: clindamycin 600 mg by mouth. Cephalexin 2 g is the third option on the slide.',ch:'Not given on the slides, which show adult doses only.'},
+'Nystatin, amphotericin B, miconazole':{ad:'All four times a day for 7 to 14 days. Amphotericin B 10 mg lozenges. Nystatin 500,000 unit capsules or tablets, or the 100,000 units per mL liquid. Miconazole 2% gel, 2.5 mL.',ch:NCD,s:'af'},
+'Fluconazole':{ad:'50 mg. How often and for how long is not given.',ch:NCD},
+'Aciclovir':{ad:'Cold sores: 5% cream, 5 times a day for 5 days, started at the first signs. Shingles: 800 mg, 5 times a day for 7 days, and refer.',ch:NCD,s:'lm'},
+'Famciclovir':{ad:'1500 mg as a single dose.',ch:NCD,s:'lm',watch:'A systemic antiviral, used in place of the cream.'},
+'Lidocaine 2% with adrenaline':{ad:'Maximum for a 70 kg adult: 11 cartridges. Infiltration: about 1 mL for a filling, 2 mL for an extraction.',ch:NCD},
+'Articaine 4% with adrenaline':{ad:'Maximum for a 70 kg adult: 5.5 cartridges.',ch:NCD},
+'Oral premedication (temazepam, diazepam)':{ad:'Taken 1 hour before treatment, sometimes the night before as well. The amount is not on the slides (it says to check eTG).',ch:NCD},
+'Midazolam':{ad:'Ampoules of 5 mg in 5 mL for IV sedation.',ch:'By mouth, given by paediatric dentists: 0.075 mg/kg.'},
+'GTN spray':{ad:'400 to 800 micrograms under the tongue. Repeat every 5 minutes, up to 3 doses.',ch:NCD},
+'Aspirin':{ad:'300 mg dispersible, chewed.',ch:NCD},
+'Salbutamol':{ad:'2 puffs through a spacer. Repeat as needed. Oxygen at 15 L/min.',ch:NCD},
+'Glucose and glucagon':{ad:'Conscious: 15 g of glucose by mouth. Unconscious: recovery position and 1 mg glucagon into the muscle, then oral glucose.',ch:NCD},
+'Diazepam, lorazepam or midazolam':{ad:'Diazepam 10 mg, lorazepam 4 mg or midazolam 10 mg.',ch:NCD}};
+MEDS.find(g=>g.g==='Medical emergencies').items.push({n:'Diazepam, lorazepam or midazolam',use:'A seizure that lasts more than 3 minutes.',dose:'',watch:'Most seizures stop on their own. Recovery position and oxygen at 15 L/min come first. Repeated seizures can become status epilepticus.',s:'m3'});
+MEDS.forEach(g=>g.items.forEach(m=>{const d=MDOSE[m.n];if(d){m.ad=d.ad;m.ch=d.ch;if(d.s)m.s=d.s;if(d.watch!==undefined)m.watch=d.watch}}));
+MEDS.find(g=>g.g==='Antibiotics').tip+=' Child doses go by weight and never exceed the adult dose.';
 const RXRULES=['Your name, address, phone, qualifications and prescriber number.','Patient\'s full name and address. Date of birth for drugs of dependence. Age and weight for children.','The date, and your signature.','Drug name in full (generic name), strength, form, dose, route and how often, in plain English. Never write "take as directed".','How long to take it, and the quantity to supply.','No more than 3 items on one script, and only 1 if it is a drug of dependence.','Dentists cannot write repeats, cannot prescribe authority items, and cannot prescribe for themselves.'];
 function pageMeds(){view().className='page';
-  let h='<div class="thead"><div class="eyebrow">Quick reference</div><h1>Medications</h1><p class="lead">Every drug and dose named in your Paper 2 lectures, in plain words. Where a slide gives no dose, it says so rather than guessing.</p></div>';
+  let h='<div class="thead"><div class="eyebrow">Quick reference</div><h1>Medications</h1><p class="lead">Every drug named in your Paper 2 lectures, with the adult dose and the child dose side by side. Where the slides give no dose, the card says so rather than guessing.</p></div>';
   h+='<div class="med-bar"><input type="search" id="medq" placeholder="Search a drug or a use" autocomplete="off"><div class="med-chips"><button class="on" data-g="">All</button>'+MEDS.map((g,i)=>'<button data-g="'+i+'">'+esc(g.g)+'</button>').join('')+'</div></div><div id="medl"></div>';
   h+='<h2 class="sec">Writing the prescription</h2><div class="card"><ul class="med-rules">'+RXRULES.map(r=>'<li>'+esc(r)+'</li>').join('')+'</ul><div class="med-rx"><div><b>Adult example</b><span>Amoxicillin 500 mg capsules. Take 1 capsule every 8 hours for 5 days. 15 (fifteen) capsules.</span></div><div><b>Child example (20 kg)</b><span>Amoxicillin 250 mg/5 mL oral suspension. Give 6 mL orally every 8 hours for 5 days. Total 100 mL.</span></div><div><b>Schedules</b><span>S2 pharmacy medicine. S3 pharmacist only. S4 prescription only, such as antibiotics. S8 controlled drug, such as oxycodone and morphine.</span></div></div><p class="med-src">Source: '+esc(MSRC.sc)+'; '+esc(MSRC.pr)+'</p></div>';
   h+='<p class="mut med-note">This page is a study summary of your lecture slides. It is not a prescribing guide. Always check Therapeutic Guidelines before prescribing for a patient.</p>';
   view().innerHTML=h;let grp='';
   const row=(l,t)=>t?'<div class="med-r"><span>'+l+'</span><p>'+esc(t)+'</p></div>':'';
+  const drow=(l,t,k)=>'<div class="med-r med-d'+(t.indexOf('Not given')===0?' med-nd':'')+'"><span>'+l+'</span><p>'+esc(t)+'</p></div>';
   const draw=()=>{const q=$('#medq').value.trim().toLowerCase();let out='';
-    MEDS.forEach((g,i)=>{if(grp!==''&&+grp!==i)return;const its=g.items.filter(m=>!q||(m.n+' '+m.use+' '+m.dose+' '+m.watch).toLowerCase().includes(q));if(!its.length)return;
-      out+='<h2 class="sec">'+esc(g.g)+'</h2>'+(g.tip&&!q?'<p class="med-tip">'+esc(g.tip)+'</p>':'')+'<div class="med-grid">'+its.map(m=>'<div class="card med" style="--h:'+g.h+'"><h3>'+esc(m.n)+'</h3>'+row('Used for',m.use)+row('Dose',m.dose)+row('Watch out',m.watch)+'<p class="med-src">'+esc(MSRC[m.s])+'</p></div>').join('')+'</div>'});
+    MEDS.forEach((g,i)=>{if(grp!==''&&+grp!==i)return;const its=g.items.filter(m=>!q||(m.n+' '+m.use+' '+m.dose+' '+(m.ad||'')+' '+(m.ch||'')+' '+m.watch).toLowerCase().includes(q));if(!its.length)return;
+      out+='<h2 class="sec">'+esc(g.g)+'</h2>'+(g.tip&&!q?'<p class="med-tip">'+esc(g.tip)+'</p>':'')+'<div class="med-grid">'+its.map(m=>'<div class="card med" style="--h:'+g.h+'"><h3>'+esc(m.n)+'</h3>'+row('Used for',m.use)+(m.ad?drow('Adult dose',m.ad,'a')+drow('Child dose',m.ch,'c'):row('Dose',m.dose))+row('Watch out',m.watch)+'<p class="med-src">'+esc(MSRC[m.s])+'</p></div>').join('')+'</div>'});
     $('#medl').innerHTML=out||'<p class="mut">Nothing matches that search.</p>'};
   $('#medq').oninput=draw;$$('.med-chips button').forEach(b=>b.onclick=()=>{grp=b.dataset.g;$$('.med-chips button').forEach(x=>x.classList.toggle('on',x===b));draw()});draw()}
 
