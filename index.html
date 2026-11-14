@@ -658,6 +658,12 @@ div#intro{position:fixed;inset:0;z-index:1000;background:#05060d;color:#f5f6fb;f
 .med-d{background:var(--hover);border-radius:12px;padding:8px 10px;margin:6px 0}
 .med-d p{font-weight:600}
 .med-d.med-nd p{font-weight:400;color:var(--muted)}
+
+.med-tg{border-radius:12px;padding:8px 10px;margin:6px 0;box-shadow:inset 0 0 0 1.5px hsl(38 85% 55%/.7);background:hsl(38 90% 55%/.1)}
+.med-tg span{color:hsl(32 80% 38%)}
+.med-tg small{font-size:11.5px;color:var(--muted);line-height:1.4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .med-tg span{color:hsl(40 90% 68%)}}
+:root[data-theme="dark"] .med-tg span{color:hsl(40 90% 68%)}
 </style>
 <div class="app">
 <aside class="side">
@@ -1300,6 +1306,12 @@ const MDOSE={
 MEDS.find(g=>g.g==='Medical emergencies').items.push({n:'Diazepam, lorazepam or midazolam',use:'A seizure that lasts more than 3 minutes.',dose:'',watch:'Most seizures stop on their own. Recovery position and oxygen at 15 L/min come first. Repeated seizures can become status epilepticus.',s:'m3'});
 MEDS.forEach(g=>g.items.forEach(m=>{const d=MDOSE[m.n];if(d){m.ad=d.ad;m.ch=d.ch;if(d.s)m.s=d.s;if(d.watch!==undefined)m.watch=d.watch}}));
 MEDS.find(g=>g.g==='Antibiotics').tip+=' Child doses go by weight and never exceed the adult dose.';
+/* Outside the lectures: doses published by Therapeutic Guidelines, added at Brandon's request. Only figures checked against a published source. */
+const MTG={
+'Paracetamol':{t:'Adult: paracetamol 1 g taken at the same time as ibuprofen 400 mg.',src:'Therapeutic Guidelines dose, as quoted in Australian Prescriber podcast episode 91 (2020).'},
+'NSAIDs (ibuprofen, diclofenac)':{t:'Adult: ibuprofen 400 mg taken at the same time as paracetamol 1 g.',src:'Therapeutic Guidelines dose, as quoted in Australian Prescriber podcast episode 91 (2020).'},
+'Endocarditis prophylaxis':{t:'Child: amoxicillin 50 mg/kg, up to 2 g, by mouth 60 minutes before. Cefalexin: child 50 mg/kg, up to 2 g, 60 minutes before. Clindamycin: adult 600 mg, child 20 mg/kg, up to 600 mg, 60 to 120 minutes before. Newer advice (ADA, April 2026) lists doxycycline or azithromycin for severe penicillin allergy in place of clindamycin, so check the current eTG.',src:'Australian Prescriber 2022, published by Therapeutic Guidelines (table from the 2020 Australian rheumatic heart disease guideline).'}};
+MEDS.forEach(g=>g.items.forEach(m=>{if(MTG[m.n])m.tg=MTG[m.n]}));
 const RXRULES=['Your name, address, phone, qualifications and prescriber number.','Patient\'s full name and address. Date of birth for drugs of dependence. Age and weight for children.','The date, and your signature.','Drug name in full (generic name), strength, form, dose, route and how often, in plain English. Never write "take as directed".','How long to take it, and the quantity to supply.','No more than 3 items on one script, and only 1 if it is a drug of dependence.','Dentists cannot write repeats, cannot prescribe authority items, and cannot prescribe for themselves.'];
 function pageMeds(){view().className='page';
   let h='<div class="thead"><div class="eyebrow">Quick reference</div><h1>Medications</h1><p class="lead">Every drug named in your Paper 2 lectures, with the adult dose and the child dose side by side. Where the slides give no dose, the card says so rather than guessing.</p></div>';
@@ -1310,8 +1322,8 @@ function pageMeds(){view().className='page';
   const row=(l,t)=>t?'<div class="med-r"><span>'+l+'</span><p>'+esc(t)+'</p></div>':'';
   const drow=(l,t,k)=>'<div class="med-r med-d'+(t.indexOf('Not given')===0?' med-nd':'')+'"><span>'+l+'</span><p>'+esc(t)+'</p></div>';
   const draw=()=>{const q=$('#medq').value.trim().toLowerCase();let out='';
-    MEDS.forEach((g,i)=>{if(grp!==''&&+grp!==i)return;const its=g.items.filter(m=>!q||(m.n+' '+m.use+' '+m.dose+' '+(m.ad||'')+' '+(m.ch||'')+' '+m.watch).toLowerCase().includes(q));if(!its.length)return;
-      out+='<h2 class="sec">'+esc(g.g)+'</h2>'+(g.tip&&!q?'<p class="med-tip">'+esc(g.tip)+'</p>':'')+'<div class="med-grid">'+its.map(m=>'<div class="card med" style="--h:'+g.h+'"><h3>'+esc(m.n)+'</h3>'+row('Used for',m.use)+(m.ad?drow('Adult dose',m.ad,'a')+drow('Child dose',m.ch,'c'):row('Dose',m.dose))+row('Watch out',m.watch)+'<p class="med-src">'+esc(MSRC[m.s])+'</p></div>').join('')+'</div>'});
+    MEDS.forEach((g,i)=>{if(grp!==''&&+grp!==i)return;const its=g.items.filter(m=>!q||(m.n+' '+m.use+' '+m.dose+' '+(m.ad||'')+' '+(m.ch||'')+' '+(m.tg?m.tg.t:'')+' '+m.watch).toLowerCase().includes(q));if(!its.length)return;
+      out+='<h2 class="sec">'+esc(g.g)+'</h2>'+(g.tip&&!q?'<p class="med-tip">'+esc(g.tip)+'</p>':'')+'<div class="med-grid">'+its.map(m=>'<div class="card med" style="--h:'+g.h+'"><h3>'+esc(m.n)+'</h3>'+row('Used for',m.use)+(m.ad?drow('Adult dose',m.ad,'a')+drow('Child dose',m.ch,'c'):row('Dose',m.dose))+(m.tg?'<div class="med-r med-tg"><span>Therapeutic Guidelines · not from your lectures</span><p>'+esc(m.tg.t)+'</p><small>'+esc(m.tg.src)+'</small></div>':'')+row('Watch out',m.watch)+'<p class="med-src">'+esc(MSRC[m.s])+'</p></div>').join('')+'</div>'});
     $('#medl').innerHTML=out||'<p class="mut">Nothing matches that search.</p>'};
   $('#medq').oninput=draw;$$('.med-chips button').forEach(b=>b.onclick=()=>{grp=b.dataset.g;$$('.med-chips button').forEach(x=>x.classList.toggle('on',x===b));draw()});draw()}
 
