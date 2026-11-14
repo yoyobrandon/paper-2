@@ -725,6 +725,44 @@ div#ad.on{opacity:1}
 @keyframes adBlink{50%{opacity:0}}
 @media (max-width:760px){.ad-feat{grid-template-columns:minmax(0,1fr)}.ad-in{gap:18px}}
 @media (prefers-reduced-motion:reduce){.ad-in>*{transition:none}#ad.on .ad-res{animation:none;opacity:1;transform:none}#ad.on .in-bar i,.ad-caret{animation:none}}
+
+.dz{display:grid;gap:14px;min-width:0}
+.dz h2{margin:0 0 4px}
+.dz-head{display:grid;gap:12px}
+.dz-head p{margin:0;line-height:1.45}
+.dz-in{display:flex;flex-wrap:wrap;gap:10px}
+.dz-in label{display:grid;gap:4px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dz-in label span{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink)}
+.dz-in input,.dz-in select{font:inherit;font-size:17px;font-weight:600;width:104px;color:var(--ink);padding:8px 10px;border-radius:12px;border:0;background:var(--hover);color:inherit;box-shadow:inset 0 0 0 1px var(--edge)}
+.dz-in select{width:auto}
+.dz-quick,.dz-idx{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.dz-quick button,.dz-idx a{appearance:none;font:inherit;font-size:12.5px;padding:6px 11px;border-radius:999px;border:0;background:var(--hover);color:inherit;text-decoration:none;cursor:pointer;box-shadow:inset 0 0 0 .5px var(--edge)}
+.dz-quick button:hover,.dz-idx a:hover{background:var(--glass2)}
+.dz-idx>span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.dz-idx input{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;border:0;background:var(--hover);color:inherit;box-shadow:inset 0 0 0 1px var(--edge);min-width:0;flex:1 1 140px}
+.dz-key{display:flex;flex-wrap:wrap;gap:8px}
+.dz-src{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--hover);color:var(--muted);white-space:nowrap}
+.dz-src.tg,.dz-tg .dz-src{background:hsl(38 90% 55%/.16);color:hsl(32 80% 38%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dz-src.tg,:root:not([data-theme="light"]) .dz-tg .dz-src{color:hsl(40 90% 68%)}}
+:root[data-theme="dark"] .dz-src.tg,:root[data-theme="dark"] .dz-tg .dz-src{color:hsl(40 90% 68%)}
+.dz-g{margin:8px 0 0;font-size:15px;scroll-margin-top:80px}
+.dz-rows{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:10px}
+.dz-r{display:grid;gap:8px;align-content:start;padding:12px;border-radius:14px;background:var(--glass2);box-shadow:0 0 0 .5px var(--edge);min-width:0}
+.dz-tg{box-shadow:inset 0 0 0 1.5px hsl(38 85% 55%/.55)}
+.dz-n{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.dz-n b{font-size:14.5px;line-height:1.3}
+.dz-rule,.dz-ad,.dz-note{margin:0;font-size:13px;line-height:1.45}
+.dz-rule{color:var(--muted)}
+.dz-note{color:var(--muted);font-style:italic}
+.dz-ad span,.dz-fix span,.dz-out span{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dz-out{display:grid;gap:2px;padding:10px 12px;border-radius:12px;background:var(--hover)}
+.dz-out b{font-size:22px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.dz-out em{font-style:normal;font-size:12px;font-weight:600;color:hsl(32 80% 42%)}
+.dz-out small{font-size:13px;line-height:1.4}
+.dz-out.no{font-size:13.5px;font-weight:600;color:hsl(4 70% 48%)}
+.dz-fix{display:grid;gap:6px;font-size:13.5px;line-height:1.45}
+.dz-fix>div{display:grid;gap:1px}
+.dz-fine{margin:0;font-size:12px;color:var(--muted)}
 </style>
 <div class="app">
 <aside class="side">
@@ -1228,6 +1266,84 @@ function showAd(){if($('#ad'))return;const nQ=allItems().filter(it=>it.b[0]==='s
   const key=e=>{if(e.key==='Escape')close()};document.addEventListener('keydown',key);
   o.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.go!==undefined)close(true);else if(t.dataset.x!==undefined)close()})}
 
+/* ===== dose calculator and dose index on the Medications page ===== */
+/* k: kg (per mg/kg, max mg), rng (per range), la (local anaesthetic max), band (weight bands), mcg (micrograms/kg), fix (fixed dose)
+   src: s = your slides, tg = Therapeutic Guidelines (not from your lectures) */
+const DZSRC={s:'Your slides',tg:'Therapeutic Guidelines'};
+const DZ=[
+ {g:'Pain relief',n:'Paracetamol',k:'k',per:15,max:1000,f:'every 4 to 6 hours, maximum 4 doses in 24 hours',ad:'1000 mg every 4 to 6 hours, maximum 4 g a day (slides: 500 to 1000 mg every 6 to 8 hours)',liq:[[120,5],[240,5]],src:'tg',note:'For a child with obesity, use ideal body weight.'},
+ {g:'Pain relief',n:'Ibuprofen',k:'rng',per:[5,10],max:400,f:'every 6 to 8 hours, maximum 3 doses in 24 hours, no more than 3 days without review',ad:'400 mg every 6 to 8 hours, no more than 5 days without review',liq:[[100,5],[200,5]],minA:0.25,minT:'3 months',src:'tg'},
+ {g:'Pain relief',n:'Celecoxib',k:'fix',ad:'100 mg every 12 hours, no more than 5 days without review. Avoid in pregnancy',ch:'No child regimen given',src:'tg'},
+ {g:'Pain relief',n:'Oxycodone (severe pain only)',k:'fix',ad:'5 mg immediate-release every 4 to 6 hours if required, no more than 3 days, about 10 tablets, added to an NSAID and paracetamol',ch:'Not under 16 years unless a specialist prescribes',src:'tg'},
+ {g:'Antibiotics',n:'Phenoxymethylpenicillin',k:'k',per:12.5,max:500,f:'every 6 hours for 5 days',ad:'500 mg every 6 hours for 5 days',src:'s'},
+ {g:'Antibiotics',n:'Amoxicillin',k:'k',per:15,max:500,f:'every 8 hours for 5 days',ad:'500 mg every 8 hours for 5 days',liq:[[250,5]],src:'s'},
+ {g:'Antibiotics',n:'Metronidazole',k:'k',per:10,max:400,f:'every 12 hours for 5 days, with a penicillin',ad:'400 mg three times a day for 5 days (paediatric lecture: 400 mg every 12 hours)',src:'s'},
+ {g:'Antibiotics',n:'Amoxicillin with clavulanic acid',k:'k',per:22.5,max:875,f:'every 12 hours for 5 days (dose is the amoxicillin part)',ad:'500/125 mg three times a day for 5 days (paediatric lecture: 875+125 mg every 12 hours)',minA:2/12,minT:'2 months',src:'s'},
+ {g:'Antibiotics',n:'Clindamycin',k:'k',per:7.5,max:300,f:'every 8 hours for 5 days',ad:'150 to 300 mg four times a day for 5 days (paediatric lecture: 300 mg every 8 hours)',src:'s'},
+ {g:'Endocarditis prophylaxis',n:'Amoxicillin (prophylaxis)',k:'k',per:50,max:2000,f:'once, by mouth, 60 minutes before',ad:'2 g by mouth, 60 minutes before',src:'tg'},
+ {g:'Endocarditis prophylaxis',n:'Cefalexin (prophylaxis)',k:'k',per:50,max:2000,f:'once, by mouth, 60 minutes before. Non-severe penicillin reaction',ad:'2 g by mouth, 60 minutes before',src:'tg'},
+ {g:'Endocarditis prophylaxis',n:'Doxycycline (prophylaxis)',k:'band',bands:[[21,null,'2.2 mg/kg'],[26,50,'50 mg'],[35.0001,75,'75 mg'],[1e9,100,'100 mg']],f:'once, by mouth, 60 minutes before. Severe penicillin reaction',ad:'100 mg by mouth, 60 minutes before',src:'tg',bandT:'Under 21 kg: 2.2 mg/kg. 21 to under 26 kg: 50 mg. 26 to 35 kg: 75 mg. Over 35 kg: 100 mg'},
+ {g:'Endocarditis prophylaxis',n:'Azithromycin (prophylaxis)',k:'k',per:10,max:500,f:'once, by mouth, 60 minutes before. Severe penicillin reaction',ad:'500 mg by mouth, 60 minutes before',src:'tg'},
+ {g:'Endocarditis prophylaxis',n:'Cefazolin (prophylaxis, injection)',k:'k',per:30,max:2000,f:'once, into the muscle 30 minutes before or the vein within 60 minutes before',ad:'2 g IM or IV',src:'tg'},
+ {g:'Local anaesthetic maximums',n:'Lidocaine 2% with adrenaline 1:80,000',k:'la',per:7,conc:20,src:'tg',note:'Slides: 11 cartridges for a 70 kg adult.'},
+ {g:'Local anaesthetic maximums',n:'Articaine 4% with adrenaline',k:'la',per:7,conc:40,minA:4,minT:'4 years',src:'tg',note:'Slides: 5.5 cartridges for a 70 kg adult.'},
+ {g:'Local anaesthetic maximums',n:'Prilocaine 3% with felypressin or adrenaline',k:'la',per:9,conc:30,src:'tg'},
+ {g:'Local anaesthetic maximums',n:'Prilocaine 4% plain',k:'la',per:6,conc:40,src:'tg'},
+ {g:'Local anaesthetic maximums',n:'Mepivacaine 2% with adrenaline or 3% plain',k:'fix',ad:'Maximum 6.6 mL',ch:'3 to 6 years: 1.8 mL. 6 to 14 years: 2.7 mL. 14 to 17 years: 4.4 mL. Not under 3 years',src:'tg',note:'No mg/kg maximum in the Australian product information, so this goes by age.'},
+ {g:'Sedation',n:'Midazolam by mouth (paediatric dentists)',k:'k',per:0.075,max:null,f:'once, before treatment',ad:'IV sedation only, from 5 mg in 5 mL ampoules',src:'s',note:'The slides give no maximum.'},
+ {g:'Sedation',n:'Temazepam',k:'fix',ad:'10 mg by mouth 1 hour before, at the practice (20 mg at later visits if needed)',ch:'No child dose given',src:'tg'},
+ {g:'Sedation',n:'Lorazepam',k:'fix',ad:'1 mg by mouth 1 hour before, at the practice (2 mg at later visits if needed)',ch:'No child dose given',src:'tg'},
+ {g:'Sedation',n:'Diazepam',k:'fix',ad:'2 to 5 mg by mouth 1 hour before, at the practice. Lower end for older or frail patients',ch:'No child dose given',src:'tg'},
+ {g:'Antifungals and antivirals',n:'Miconazole 2% gel',k:'fix',ad:'2.5 mL 4 times a day after food, 7 to 14 days',ch:'1.25 mL 4 times a day after food, 7 to 14 days. Babies: 1 mL 2 to 4 times a day after feeds',src:'tg'},
+ {g:'Antifungals and antivirals',n:'Nystatin 100,000 units/mL liquid',k:'fix',ad:'1 mL 4 times a day after food, 7 to 14 days',ch:'1 mL 4 times a day, usually 7 days and 2 days past symptoms',src:'tg'},
+ {g:'Antifungals and antivirals',n:'Amphotericin B 10 mg lozenge',k:'fix',ad:'1 lozenge 4 times a day after food, 7 to 14 days',ch:'No child dose given',src:'tg'},
+ {g:'Antifungals and antivirals',n:'Fluconazole',k:'fix',ad:'200 mg once a day for 7 days (slides: 50 mg)',ch:'No child dose given',src:'tg'},
+ {g:'Antifungals and antivirals',n:'Aciclovir 5% cream',k:'fix',ad:'5 times a day for 5 days, from the first signs. Not inside the mouth',ch:'No child dose given',src:'s'},
+ {g:'Antifungals and antivirals',n:'Aciclovir tablets (shingles)',k:'fix',ad:'800 mg 5 times a day for 7 days, and refer',ch:'No child dose given',src:'s'},
+ {g:'Antifungals and antivirals',n:'Famciclovir',k:'fix',ad:'1500 mg as a single dose for cold sores',ch:'Not used in children',src:'s'},
+ {g:'Medical emergencies',n:'Adrenaline autoinjector (anaphylaxis)',k:'band',incl:1,bands:[[7.4999,null,'Under 7.5 kg: no autoinjector dose, use 10 micrograms/kg of 1 in 1000'],[20,150,'150 micrograms'],[50,300,'300 micrograms'],[1e9,500,'500 micrograms']],unit:'micrograms',f:'into the outer thigh, repeat every 5 minutes until response or help arrives',ad:'500 micrograms (300 micrograms if no 500 microgram pen)',src:'tg',bandT:'7.5 to 20 kg: 150 micrograms. Over 20 to 50 kg: 300 micrograms. Over 50 kg: 500 micrograms'},
+ {g:'Medical emergencies',n:'Adrenaline 1 in 1000 (anaphylaxis)',k:'mcg',per:10,max:500,f:'into the outer thigh, repeat every 5 minutes until response or help arrives',ad:'500 micrograms (0.5 mL)',src:'tg',note:'1 in 1000 is 1 mg in 1 mL, so 0.01 mL/kg.'},
+ {g:'Medical emergencies',n:'GTN spray',k:'fix',ad:'400 micrograms under the tongue, repeat every 5 minutes, up to 3 doses',ch:'No child dose given',src:'tg'},
+ {g:'Medical emergencies',n:'Aspirin (chest pain)',k:'fix',ad:'300 mg, not enteric coated, chewed',ch:'No child dose given',src:'tg'},
+ {g:'Medical emergencies',n:'Salbutamol',k:'fix',ad:'4 puffs through a spacer, one at a time, then 4 more if little improvement (slides: 2 puffs)',ch:'Same as adult',src:'tg'},
+ {g:'Medical emergencies',n:'Oral glucose (hypoglycaemia)',k:'fix',ad:'15 g: 6 or 7 jelly beans, 3 teaspoons of sugar, 125 mL juice or 150 mL non-diet soft drink',ch:'No separate child dose given',src:'tg'},
+ {g:'Medical emergencies',n:'Glucagon',k:'fix',ad:'1 mg into the muscle if unconscious, then oral glucose',ch:'Not given on the slides',src:'s'},
+ {g:'Medical emergencies',n:'Oxygen',k:'fix',ad:'15 L/min',ch:'Same as adult',src:'s'},
+ {g:'Medical emergencies',n:'Seizure lasting over 3 minutes',k:'fix',ad:'Diazepam 10 mg, lorazepam 4 mg or midazolam 10 mg',ch:'Not given on the slides',src:'s'}];
+const DZS={w:20,age:'',cart:2.2,q:''};
+const r1=x=>Math.round(x*10)/10,rmg=x=>x>=100?Math.round(x):r1(x);
+function dzCalc(d,w,age){const o={};
+  if(d.minA&&age!==''&&+age<d.minA){o.no='Not for children under '+d.minT;return o}
+  if(d.k==='k'||d.k==='mcg'){const raw=d.per*w,mg=d.max?Math.min(raw,d.max):raw;o.v=rmg(mg)+(d.k==='mcg'?' micrograms':' mg');o.cap=d.max&&raw>d.max;
+    if(d.k==='mcg')o.v+=' ('+r1(mg/1000)+' mL)';if(d.liq)o.liq=d.liq.map(l=>r1(mg*l[1]/l[0])+' mL of '+l[0]+' mg/'+l[1]+' mL')}
+  else if(d.k==='rng'){const lo=Math.min(d.per[0]*w,d.max),hi=Math.min(d.per[1]*w,d.max);o.v=rmg(lo)+' to '+rmg(hi)+' mg';o.cap=d.per[1]*w>d.max;if(d.liq)o.liq=d.liq.map(l=>r1(lo*l[1]/l[0])+' to '+r1(hi*l[1]/l[0])+' mL of '+l[0]+' mg/'+l[1]+' mL')}
+  else if(d.k==='la'){const mg=d.per*w,ml=mg/d.conc,c=Math.floor(ml/DZS.cart*10)/10;o.v=rmg(mg)+' mg maximum';o.liq=[r1(ml)+' mL, about '+c+' cartridges of '+DZS.cart+' mL']}
+  else if(d.k==='band'){const b=d.bands.find(x=>d.incl?w<=x[0]:w<x[0]);if(b[1]===null){o.v=d.n.indexOf('Doxy')===0?rmg(2.2*w)+' mg':b[2]}else o.v=b[2]}
+  return o}
+function dzDraw(){const box=$('#dzl');if(!box)return;const w=Math.max(0,+DZS.w||0),age=DZS.age,q=DZS.q.trim().toLowerCase();let out='',grp='';
+  const its=DZ.filter(d=>!q||(d.n+' '+d.g+' '+(d.ad||'')+' '+(d.ch||'')).toLowerCase().includes(q));
+  its.forEach(d=>{if(d.g!==grp){if(grp)out+='</div>';grp=d.g;out+='<h4 class="dz-g" id="dz-'+d.g.replace(/\W+/g,'-')+'">'+esc(d.g)+'</h4><div class="dz-rows">'}
+    const tg=d.src==='tg',c=d.k==='fix'?null:(w?dzCalc(d,w,age):null);
+    const rule=d.k==='k'?d.per+' mg/kg'+(d.max?', up to '+d.max+' mg':'')+', '+d.f:d.k==='rng'?d.per[0]+' to '+d.per[1]+' mg/kg, up to '+d.max+' mg, '+d.f:d.k==='la'?'Maximum '+d.per+' mg/kg ('+d.conc+' mg in each mL)':d.k==='mcg'?d.per+' micrograms/kg, up to '+d.max+' micrograms, '+d.f:d.k==='band'?d.bandT+', '+d.f:'';
+    out+='<div class="dz-r'+(tg?' dz-tg':'')+'"><div class="dz-n"><b>'+esc(d.n)+'</b><span class="dz-src">'+DZSRC[d.src]+'</span></div>'
+      +(rule?'<p class="dz-rule">'+esc(rule)+'</p>':'')
+      +(c?(c.no?'<div class="dz-out no">'+esc(c.no)+'</div>':'<div class="dz-out"><span>For '+w+' kg</span><b>'+esc(c.v)+'</b>'+(c.cap?'<em>Capped at the adult maximum</em>':'')+(c.liq?c.liq.map(l=>'<small>'+esc(l)+'</small>').join(''):'')+'</div>'):'')
+      +(d.k==='fix'?'<div class="dz-fix"><div><span>Adult</span>'+esc(d.ad)+'</div><div><span>Child</span>'+esc(d.ch)+'</div></div>':'<p class="dz-ad"><span>Adult</span> '+esc(d.ad)+'</p>')
+      +(d.note?'<p class="dz-note">'+esc(d.note)+'</p>':'')+'</div>'});
+  if(grp)out+='</div>';box.innerHTML=out||'<p class="mut">Nothing matches that search.</p>'}
+function dzMount(el){const gs=[...new Set(DZ.map(d=>d.g))];
+  el.innerHTML='<div class="card dz"><div class="dz-head"><div><h2>Dose calculator</h2><p class="mut">Enter a weight to work out every weight-based dose, with liquid volumes and local anaesthetic cartridges. Child doses never go above the adult maximum.</p></div>'
+   +'<div class="dz-in"><label>Weight <span><input id="dzw" type="number" inputmode="decimal" min="1" max="200" step="0.5" value="'+DZS.w+'"> kg</span></label><label>Age <span><input id="dza" type="number" inputmode="decimal" min="0" max="100" step="0.5" placeholder="Any" value="'+DZS.age+'"> years</span></label><label>Cartridge <span><select id="dzc">'+[2.2,1.8,1.7].map(v=>'<option'+(v==DZS.cart?' selected':'')+'>'+v+'</option>').join('')+'</select> mL</span></label></div>'
+   +'<div class="dz-quick">'+[[10,'1 yr, 10 kg'],[20,'6 yr, 20 kg'],[30,'9 yr, 30 kg'],[45,'13 yr, 45 kg'],[70,'Adult, 70 kg']].map(x=>'<button data-dzw="'+x[0]+'">'+x[1]+'</button>').join('')+'</div></div>'
+   +'<div class="dz-idx"><span>Index</span>'+gs.map(g=>'<a href="#meds" data-dzg="dz-'+g.replace(/\W+/g,'-')+'">'+esc(g)+'</a>').join('')+'<input type="search" id="dzq" placeholder="Find a drug" autocomplete="off"></div>'
+   +'<div class="dz-key"><span class="dz-src">Your slides</span><span class="dz-src tg">Therapeutic Guidelines · not from your lectures</span></div>'
+   +'<div id="dzl"></div><p class="dz-fine">A study aid, not a prescribing tool. For a child with obesity, use ideal body weight. Check the current Therapeutic Guidelines before prescribing.</p></div>';
+  const ages={10:1,20:6,30:9,45:13,70:30};
+  $('#dzw').oninput=e=>{DZS.w=e.target.value;dzDraw()};$('#dza').oninput=e=>{DZS.age=e.target.value;dzDraw()};$('#dzc').onchange=e=>{DZS.cart=+e.target.value;dzDraw()};$('#dzq').oninput=e=>{DZS.q=e.target.value;dzDraw()};
+  $$('[data-dzw]',el).forEach(b=>b.onclick=()=>{DZS.w=+b.dataset.dzw;DZS.age=ages[DZS.w];$('#dzw').value=DZS.w;$('#dza').value=DZS.age;dzDraw()});
+  $$('[data-dzg]',el).forEach(a=>a.onclick=e=>{e.preventDefault();DZS.q='';$('#dzq').value='';dzDraw();const t=document.getElementById(a.dataset.dzg);if(t)t.scrollIntoView({behavior:'smooth',block:'start'})});
+  dzDraw()}
+
 /* ===== introduction: shown once per account after an update (one deliberate dark look, like the timer) ===== */
 const INTRO_V=1;
 function introSoon(){setTimeout(maybeIntro,700)}
@@ -1424,10 +1540,10 @@ MEDS.forEach(g=>g.items.forEach(m=>{if(MTG[m.n])m.tg=MTG[m.n]}));
 const RXRULES=['Your name, address, phone, qualifications and prescriber number.','Patient\'s full name and address. Date of birth for drugs of dependence. Age and weight for children.','The date, and your signature.','Drug name in full (generic name), strength, form, dose, route and how often, in plain English. Never write "take as directed".','How long to take it, and the quantity to supply.','No more than 3 items on one script, and only 1 if it is a drug of dependence.','Dentists cannot write repeats, cannot prescribe authority items, and cannot prescribe for themselves.'];
 function pageMeds(){view().className='page';
   let h='<div class="thead"><div class="eyebrow">Quick reference</div><h1>Medications</h1><p class="lead">Every drug named in your Paper 2 lectures, with the adult dose and the child dose side by side. Where the slides give no dose, the card says so rather than guessing.</p></div>';
-  h+='<div class="med-bar"><input type="search" id="medq" placeholder="Search a drug or a use" autocomplete="off"><div class="med-chips"><button class="on" data-g="">All</button>'+MEDS.map((g,i)=>'<button data-g="'+i+'">'+esc(g.g)+'</button>').join('')+'</div></div><div id="medl"></div>';
+  h+='<div id="dzbox"></div><h2 class="sec">Every drug</h2>';h+='<div class="med-bar"><input type="search" id="medq" placeholder="Search a drug or a use" autocomplete="off"><div class="med-chips"><button class="on" data-g="">All</button>'+MEDS.map((g,i)=>'<button data-g="'+i+'">'+esc(g.g)+'</button>').join('')+'</div></div><div id="medl"></div>';
   h+='<h2 class="sec">Writing the prescription</h2><div class="card"><ul class="med-rules">'+RXRULES.map(r=>'<li>'+esc(r)+'</li>').join('')+'</ul><div class="med-rx"><div><b>Adult example</b><span>Amoxicillin 500 mg capsules. Take 1 capsule every 8 hours for 5 days. 15 (fifteen) capsules.</span></div><div><b>Child example (20 kg)</b><span>Amoxicillin 250 mg/5 mL oral suspension. Give 6 mL orally every 8 hours for 5 days. Total 100 mL.</span></div><div><b>Schedules</b><span>S2 pharmacy medicine. S3 pharmacist only. S4 prescription only, such as antibiotics. S8 controlled drug, such as oxycodone and morphine.</span></div></div><p class="med-src">Source: '+esc(MSRC.sc)+'; '+esc(MSRC.pr)+'</p></div>';
   h+='<p class="mut med-note">This page is a study summary of your lecture slides. It is not a prescribing guide. Always check Therapeutic Guidelines before prescribing for a patient.</p>';
-  view().innerHTML=h;let grp='';
+  view().innerHTML=h;dzMount($('#dzbox'));let grp='';
   const row=(l,t)=>t?'<div class="med-r"><span>'+l+'</span><p>'+esc(t)+'</p></div>':'';
   const drow=(l,t,k)=>'<div class="med-r med-d'+(t.indexOf('Not given')===0?' med-nd':'')+'"><span>'+l+'</span><p>'+esc(t)+'</p></div>';
   const draw=()=>{const q=$('#medq').value.trim().toLowerCase();let out='';
