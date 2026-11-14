@@ -613,6 +613,19 @@ select.tm-pill{max-width:190px;padding-right:10px}select.tm-pill option{color:#1
 .lb-k{display:inline-flex;align-items:center;gap:6px;border:0;padding:4px 10px;border-radius:20px;font-size:12.5px;font-weight:600;color:var(--ink);background:var(--hover)}
 .lb-k i{width:10px;height:10px;border-radius:3px;background:var(--sc);flex:none}
 .lb-k.on{box-shadow:inset 0 0 0 1.5px var(--sc,var(--accent))}
+
+.st-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.st-sum div{background:var(--glass);box-shadow:var(--shadow);border-radius:18px;padding:14px 16px;display:grid;gap:2px;min-width:0}
+.st-sum b{font:700 22px var(--head);font-variant-numeric:tabular-nums}
+.st-sum span{color:var(--muted);font-size:12.5px}
+.st-stack{display:flex;gap:3px;height:16px;min-width:0}
+.st-stack i{min-width:5px;border-radius:5px;background:var(--sc)}
+.st-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:16px;min-width:0;color:inherit;text-decoration:none}
+.st-row:hover{background:var(--hover)}
+.st-row .lb-name b{overflow-wrap:anywhere}
+.st-time{font:700 16px var(--head);font-variant-numeric:tabular-nums;flex:none;white-space:nowrap}
+@media (max-width:900px){.st-row{gap:9px;padding:10px 8px}.st-time{font-size:14px}}
+.st-row .lb-name .meter{--sc:hsl(var(--h) var(--scs) var(--scl))}
 </style>
 <div class="app">
 <aside class="side">
@@ -620,7 +633,7 @@ select.tm-pill{max-width:190px;padding-right:10px}select.tm-pill option{color:#1
   <nav class="nav">
     <a href="#home">Home</a><a href="#timer">Study timer</a><a href="#gaps">My gaps <span class="badge" id="gbadge" hidden>0</span></a>
     <a href="#drill">Mixed drill</a><a href="#paper">Practice paper</a><a href="#index">A to Z</a>
-    <a href="#numbers">Numbers</a><a href="#meds">Medications</a><a href="#traps">Traps</a><a href="#leaderboard">Leaderboard</a><a href="#intro">What's new</a>
+    <a href="#numbers">Numbers</a><a href="#meds">Medications</a><a href="#traps">Traps</a><a href="#leaderboard">Leaderboard</a><a href="#stats">Study stats</a><a href="#intro">What's new</a>
   </nav>
   <div class="slist" id="slist"></div>
 </aside>
@@ -881,6 +894,7 @@ function route(){const c=cur();$('.app').classList.remove('nav-open');
   else if(c==='timer')pageTimer();
   else if(c==='intro'){pageHome();showIntro()}
   else if(c==='meds')pageMeds();
+  else if(c==='stats')pageStats();
   else pageHome();
   window.scrollTo(0,0)}
 let SIDX=null;
@@ -1027,15 +1041,15 @@ function setSync(s){CL.status=s;const d=$('#acct .sync');if(d){d.className='sync
 function subjOf(id){const k=id.lastIndexOf(':'),t=TMAP[id.slice(0,k)];return t?t.s:null}
 function splitR(){const o={};SUBJ.forEach(s=>o[s.id]={});Object.keys(st.r).forEach(id=>{const s=subjOf(id);if(s)o[s][id]=st.r[id]});return o}
 function slim(part){let str=stable({r:part});if(str.length<200000)return {r:part};const r={};Object.keys(part).forEach(k=>{r[k]=Object.assign({},part[k]);if(r[k].a)r[k].a=r[k].a.slice(0,300)});return {r}}
-function metaBody(){return {papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0,metaAt:st.metaAt||0,z:st.z||{},iv:st.iv||0}}
+function metaBody(){return {papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0,metaAt:st.metaAt||0,z:st.z||{},iv:st.iv||0,tt:st.tt||{}}}
 function localSave(){try{localStorage.setItem(ukey(acc.cur),JSON.stringify(st))}catch(e){storeWarn()}}
 function cloudQueue(){if(!CL.on||CL.ro)return;clearTimeout(CL.t);CL.t=setTimeout(cloudFlush,2500)}
 async function cloudFlush(){if(!CL.on||CL.ro||!CL.ready)return;if(CL.busy){CL.again=true;return}CL.busy=true;clearTimeout(CL.t);setSync('busy');
   try{const base=CL.db.collection('data/users/'+CL.uid),parts=splitR();
     for(const s of SUBJ){const body=slim(parts[s.id]),str=stable(body);if(str!==(CL.cloudStr[s.id]||stable({r:{}}))){await base.doc('p_'+s.id).set(body);CL.cloudStr[s.id]=str}}
     const core=stable({papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0});if(core!==CL.coreStr){if(CL.coreStr!==undefined){st.metaAt=Date.now();localSave()}CL.coreStr=core}
-    const mb=metaBody(),ms=stable(mb);if(ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||mb.iv||Object.keys(mb.z).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms}
-    const sc=scoreFrom(st.r),sb={p:+sc.p.toFixed(4),done:sc.done,full:sc.full,n:sc.n,subj:sc.subj},ss=stable(sb);
+    const mb=metaBody(),ms=stable(mb);if(ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||mb.iv||Object.keys(mb.z).length||Object.keys(mb.tt).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms}
+    const sc=scoreFrom(st.r),sb={p:+sc.p.toFixed(4),done:sc.done,full:sc.full,n:sc.n,subj:sc.subj,tt:ttClean(st.tt)},ss=stable(sb);
     if(ss!==CL.scoreStr){await CL.db.doc('scores/'+CL.uid).set(Object.assign({at:new Date().toISOString().slice(0,10)},sb));CL.scoreStr=ss}
     setSync('ok')}
   catch(e){const c=e&&e.code;if(c==='invalid_argument'){CL.ro=true;setSync('ro')}else if(c==='quota_exceeded')setSync('full');else setSync(c==='unavailable'?'offline':'err')}
@@ -1057,6 +1071,7 @@ function cloudMerge(snap){let changed=false,meta=null;const cloudR={};
   if(changed){localSave();refreshChrome();const c=cur(),busyTyping=document.activeElement&&/textarea|input|select/i.test(document.activeElement.tagName);
     if(!busyTyping&&(CL.first||c==='leaderboard'||c==='gaps'||c==='home'||c===''))route()}
   if(meta&&(+meta.iv||0)>(st.iv||0)){st.iv=+meta.iv;localSave()}
+  if(meta&&meta.tt&&ttMerge(meta.tt))localSave();
   if(!snap.metadata.fromCache){if(CL.first)introSoon();CL.first=false}
   if(!was||changed)setSync('ok');if(!was){clearTimeout(CL.t);CL.t=setTimeout(cloudFlush,300)}else cloudQueue()}
 async function cloudInit(){if(!(window.claude&&typeof claude.use==='function'))return false;CL.pending=true;setSync('wait');
@@ -1073,7 +1088,7 @@ async function cloudInit(){if(!(window.claude&&typeof claude.use==='function'))r
   db.collection('data/users/'+uid).onSnapshot(s=>{clearTimeout(slow);try{cloudMerge(s)}catch(e){console.error(e)}},e=>{clearTimeout(slow);setSync(e&&e.code==='revoked'?'ro':'offline')});
   db.collection('scores').limit(500).onSnapshot(s=>{const m={};s.docs.forEach(d=>{const x=d.data();if(x&&typeof x.p==='number')m[d.id]=x});CL.scores=m;
     user.profiles(Object.keys(m)).then(ps=>{Object.keys(ps||{}).forEach(id=>{CL.names[id]=ps[id]&&ps[id].name||''});if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard()},()=>{});
-    if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard()},()=>{});
+    if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard();if(cur()==='stats')pageStats()},()=>{});
   window.addEventListener('pagehide',()=>{if(CL.t){clearTimeout(CL.t);cloudFlush()}});
   return true}
 function cloudEntries(){const out=[],mine=scoreFrom(st.r);const ids=new Set(Object.keys(CL.scores));ids.add(CL.uid);
@@ -1266,6 +1281,47 @@ W.propRank=function(el,cfg){// cfg:{title,sub,props:[name...],rows:[[material,[v
   function up(i){const rows=cfg.rows.map(r=>[r[0],r[1][i],r[2]&&r[2][i]]).sort((a,b)=>b[1]-a[1]);const mx=Math.max(...rows.map(r=>r[1]));
     $('#b',el).innerHTML='<div class="bars" style="border:0;padding:0">'+rows.map(r=>'<div class="bar"><span>'+r[0]+'</span><div class="tr"><i style="width:'+(r[1]/mx*100)+'%;transition:width .5s"></i></div><b>'+(r[2]||'')+'</b></div>').join('')+'</div>';$('#o',el).innerHTML=cfg.notes[i]}
   onSeg(el,'p',up);up(0)};
+
+
+/* ===== study time per topic, and the collective stats page ===== */
+const TT={act:Date.now(),q:null,qpage:'',dirty:0,STEP:10,IDLE:180000,CAP:3600000};
+function ttNow(){const c=cur();if(TMAP[c])return Date.now()-TT.act<TT.IDLE?c:null;
+  if(typeof TMX!=='undefined'&&TMX&&TMX.it)return TMX.paused?null:TMX.it.t.id;
+  if((c==='drill'||c==='gaps'||c==='paper')&&TT.q&&TT.qpage===c&&TMAP[TT.q])return Date.now()-TT.act<TT.IDLE?TT.q:null;
+  return null}
+function ttTick(){if(!acc.cur||document.visibilityState!=='visible')return;const t=ttNow();if(!t)return;
+  st.tt=st.tt||{};st.tt[t]=(st.tt[t]||0)+TT.STEP;TT.dirty+=TT.STEP;
+  if(TT.dirty>=120){TT.dirty=0;save()}else if(TT.dirty%30===0)localSave();
+  if(cur()==='stats'&&TT.dirty%60===0)pageStats()}
+function ttStart(){const hit=e=>{TT.act=Date.now();const el=e&&e.target&&e.target.closest&&e.target.closest('[data-id]');
+    if(el){const id=el.dataset.id||'',k=id.lastIndexOf(':');if(k>0&&TMAP[id.slice(0,k)]){TT.q=id.slice(0,k);TT.qpage=cur()}}};
+  ['pointerdown','keydown','input'].forEach(n=>document.addEventListener(n,hit,true));
+  ['scroll','pointermove','touchmove'].forEach(n=>document.addEventListener(n,()=>{TT.act=Date.now()},{capture:true,passive:true}));
+  setInterval(ttTick,TT.STEP*1000);
+  window.addEventListener('pagehide',()=>{if(TT.dirty&&acc.cur){TT.dirty=0;localSave()}})}
+function ttClean(o){const out={};if(o&&typeof o==='object')Object.keys(o).forEach(k=>{const v=+o[k];if(TMAP[k]&&v>0&&isFinite(v))out[k]=Math.min(Math.round(v),TT.CAP)});return out}
+function ttMerge(o){const c=ttClean(o);let ch=false;st.tt=st.tt||{};Object.keys(c).forEach(k=>{if(c[k]>(st.tt[k]||0)){st.tt[k]=c[k];ch=true}});return ch}
+function ttPeople(){const out=[];
+  if(CL.on){Object.keys(CL.scores||{}).forEach(id=>{if(id!==CL.uid)out.push(ttClean(CL.scores[id].tt))});out.push(ttClean(st.tt))}
+  else Object.keys(acc.users).forEach(id=>{let t={};try{const x=id===acc.cur?st:JSON.parse(localStorage.getItem(ukey(id))||'null');if(x&&x.tt)t=x.tt}catch(e){}out.push(ttClean(t))});
+  return out.filter(t=>Object.keys(t).length)}
+function ttFmt(s){s=Math.round(s);if(s<60)return 'under 1 min';const m=Math.round(s/60);if(m<60)return m+' min';const h=Math.floor(m/60),r=m%60;return h+' h'+(r?' '+r+' min':'')}
+let stSub='all';
+function pageStats(){const ppl=ttPeople(),tot={},who={};
+  ppl.forEach(p=>Object.keys(p).forEach(k=>{tot[k]=(tot[k]||0)+p[k];who[k]=(who[k]||0)+1}));
+  const sub={};let all=0;Object.keys(tot).forEach(k=>{const s=TMAP[k].s;sub[s]=(sub[s]||0)+tot[k];all+=tot[k]});
+  const rows=Object.keys(tot).filter(k=>stSub==='all'||TMAP[k].s===stSub).sort((a,b)=>tot[b]-tot[a]),mx=rows.length?tot[rows[0]]:1;
+  const mine=ttClean(st.tt),myAll=Object.keys(mine).reduce((a,k)=>a+mine[k],0);
+  let h='<div class="thead"><div class="eyebrow">Everyone together</div><h1>Study stats</h1><p class="lead">The topics studied most, ranked by the total time everyone has spent on them. Time counts while a topic page is open and in use, and while you answer its questions in the timer, drill, gaps or practice paper.</p></div>';
+  h+='<div class="st-sum"><div><b>'+ttFmt(all)+'</b><span>studied in total</span></div><div><b>'+ppl.length+'</b><span>'+(ppl.length===1?'person':'people')+' with study time</span></div><div><b>'+Object.keys(tot).length+' of '+TOP.length+'</b><span>topics opened</span></div><div><b>'+ttFmt(myAll)+'</b><span>your own time</span></div></div>';
+  if(all){h+='<div class="card"><h3 style="margin:0 0 8px">Time by subject</h3><span class="st-stack" role="img" aria-label="Total study time by subject">'+SUBJ.filter(s=>sub[s.id]).map(s=>'<i data-h style="--h:'+s.h+';flex:'+sub[s.id]+' 1 0" title="'+esc(s.name)+' '+ttFmt(sub[s.id])+'"></i>').join('')+'</span>'
+    +'<div class="lb-key"><button class="lb-k'+(stSub==='all'?' on':'')+'" data-sts="all">All subjects</button>'+SUBJ.filter(s=>sub[s.id]).sort((a,b)=>sub[b.id]-sub[a.id]).map(s=>'<button class="lb-k'+(stSub===s.id?' on':'')+'" data-h style="--h:'+s.h+'" data-sts="'+s.id+'"><i></i>'+esc(s.name)+' · '+ttFmt(sub[s.id])+'</button>').join('')+'</div></div>'}
+  h+='<h2 class="sec">Most studied topics</h2><div class="card lb">'+(rows.length?rows.map((k,i)=>{const t=TMAP[k],s=SMAP[t.s];
+    return '<a class="st-row" href="#'+k+'" data-h style="--h:'+s.h+'"><span class="lb-rank">'+(i+1)+'</span><span class="lb-name"><b>'+esc(t.t)+'</b><small>'+esc(s.name)+' · '+who[k]+(who[k]===1?' person':' people')+'</small><span class="meter"><i style="width:'+Math.max(2,tot[k]/mx*100)+'%"></i></span></span><span class="st-time">'+ttFmt(tot[k])+'</span></a>'}).join(''):'<p class="mut">No study time has been recorded yet. Counting started with this update, so open a topic and it will appear here.</p>')+'</div>';
+  h+='<p class="mut" style="font-size:12.5px;margin-top:14px">'+(CL.on?'Totals combine everyone on the shared app and update as people study.':'This is the offline copy, so the totals cover accounts on this device only.')+' Only combined totals are shown, never one person\'s time. Counting started when this page was added, and it pauses after three minutes without activity.</p>';
+  view().className='page';view().innerHTML=h;
+  $$('[data-sts]').forEach(b=>b.onclick=()=>{stSub=b.dataset.sts;pageStats()})}
+ttStart();
 
 /* ===== study timer: a screensaver that asks a random short-answer question every N minutes ===== */
 const SLIDE={};
