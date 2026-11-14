@@ -664,6 +664,26 @@ div#intro{position:fixed;inset:0;z-index:1000;background:#05060d;color:#f5f6fb;f
 .med-tg small{font-size:11.5px;color:var(--muted);line-height:1.4}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .med-tg span{color:hsl(40 90% 68%)}}
 :root[data-theme="dark"] .med-tg span{color:hsl(40 90% 68%)}
+
+.px-c{display:grid;gap:10px;margin-bottom:12px;min-width:0}
+.px-c h3{margin:0}
+.px-tg{box-shadow:inset 0 0 0 1.5px hsl(38 85% 55%/.7);background:hsl(38 90% 55%/.07)}
+.px-warn{box-shadow:inset 0 0 0 1.5px hsl(4 75% 55%/.7);background:hsl(4 80% 55%/.07)}
+.px-tag{margin:0;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:hsl(32 80% 38%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .px-tag{color:hsl(40 90% 68%)}}
+:root[data-theme="dark"] .px-tag{color:hsl(40 90% 68%)}
+.px-c small{font-size:11.5px;color:var(--muted);line-height:1.4}
+.px-n{margin:0;line-height:1.45;font-size:13.5px}
+.px-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px}
+.px-two .med-rules{margin:6px 0 0}
+.px-scroll{overflow-x:auto;max-width:100%}
+.px-t{border-collapse:collapse;width:100%;min-width:560px;font-size:13.5px;line-height:1.4}
+.px-t th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 8px}
+.px-t td{padding:8px;border-top:1px solid var(--edge);vertical-align:top}
+.px-t td:nth-child(2),.px-t td:nth-child(3),.px-t td.px-ch{font-weight:600}
+.px-work{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
+.px-work>div{display:grid;gap:4px;padding:12px;border-radius:14px;background:var(--glass2);box-shadow:0 0 0 .5px var(--edge)}
+.px-work span{line-height:1.45}
 </style>
 <div class="app">
 <aside class="side">
@@ -671,7 +691,7 @@ div#intro{position:fixed;inset:0;z-index:1000;background:#05060d;color:#f5f6fb;f
   <nav class="nav">
     <a href="#home">Home</a><a href="#timer">Study timer</a><a href="#gaps">My gaps <span class="badge" id="gbadge" hidden>0</span></a>
     <a href="#drill">Mixed drill</a><a href="#paper">Practice paper</a><a href="#objectives">Learning objectives</a><a href="#index">A to Z</a>
-    <a href="#numbers">Numbers</a><a href="#meds">Medications</a><a href="#traps">Traps</a><a href="#leaderboard">Leaderboard</a><a href="#stats">Study stats</a><a href="#intro">What's new</a>
+    <a href="#numbers">Numbers</a><a href="#meds">Medications</a><a href="#prophylaxis">Antibiotic prophylaxis</a><a href="#traps">Traps</a><a href="#leaderboard">Leaderboard</a><a href="#stats">Study stats</a><a href="#intro">What's new</a>
   </nav>
   <div class="slist" id="slist"></div>
 </aside>
@@ -934,6 +954,7 @@ function route(){const c=cur();$('.app').classList.remove('nav-open');
   else if(c==='meds')pageMeds();
   else if(c==='stats')pageStats();
   else if(c==='objectives')pageLO();
+  else if(c==='prophylaxis')pagePx();
   else pageHome();
   window.scrollTo(0,0)}
 let SIDX=null;
@@ -1308,9 +1329,23 @@ MEDS.forEach(g=>g.items.forEach(m=>{const d=MDOSE[m.n];if(d){m.ad=d.ad;m.ch=d.ch
 MEDS.find(g=>g.g==='Antibiotics').tip+=' Child doses go by weight and never exceed the adult dose.';
 /* Outside the lectures: doses published by Therapeutic Guidelines, added at Brandon's request. Only figures checked against a published source. */
 const MTG={
-'Paracetamol':{t:'Adult: paracetamol 1 g taken at the same time as ibuprofen 400 mg.',src:'Therapeutic Guidelines dose, as quoted in Australian Prescriber podcast episode 91 (2020).'},
-'NSAIDs (ibuprofen, diclofenac)':{t:'Adult: ibuprofen 400 mg taken at the same time as paracetamol 1 g.',src:'Therapeutic Guidelines dose, as quoted in Australian Prescriber podcast episode 91 (2020).'},
-'Endocarditis prophylaxis':{t:'Child: amoxicillin 50 mg/kg, up to 2 g, by mouth 60 minutes before. Cefalexin: child 50 mg/kg, up to 2 g, 60 minutes before. Clindamycin: adult 600 mg, child 20 mg/kg, up to 600 mg, 60 to 120 minutes before. Newer advice (ADA, April 2026) lists doxycycline or azithromycin for severe penicillin allergy in place of clindamycin, so check the current eTG.',src:'Australian Prescriber 2022, published by Therapeutic Guidelines (table from the 2020 Australian rheumatic heart disease guideline).'}};
+'Paracetamol':{t:"Adult: 1000 mg every 4 to 6 hours, maximum 4 g in 24 hours. Child: 15 mg/kg, up to 1000 mg, every 4 to 6 hours, maximum 4 doses in 24 hours. A 20 kg child gets 300 mg. For a child with obesity, use ideal body weight.",src:"Therapeutic Guidelines, Acute and postprocedural dental pain (Oral and Dental guidelines, read November 2026)."},
+'NSAIDs (ibuprofen, diclofenac)':{t:"Adult: ibuprofen 400 mg every 6 to 8 hours, for no more than 5 days without review. Best combined with paracetamol. Child from 3 months: ibuprofen 5 to 10 mg/kg, up to 400 mg, every 6 to 8 hours, maximum 3 doses in 24 hours, for no more than 3 days without review. A 20 kg child gets 100 to 200 mg.",src:"Therapeutic Guidelines, Acute and postprocedural dental pain (Oral and Dental guidelines, read November 2026)."},
+'Celecoxib (COX-2 selective NSAID)':{t:"Adult: 100 mg every 12 hours, for no more than 5 days without review. Avoid in pregnancy. No child regimen is given.",src:"Therapeutic Guidelines, Acute and postprocedural dental pain (Oral and Dental guidelines, read November 2026)."},
+'Opioids (for example oxycodone, morphine)':{t:"Adult, severe pain only, added to an NSAID and paracetamol: oxycodone immediate-release 5 mg every 4 to 6 hours if required, for no more than 3 days. Prescribe a small quantity, such as 10 tablets, and use a lower dose in older or frail patients. Not for patients under 16 unless a specialist prescribes. Codeine and tramadol are not recommended.",src:"Therapeutic Guidelines, Acute and postprocedural dental pain (Oral and Dental guidelines, read November 2026)."},
+'Endocarditis prophylaxis':{t:"Amoxicillin 2 g (child 50 mg/kg, up to 2 g) by mouth 60 minutes before. Non-severe penicillin reaction: cefalexin 2 g (child 50 mg/kg, up to 2 g). Severe penicillin reaction: doxycycline 100 mg (child by weight) or azithromycin 500 mg (child 10 mg/kg, up to 500 mg). Clindamycin is no longer recommended. See the Antibiotic prophylaxis tab for the full table.",src:"Therapeutic Guidelines, Prevention of infective endocarditis (Antibiotic guidelines, published September 2025, amended June 2026)."},
+'Nystatin, amphotericin B, miconazole':{t:"Adult: miconazole 2% gel 2.5 mL, or nystatin 100,000 units/mL liquid 1 mL, or amphotericin B 10 mg lozenge, each 4 times a day after food for 7 to 14 days. Child: nystatin liquid 1 mL 4 times a day, usually for 7 days and for 2 days after symptoms clear, or miconazole 2% gel 1.25 mL 4 times a day for 7 to 14 days. Babies: nystatin 1 mL 4 times a day after feeds, or miconazole gel 1 mL 2 to 4 times a day after feeds.",src:"Therapeutic Guidelines, Oral and oropharyngeal infection caused by Candida (Antibiotic guidelines, read November 2026)."},
+'Fluconazole':{t:"Adult: 200 mg by mouth once a day for 7 days. This is higher than the 50 mg on your slide. No child dose is given in this topic.",src:"Therapeutic Guidelines, Oral and oropharyngeal infection caused by Candida (Antibiotic guidelines, read November 2026)."},
+'Aciclovir':{t:"No child dose is given in the dental topic. Aciclovir cream is applied 5 times a day and should not be used inside the mouth. Valaciclovir is not licensed in Australia for children under 12.",src:"Therapeutic Guidelines, Practical information on using antimicrobial drugs in dental practice (Oral and Dental guidelines, read November 2026)."},
+'Famciclovir':{t:"Single-dose famciclovir is for adults with mild recurrent cold sores. Famciclovir is not used in children.",src:"Therapeutic Guidelines, Practical information on using antimicrobial drugs in dental practice (Oral and Dental guidelines, read November 2026)."},
+'Lidocaine 2% with adrenaline':{t:"Maximum 7 mg/kg, for adults and children. 70 kg adult: 490 mg, which is 24.5 mL or 11 cartridges of 2.2 mL. 20 kg child: 140 mg, which is 7 mL or about 3 cartridges of 2.2 mL.",src:"Therapeutic Guidelines, Local anaesthetics in dentistry, Table 13.9 (Oral and Dental guidelines, read November 2026)."},
+'Articaine 4% with adrenaline':{t:"Maximum 7 mg/kg. 70 kg adult: 12.25 mL, about 5.5 cartridges of 2.2 mL. 20 kg child: 3.5 mL, about 1.5 cartridges of 2.2 mL. Do not use in children under 4 years.",src:"Therapeutic Guidelines, Local anaesthetics in dentistry, Table 13.9 (Oral and Dental guidelines, read November 2026)."},
+'Oral premedication (temazepam, diazepam)':{t:"Adult, 1 hour before and given at the practice: temazepam 10 mg (20 mg at later visits if needed), or lorazepam 1 mg (2 mg at later visits if needed), or diazepam 2 to 5 mg, using the low end for older or frail patients. No child dose is given.",src:"Therapeutic Guidelines, Anxiety management in dentistry (Oral and Dental guidelines, read November 2026)."},
+'GTN spray':{t:"Spray 400 micrograms under the tongue, or a 300 to 600 microgram tablet. Repeat every 5 minutes if pain persists, up to 3 doses. No child dose is given.",src:"Therapeutic Guidelines, Medical emergencies in dental practice (Oral and Dental guidelines, read November 2026)."},
+'Aspirin':{t:"300 mg, not enteric coated, chewed or dissolved before swallowing. No child dose is given.",src:"Therapeutic Guidelines, Medical emergencies in dental practice (Oral and Dental guidelines, read November 2026)."},
+'Salbutamol':{t:"4 puffs through a spacer, one puff at a time, shaking the inhaler before each. Give another 4 puffs if there is little or no improvement. Your slide says 2 puffs. The same for adults and children.",src:"Therapeutic Guidelines, Medical emergencies in dental practice (Oral and Dental guidelines, read November 2026)."},
+'Glucose and glucagon':{t:"15 g of glucose by mouth is 6 or 7 regular glucose jelly beans, 3 teaspoons of sugar or honey, 125 mL of fruit juice, 150 mL of non-diet soft drink or 100 mL of oral glucose solution. The glucagon dose sits in a flowchart image that I could not read, so check eTG for it.",src:"Therapeutic Guidelines, Medical emergencies in dental practice (Oral and Dental guidelines, read November 2026)."},
+'Diazepam, lorazepam or midazolam':{t:"The dental emergencies topic gives first aid for seizures and no drug doses in its text.",src:"Therapeutic Guidelines, Medical emergencies in dental practice (Oral and Dental guidelines, read November 2026)."}};
 MEDS.forEach(g=>g.items.forEach(m=>{if(MTG[m.n])m.tg=MTG[m.n]}));
 const RXRULES=['Your name, address, phone, qualifications and prescriber number.','Patient\'s full name and address. Date of birth for drugs of dependence. Age and weight for children.','The date, and your signature.','Drug name in full (generic name), strength, form, dose, route and how often, in plain English. Never write "take as directed".','How long to take it, and the quantity to supply.','No more than 3 items on one script, and only 1 if it is a drug of dependence.','Dentists cannot write repeats, cannot prescribe authority items, and cannot prescribe for themselves.'];
 function pageMeds(){view().className='page';
@@ -1326,6 +1361,38 @@ function pageMeds(){view().className='page';
       out+='<h2 class="sec">'+esc(g.g)+'</h2>'+(g.tip&&!q?'<p class="med-tip">'+esc(g.tip)+'</p>':'')+'<div class="med-grid">'+its.map(m=>'<div class="card med" style="--h:'+g.h+'"><h3>'+esc(m.n)+'</h3>'+row('Used for',m.use)+(m.ad?drow('Adult dose',m.ad,'a')+drow('Child dose',m.ch,'c'):row('Dose',m.dose))+(m.tg?'<div class="med-r med-tg"><span>Therapeutic Guidelines · not from your lectures</span><p>'+esc(m.tg.t)+'</p><small>'+esc(m.tg.src)+'</small></div>':'')+row('Watch out',m.watch)+'<p class="med-src">'+esc(MSRC[m.s])+'</p></div>').join('')+'</div>'});
     $('#medl').innerHTML=out||'<p class="mut">Nothing matches that search.</p>'};
   $('#medq').oninput=draw;$$('.med-chips button').forEach(b=>b.onclick=()=>{grp=b.dataset.g;$$('.med-chips button').forEach(x=>x.classList.toggle('on',x===b));draw()});draw()}
+
+/* Antibiotic prophylaxis tab. Lecture content first, then Therapeutic Guidelines content that Brandon asked for, clearly labelled. */
+const PXTG='Therapeutic Guidelines, Prevention of infective endocarditis (Antibiotic guidelines, published September 2025, amended June 2026)';
+const PXTG2='Therapeutic Guidelines, Antibiotic prophylaxis for dental procedures (Oral and Dental guidelines, published September 2025)';
+const PXORAL=[
+ ['No penicillin allergy','Amoxicillin','2 g','50 mg/kg, up to 2 g','By mouth, 60 minutes before'],
+ ['Non-severe penicillin reaction (immediate or delayed)','Cefalexin','2 g','50 mg/kg, up to 2 g','By mouth, 60 minutes before'],
+ ['Severe penicillin reaction, first choice','Doxycycline','100 mg','Under 21 kg: 2.2 mg/kg. 21 to under 26 kg: 50 mg. 26 to 35 kg: 75 mg. Over 35 kg: 100 mg','By mouth, 60 minutes before'],
+ ['Severe penicillin reaction, second choice','Azithromycin','500 mg','10 mg/kg, up to 500 mg','By mouth, 60 minutes before']];
+const PXINJ=[
+ ['No penicillin allergy','Amoxicillin or ampicillin','2 g','50 mg/kg, up to 2 g','Into the muscle 30 minutes before, or into the vein within the 60 minutes before'],
+ ['Non-severe penicillin reaction','Cefazolin','2 g','30 mg/kg, up to 2 g','Into the muscle 30 minutes before, or into the vein within the 60 minutes before'],
+ ['Severe penicillin reaction','Azithromycin','500 mg','10 mg/kg, up to 500 mg','Into the vein, within the 60 minutes before']];
+const PXWORK=[['15 kg child, no allergy','Amoxicillin 50 mg/kg x 15 kg = 750 mg'],['30 kg child, no allergy','Amoxicillin 50 mg/kg x 30 kg = 1500 mg'],['45 kg child, no allergy','50 mg/kg x 45 kg = 2250 mg, so cap at the adult dose of 2 g'],['18 kg child, severe penicillin reaction','Doxycycline 2.2 mg/kg x 18 kg = about 40 mg, or azithromycin 10 mg/kg x 18 kg = 180 mg'],['30 kg child, severe penicillin reaction','Doxycycline 75 mg, or azithromycin 300 mg']];
+function pagePx(){view().className='page';
+  const m=MEDS.find(g=>g.g==='Antibiotics').items.find(x=>x.n==='Endocarditis prophylaxis');
+  const li=a=>'<ul class="med-rules">'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';
+  const tbl=(rows)=>'<div class="px-scroll"><table class="px-t"><thead><tr><th>Patient</th><th>Drug</th><th>Adult</th><th>Child</th><th>When</th></tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map((c,i)=>'<td'+(i===3?' class="px-ch"':'')+'>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+  const tg=s=>'<p class="px-tag">Therapeutic Guidelines · not from your lectures</p>'+s;
+  let h='<div class="thead"><div class="eyebrow">Quick reference</div><h1>Antibiotic prophylaxis</h1><p class="lead">Who needs antibiotic cover before dental treatment, which procedures count, and the adult and child doses. Your lecture slide comes first. The amber sections are from Therapeutic Guidelines, added at your request, and are not from your lectures.</p></div>';
+  h+='<h2 class="sec">From your lectures</h2><div class="card px-c"><h3>Endocarditis prophylaxis</h3><div class="med-r"><span>Who and when</span><p>'+esc(m.use)+'</p></div><div class="med-r med-d"><span>Adult dose</span><p>'+esc(m.ad)+'</p></div><div class="med-r med-d med-nd"><span>Child dose</span><p>'+esc(m.ch)+'</p></div><div class="med-r"><span>Watch out</span><p>'+esc(m.watch)+'</p></div><p class="med-src">'+esc(MSRC[m.s])+'</p></div>';
+  h+='<div class="card px-c px-warn"><h3>Where your slide and Therapeutic Guidelines differ</h3>'+li(['Your slide gives clindamycin 600 mg for penicillin allergy. Therapeutic Guidelines no longer recommends clindamycin for endocarditis prophylaxis, because of more severe adverse reactions, mostly Clostridioides difficile infection.','The current choices for penicillin allergy are cefalexin for a non-severe reaction, and doxycycline or azithromycin for a severe reaction.','For the exam, know what your slide says and be ready to say the guideline has changed.'])+'</div>';
+  h+='<h2 class="sec">Endocarditis prophylaxis in Therapeutic Guidelines</h2>';
+  h+='<div class="card px-c px-tg">'+tg('<h3>Both must be true</h3>'+li(['The patient has one of the listed heart conditions.','The procedure manipulates the gingival or periapical tissue, or perforates the oral mucosa.']))+'<div class="px-two"><div><b>Heart conditions</b>'+li(['Prosthetic heart valve, including a transcatheter valve or homograft','Prosthetic material used for valve repair, such as annuloplasty rings and chords','Previous infective endocarditis','Ventricular assist device','Congenital heart disease, only if unrepaired cyanotic defects (including palliative shunts and conduits), or repaired with a residual defect at or next to a prosthetic patch or device','Rheumatic heart disease'])+'</div><div><b>Dental procedures</b>'+li(['Extractions','Implant placement','Biopsy','Removal of soft tissue or bone','Subgingival debridement','Replanting an avulsed tooth','Supragingival debridement only if the gingival tissue will be manipulated'])+'</div></div><p class="px-n">Not recommended for mitral valve prolapse, septal defects, or pacemakers and other implanted cardiac electronic devices.</p><small>'+esc(PXTG)+'</small></div>';
+  h+='<div class="card px-c px-tg">'+tg('<h3>By mouth (preferred)</h3>')+tbl(PXORAL)+'<p class="px-n">Doxycycline: take with a large glass of water and stay upright for at least 30 minutes. Azithromycin can prolong the QT interval, so check with the patient\'s doctor first.</p><small>'+esc(PXTG)+'</small></div>';
+  h+='<div class="card px-c px-tg">'+tg('<h3>By injection (only if the patient cannot take it by mouth)</h3>')+tbl(PXINJ)+'<small>'+esc(PXTG)+'</small></div>';
+  h+='<div class="card px-c px-tg">'+tg('<h3>Paediatric worked examples</h3><p class="px-n">Every child dose is by weight and never goes above the adult dose. These are my arithmetic from the doses above.</p>')+'<div class="px-work">'+PXWORK.map(w=>'<div><b>'+esc(w[0])+'</b><span>'+esc(w[1])+'</span></div>').join('')+'</div></div>';
+  h+='<div class="card px-c px-tg">'+tg('<h3>Practical points</h3>'+li(['Verify a reported penicillin allergy before choosing an alternative.','Plan treatment so all procedures needing cover are done in one sitting, or two at most.','A dose after the procedure has no proven value.','A patient on long-term benzathine benzylpenicillin for rheumatic fever can still have amoxicillin.','A patient who is taking, or has just finished, another beta-lactam antibiotic may need doxycycline or azithromycin.','Good oral hygiene and regular check-ups matter more than antibiotic cover.']))+'<small>'+esc(PXTG)+'</small></div>';
+  h+='<h2 class="sec">Surgical prophylaxis in Therapeutic Guidelines</h2><p class="med-tip">This is antibiotic cover to prevent infection at the surgical site. It is rarely indicated in general dental practice.</p>';
+  h+='<div class="card px-c px-tg">'+tg('<div class="px-two"><div><b>Does not need it</b>'+li(['Third molar surgery','Tooth extractions','Placing or removing dental implants, and peri-implant surgery','Periodontal surgery','Periapical surgery','Soft and hard tissue removal, such as biopsies, exostoses and alveoloplasty'])+'</div><div><b>Does need it</b>'+li(['Inserting prosthetic material, other than dental implants','Open reduction and internal fixation of mandibular or midfacial fractures','Intraoral bone grafting','Orthognathic surgery','Cleft lip and palate repair'])+'</div></div>')+'<p class="px-n">Joint replacements, breast implants, shunts for hydrocephalus and deep brain stimulators do not change this advice. Antibiotics do not prevent dry socket. For a patient with profound immune compromise, discuss with the treating specialist. Consider antibiotics when replanting an avulsed tooth.</p><small>'+esc(PXTG2)+'</small></div>';
+  h+='<p class="mut med-note">This page is a study summary. It is not a prescribing guide. Always check the current Therapeutic Guidelines before prescribing for a patient.</p>';
+  view().innerHTML=h}
 
 /* ===== Prosthodontics and materials widgets ===== */
 W.crownPrep=function(el){
