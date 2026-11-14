@@ -684,6 +684,47 @@ div#intro{position:fixed;inset:0;z-index:1000;background:#05060d;color:#f5f6fb;f
 .px-work{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
 .px-work>div{display:grid;gap:4px;padding:12px;border-radius:14px;background:var(--glass2);box-shadow:0 0 0 .5px var(--edge)}
 .px-work span{line-height:1.45}
+
+div#ad{position:fixed;inset:0;z-index:1001;background:#05060d;color:#f5f6fb;font-family:-apple-system,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;opacity:0;transition:opacity .5s ease}
+div#ad.on{opacity:1}
+.ad-scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden}
+.ad-in{max-width:1040px;margin:0 auto;padding:clamp(72px,11vh,120px) max(22px,env(safe-area-inset-right,0px)) max(48px,env(safe-area-inset-bottom,0px)) max(22px,env(safe-area-inset-left,0px));display:grid;justify-items:center;text-align:center;gap:22px}
+.ad-in>*{opacity:0;transform:translateY(24px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+#ad.on .ad-in>*{opacity:1;transform:none}
+#ad.on .ad-in>*:nth-child(2){transition-delay:.08s}#ad.on .ad-in>*:nth-child(3){transition-delay:.16s}#ad.on .ad-in>*:nth-child(4){transition-delay:.24s}#ad.on .ad-in>*:nth-child(5){transition-delay:.34s}#ad.on .ad-in>*:nth-child(n+6){transition-delay:.44s}
+.ad-e{font-size:14px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:#ffb35c}
+.ad-h{margin:0;font-size:clamp(40px,7.4vw,96px);line-height:1.02;letter-spacing:-.04em;font-weight:700;text-wrap:balance}
+.ad-h em{font-style:normal;background:linear-gradient(90deg,#ffcf6b,#ff7a59 45%,#d58bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ad-p{margin:0;max-width:30em;font-size:clamp(17px,1.9vw,22px);line-height:1.45;color:rgba(245,246,251,.72)}
+.ad-cta{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.ad-cta .in-btn{padding:13px 26px;font-size:16px}
+.ad-dev{width:min(620px,100%);margin-top:18px;text-align:left;border-radius:34px;padding:clamp(20px,3vw,32px);display:grid;gap:16px;background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,.04));box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),inset 0 1px 0 rgba(255,255,255,.3),0 40px 120px -30px rgba(255,140,80,.45);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+.ad-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.ad-clock{font-size:clamp(46px,7vw,72px);font-weight:200;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.ad-sub{font-size:13px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.12)}
+#ad.on .in-bar i{animation:inBar 9s linear infinite}
+.ad-q{font-size:clamp(18px,2.2vw,22px);font-weight:600;line-height:1.3}
+.ad-ans{min-height:76px;border-radius:18px;padding:12px 14px;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);font-size:15.5px;line-height:1.5;color:rgba(245,246,251,.9)}
+.ad-caret{display:inline-block;width:2px;height:1.1em;margin-left:2px;vertical-align:-.15em;background:#ffcf6b;animation:adBlink 1s step-end infinite}
+.ad-res{display:grid;gap:10px;opacity:0;transform:translateY(10px)}
+#ad.on .ad-res{animation:inPop .6s cubic-bezier(.2,.8,.2,1) 3.7s forwards}
+.ad-score{display:flex;align-items:center;gap:14px}
+.ad-score b{font-size:26px;font-variant-numeric:tabular-nums}
+.ad-meter{flex:1;height:8px;border-radius:8px;background:rgba(255,255,255,.14);overflow:hidden}
+.ad-meter i{display:block;height:100%;width:75%;border-radius:8px;background:linear-gradient(90deg,#ffcf6b,#ff7a59)}
+.ad-chip{justify-self:start;font-size:13.5px;padding:7px 12px;border-radius:999px}
+.ad-chip.ok{background:rgba(70,220,140,.18);color:#9ff0c4}
+.ad-chip.gap{background:rgba(255,140,90,.18);color:#ffc29e}
+.ad-feat{width:100%;margin-top:28px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;text-align:left}
+.ad-feat>div{display:grid;gap:6px;align-content:start;border-radius:26px;padding:22px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.ad-feat b{font-size:clamp(30px,3.6vw,44px);font-weight:700;letter-spacing:-.03em;background:linear-gradient(90deg,#ffcf6b,#ff7a59);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ad-feat h3{margin:0;font-size:18px}
+.ad-feat span{font-size:14.5px;line-height:1.45;color:rgba(245,246,251,.65)}
+.ad-fine{margin:6px 0 0;max-width:40em;font-size:12.5px;line-height:1.5;color:rgba(245,246,251,.45)}
+@keyframes adType{to{clip-path:inset(0 0 0 0)}}
+@keyframes adBlink{50%{opacity:0}}
+@media (max-width:760px){.ad-feat{grid-template-columns:minmax(0,1fr)}.ad-in{gap:18px}}
+@media (prefers-reduced-motion:reduce){.ad-in>*{transition:none}#ad.on .ad-res{animation:none;opacity:1;transform:none}#ad.on .in-bar i,.ad-caret{animation:none}}
 </style>
 <div class="app">
 <aside class="side">
@@ -935,7 +976,7 @@ function buildSide(){$('#slist').innerHTML=SUBJ.map(s=>'<div class="sgrp" data-h
 function refreshChrome(){SUBJ.forEach(s=>{const g=$('.sgrp[data-s="'+s.id+'"]');if(!g)return;$('.pct',g).textContent=pct(mastery(s.topics.flatMap(items)).p);s.topics.forEach(t=>{$('a[data-t="'+t.id+'"] i',g).className=tState(t)})});
   const n=gapList().length;$('#gbadge').textContent=n;$('#gbadge').hidden=!n;
   const c=cur();if(TMAP[c])drawDots(TMAP[c])}
-const cur=()=>(location.hash||'#home').slice(1)||'home';
+const cur=()=>(location.hash||'#timer').slice(1)||'timer';
 function route(){const c=cur();$('.app').classList.remove('nav-open');
   $$('.tlist a').forEach(a=>a.classList.toggle('on',a.dataset.t===c));$$('.nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+c));
   if(window.SITE&&SITE.leave)SITE.leave();if(window.SITE&&SITE.pages&&SITE.pages[c]){SITE.pages[c]();return}
@@ -1101,14 +1142,14 @@ function setSync(s){CL.status=s;const d=$('#acct .sync');if(d){d.className='sync
 function subjOf(id){const k=id.lastIndexOf(':'),t=TMAP[id.slice(0,k)];return t?t.s:null}
 function splitR(){const o={};SUBJ.forEach(s=>o[s.id]={});Object.keys(st.r).forEach(id=>{const s=subjOf(id);if(s)o[s][id]=st.r[id]});return o}
 function slim(part){let str=stable({r:part});if(str.length<200000)return {r:part};const r={};Object.keys(part).forEach(k=>{r[k]=Object.assign({},part[k]);if(r[k].a)r[k].a=r[k].a.slice(0,300)});return {r}}
-function metaBody(){return {papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0,metaAt:st.metaAt||0,z:st.z||{},iv:st.iv||0,tt:st.tt||{}}}
+function metaBody(){return {papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0,metaAt:st.metaAt||0,z:st.z||{},iv:st.iv||0,av:st.av||0,tt:st.tt||{}}}
 function localSave(){try{localStorage.setItem(ukey(acc.cur),JSON.stringify(st))}catch(e){storeWarn()}}
 function cloudQueue(){if(!CL.on||CL.ro)return;clearTimeout(CL.t);CL.t=setTimeout(cloudFlush,2500)}
 async function cloudFlush(){if(!CL.on||CL.ro||!CL.ready)return;if(CL.busy){CL.again=true;return}CL.busy=true;clearTimeout(CL.t);setSync('busy');
   try{const base=CL.db.collection('data/users/'+CL.uid),parts=splitR();
     for(const s of SUBJ){const body=slim(parts[s.id]),str=stable(body);if(str!==(CL.cloudStr[s.id]||stable({r:{}}))){await base.doc('p_'+s.id).set(body);CL.cloudStr[s.id]=str}}
     const core=stable({papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0});if(core!==CL.coreStr){if(CL.coreStr!==undefined){st.metaAt=Date.now();localSave()}CL.coreStr=core}
-    const mb=metaBody(),ms=stable(mb);if(ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||mb.iv||Object.keys(mb.z).length||Object.keys(mb.tt).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms}
+    const mb=metaBody(),ms=stable(mb);if(ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||mb.iv||mb.av||Object.keys(mb.z).length||Object.keys(mb.tt).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms}
     const sc=scoreFrom(st.r),sb={p:+sc.p.toFixed(4),done:sc.done,full:sc.full,n:sc.n,subj:sc.subj,tt:ttClean(st.tt)},ss=stable(sb);
     if(ss!==CL.scoreStr){await CL.db.doc('scores/'+CL.uid).set(Object.assign({at:new Date().toISOString().slice(0,10)},sb));CL.scoreStr=ss}
     setSync('ok')}
@@ -1131,6 +1172,7 @@ function cloudMerge(snap){let changed=false,meta=null;const cloudR={};
   if(changed){localSave();refreshChrome();const c=cur(),busyTyping=document.activeElement&&/textarea|input|select/i.test(document.activeElement.tagName);
     if(!busyTyping&&(CL.first||c==='leaderboard'||c==='gaps'||c==='home'||c===''))route()}
   if(meta&&(+meta.iv||0)>(st.iv||0)){st.iv=+meta.iv;localSave()}
+  if(meta&&(+meta.av||0)>(st.av||0)){st.av=+meta.av;localSave();const a=$('#ad');if(a)a.remove()}
   if(meta&&meta.tt&&ttMerge(meta.tt))localSave();
   if(!snap.metadata.fromCache){if(CL.first)introSoon();CL.first=false}
   if(!was||changed)setSync('ok');if(!was){clearTimeout(CL.t);CL.t=setTimeout(cloudFlush,300)}else cloudQueue()}
@@ -1154,10 +1196,42 @@ async function cloudInit(){if(!(window.claude&&typeof claude.use==='function'))r
 function cloudEntries(){const out=[],mine=scoreFrom(st.r);const ids=new Set(Object.keys(CL.scores));ids.add(CL.uid);
   ids.forEach(id=>{const me=id===CL.uid,x=me?mine:CL.scores[id];out.push({name:me?acc.users[acc.cur].name:(CL.names[id]||'Someone'),me,kind:'cloud',p:x.p,done:x.done||0,full:x.full||0,n:x.n||mine.n,subj:x.subj||{}})});return out}
 
+/* ===== one-off announcement for the study timer, shown once per account ===== */
+const AD_V=1;
+function showAd(){if($('#ad'))return;const nQ=allItems().filter(it=>it.b[0]==='saq').length;
+  const o=document.createElement('div');o.id='ad';o.setAttribute('role','dialog');o.setAttribute('aria-label','New: the study timer');
+  o.innerHTML='<div class="tm-bg"><i></i><i></i><i></i><i></i></div><div class="tm-grain"></div>'
+   +'<button class="in-skip" data-x>Not now</button>'
+   +'<div class="ad-scroll"><div class="ad-in">'
+   +'<div class="ad-e">New · Study timer</div>'
+   +'<h2 class="ad-h">Not sure what to study?<br><em>Let the timer pick.</em></h2>'
+   +'<p class="ad-p">A random Paper 2 question appears every few minutes. Type your answer, check it against the marking key, and keep going.</p>'
+   +'<div class="ad-cta"><button class="in-btn pri" data-go>Try the study timer</button></div>'
+   +'<div class="ad-dev"><div class="ad-top"><span class="ad-clock">03:42</span><span class="ad-sub">Endodontics</span></div><div class="in-bar"><i></i></div>'
+   +'<div class="ad-q">Why is a rubber dam essential during endodontic treatment?</div>'
+   +'<div class="ad-ans"><span class="ad-type"></span><i class="ad-caret"></i></div>'
+   +'<div class="ad-res"><div class="ad-score"><b>3 / 4</b><span class="ad-meter"><i></i></span></div>'
+   +'<div class="ad-chip ok">Saved to your progress</div><div class="ad-chip gap">1 missed point added to My gaps</div></div></div>'
+   +'<div class="ad-feat">'
+   +'<div><b>'+nQ+'</b><h3>Random questions</h3><span>Short-answer questions drawn from every Paper 2 subject, so you never have to choose.</span></div>'
+   +'<div><b>Counts</b><h3>Toward your progress</h3><span>Every answer you check is marked and adds to your overall progress.</span></div>'
+   +'<div><b>Gaps</b><h3>Mistakes become a list</h3><span>Any point you miss goes straight to My gaps, ready for you to redo.</span></div>'
+   +'</div>'
+   +'<div class="ad-cta"><button class="in-btn pri" data-go>Start the study timer</button><button class="in-btn" data-x>Maybe later</button></div>'
+   +'<p class="ad-fine">Only answers you type and check are marked and saved. You can turn this page into your screensaver while you study, and pick how long each question stays up.</p>'
+   +'</div></div>';
+  const had=document.documentElement.classList.contains('tm-on');
+  document.body.appendChild(o);document.documentElement.classList.add('tm-on');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>o.classList.add('on')));
+  const full='Isolation from saliva and bacteria, protects the airway from files and irrigant, better visibility',ty=$('.ad-type',o);if(matchMedia('(prefers-reduced-motion: reduce)').matches)ty.textContent=full;else{let n=0;setTimeout(function step(){if(!o.isConnected)return;n+=2;ty.textContent=full.slice(0,n);if(n<full.length)setTimeout(step,38)},900)}
+  const close=go=>{o.remove();if(!had&&!(typeof TMX!=='undefined'&&TMX))document.documentElement.classList.remove('tm-on');document.removeEventListener('keydown',key);if((st.av||0)<AD_V){st.av=AD_V;save()}if(go){if(cur()==='timer')route();else location.hash='timer'}};
+  const key=e=>{if(e.key==='Escape')close()};document.addEventListener('keydown',key);
+  o.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.go!==undefined)close(true);else if(t.dataset.x!==undefined)close()})}
+
 /* ===== introduction: shown once per account after an update (one deliberate dark look, like the timer) ===== */
 const INTRO_V=1;
 function introSoon(){setTimeout(maybeIntro,700)}
-function maybeIntro(){if(!acc.cur||(st.iv||0)>=INTRO_V||$('#intro')||$('#auth'))return;if(navigator.webdriver&&!window.__introTest)return;showIntro()}
+function maybeIntro(){if(!acc.cur||$('#intro')||$('#ad')||$('#auth'))return;if(navigator.webdriver&&!window.__introTest)return;if((st.av||0)<AD_V){showAd();return}if((st.iv||0)>=INTRO_V)return;showIntro()}
 function showIntro(){if($('#intro'))return;const site=!!window.SITE,nT=TOP.length,nQ=allItems().length,nS=Object.keys(SLIDE).length;
   const sk=Object.keys(SLIDE)[0],simg=sk&&IMG[SLIDE[sk][0]];
   const S=[
@@ -1182,7 +1256,7 @@ function showIntro(){if($('#intro'))return;const site=!!window.SITE,nT=TOP.lengt
   const set=i=>{if(i===at)return;at=i;secs.forEach((s,k)=>s.classList.toggle('on',k===i));$$('[data-dot]',o).forEach((d,k)=>d.classList.toggle('on',k===i));$('#inNext',o).textContent=i===S.length-1?'Start studying':'Continue'};
   const go=i=>{i=Math.max(0,Math.min(S.length-1,i));tr.scrollTo({left:i*tr.clientWidth,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});set(i)};
   tr.addEventListener('scroll',()=>{set(Math.round(tr.scrollLeft/Math.max(1,tr.clientWidth)))},{passive:true});
-  const close=to=>{o.remove();document.documentElement.classList.remove('tm-on');document.removeEventListener('keydown',key);if((st.iv||0)<INTRO_V){st.iv=INTRO_V;save()}if(to&&to!=='home')location.hash=to;else if(cur()==='intro'||to==='home')location.hash='home'};
+  const close=to=>{o.remove();if(!(typeof TMX!=='undefined'&&TMX))document.documentElement.classList.remove('tm-on');document.removeEventListener('keydown',key);if((st.iv||0)<INTRO_V){st.iv=INTRO_V;save()}if(to&&to!=='home')location.hash=to;else if(cur()==='intro'||to==='home')location.hash='home'};
   const key=e=>{if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();at>=S.length-1?close():go(at+1)}else if(e.key==='ArrowLeft')go(at-1);else if(e.key==='Escape')close()};
   document.addEventListener('keydown',key);
   o.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.skip!==undefined)close();else if(t.dataset.dot)go(+t.dataset.dot);else if(t.dataset.go)close(t.dataset.go);else if(t.id==='inNext')at>=S.length-1?close('home'):go(at+1)});
