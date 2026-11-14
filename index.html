@@ -4164,6 +4164,66 @@ b:[
 ['mcq','Kaposi sarcoma is associated with which virus?',['Epstein-Barr virus','Human herpes virus 8','Human papilloma virus 16','Cytomegalovirus'],1,'It is one of the oral signs of HIV infection in the lecture.','It is a herpes virus with a number, not a name.'],
 ]});
 
+/* Blocks added after checking every topic against the lectures' stated learning objectives. Appended to existing topics so existing question ids do not change. */
+function ADD(id,src,blocks){const t=TMAP[id];if(!t)return;const n=t.b.length;if(src&&t.src.indexOf(src)<0)t.src+='; '+src;
+  blocks.forEach((b,i)=>{t.b.push(b);const h=b[0]==='saq'?b[1].h:b[0]==='mcq'?b[5]:null;if(h)HINT[id+':'+(n+i)]=h})}
+
+ADD('paed-eruption-anomalies','Tooth Eruption and Exfoliation, teething slide (DS3101 Wk 5)',[
+['h','Teething'],
+['p','Teething is a **physiological process**. Expect drooling, and perhaps irritability, a small rise in temperature the day before the tooth emerges, loss of appetite and a runny nose.'],
+['ul',['**Fever, vomiting, diarrhoea and skin rash** are probably due to infection, not teething.','**To ease it**: rub or cool the gums, and use teething rings or fruit and vegetables from the fridge.','Topical anaesthetic teething gels. **Benzocaine is safe after 24 months of age**.','An analgesic for babies, for example **paracetamol**.','**Amber beads are a choking hazard**.']],
+['trap','A baby with a real fever, vomiting or diarrhoea is not "just teething". Look for an infection.'],
+['mcq','A parent says their 8-month-old has vomiting, diarrhoea and a fever from teething. What is the best response?',['Reassure them that this is normal teething','These signs are probably due to infection and need assessment','Recommend amber teething beads','Apply benzocaine gel'],1,'Teething gives drooling, irritability and at most a small temperature rise. Benzocaine is for children over 24 months and amber beads are a choking hazard.','Which symptoms does the slide say are "commonly associated" but probably have another cause?'],
+]);
+
+ADD('paed-behaviour','The Child Patient (DS3101 Wk 1), examination, radiograph and informed refusal slides',[
+['h','Examining a child and taking radiographs'],
+['p','A full clinical examination of a child covers general health and growth, pain, extra-oral soft tissues, the TMJ, intra-oral soft tissues, oral hygiene and periodontal risk, the hard tissues, the **developing occlusion**, radiographs **if indicated**, **caries risk** and the child\'s **cooperative potential**.'],
+['ul',['Radiograph choices: periapical or occlusal, bitewings, OPG, and CBCT in special cases.','The dose is low, but once you decide to take a radiograph it is your responsibility to follow **ALARA** and keep exposure to a minimum.','A **diet diary** of one week is good. The minimum is 3 days including one weekend day.','**Informed refusal**: patients may refuse treatment. In general practice the items most often refused are **radiographs, fluoride and sealants**.']],
+['mcq','Which principle governs taking radiographs on a child?',['Take bitewings at every visit','ALARA: keep exposure as low as reasonably achievable','Never take radiographs before age 6','Always take an OPG first'],1,'Radiographs are taken only if indicated, and exposure is minimised.','It is an acronym about dose.'],
+]);
+
+ADD('endo-shaping','Shaping and Cleaning hands-on session (DS3101 Wk 7)',[
+['h','Modified double flare, medicament and temporary restoration'],
+['steps',[['Apical enlargement','Find the first file that binds at working length. Enlarge with larger files in sequence at working length. The **smallest acceptable apical preparation is usually ISO size 25**. The largest file taken to full working length is the **master apical file (MAF)**.'],['Apical taper','Use larger files in sequence, **stepping back 1 mm** each time, to blend the apical preparation into the coronal flare.'],['Keep it clear','Irrigate often and **recapitulate with the MAF** so the canal does not block.'],['Medicament','Dry with paper points. Place the medicament with a pre-measured file, spiral filler or fine-tipped syringe. Fill the canal, and **do not extrude** it past the apex.'],['Temporary restoration','Before the rubber dam comes off, pack **PTFE or sterile cotton wool** over the pulp chamber floor, then a durable, well-adapted temporary. **Check the occlusion** in intercuspal position and lateral excursions.']]],
+['trap','The session notes say it plainly: **failing to place rubber dam is negligence**.'],
+['saq',{q:'Describe the apical stage of the modified double flare technique. (3 marks)',m:3,h:'A file that binds, a smallest size, the name of the largest file, and a 1 mm habit.',
+ pts:[['Gauge the apex with the first file that binds at working length, then enlarge with sequentially larger files at working length (minimum usually ISO 25)','bind|gauge|25|working length'],['The largest file to full working length is the master apical file','master apical|maf'],['Step back in 1 mm increments with larger files to create the taper, irrigating and recapitulating with the MAF','step.?back|1 ?mm|recapitulat|taper']]}],
+]);
+
+ADD('law-consent','Consent and Negligence (DS3101 Wk 13), documentation, interpreter and cultural needs slides',[
+['h','Interpreters, cultural needs and recording consent'],
+['ul',['**Non-English speaking patient**: use an **interpreter**. The interpreter **countersigns the consent form and states the language** used.','**Specific cultural needs**: a **Cultural Support Worker** can be organised to help with the process.','**Documentation** of consent has three parts: patient information sheets, consent forms, and a **written record in the patient\'s chart**.']],
+['mcq','A patient who speaks little English needs an extraction. What does the lecture require for valid consent?',['A family member nods on their behalf','An interpreter, who countersigns the consent form and states the language','A consent form in English signed by the patient alone','Verbal consent is enough'],1,'A Cultural Support Worker can also be organised where there are specific cultural needs.','Who else signs the form, and what do they write on it?'],
+]);
+
+ADD('gen-pain-prescribing','Prescribing in Clinical Dental Practice (DS3101 Wk 7), how to get a prescription pad',[
+['h','How to get a prescription pad'],
+['steps',[['PRODA','Set up a PRODA (Provider Digital Access) account with Services Australia.'],['HPOS','Set up HPOS, the Health Professionals Online Service, and **link it to PRODA**.'],['Order','Go back into **PRODA**, open **My Programs**, open HPOS from there and choose **Order through HPOS**.']]],
+['ul',['You cannot reach the order page by going to HPOS directly. **Access it via PRODA**.','Emailing the form does not work. Do it online.','You need a **new provider number for each location**.']],
+['mcq','Where do you order PBS prescription pads?',['By emailing the PBS form','Through HPOS, opened from inside PRODA','From Ahpra','From the Dental Board'],1,'Link HPOS to PRODA, then open HPOS from My Programs in PRODA.','Two acronyms, and the order you open them in matters.'],
+]);
+
+ADD('gen-medical','Local Anaesthesia Part 2 (DS3101 Wk 4), complications and failed LA slides',[
+['h','When local anaesthetic goes wrong'],
+['cmp',[['Systemic complications',['Intravascular injection','Allergy','Toxicity','Vasovagal reaction (faint)','Methaemoglobinaemia']],['Local complications',['Nerve damage (paraesthesia)','Facial palsy','Accidental soft tissue damage','Needle fracture','Trismus, haematoma or swelling']]]],
+['ul',['About **15% of inferior alveolar nerve blocks** give a positive aspiration, so always aspirate.','**Facial blanching** comes from arterial penetration and vasospasm, most often after an IAN block.','**Trismus** causes: bleeding into muscle, nerve contact causing spasm, excessive opening, infection. Manage with cold or heat, massage and exercises.']],
+['h','Facial palsy after a block'],
+['steps',[['Stop','Stop treatment.'],['Reassure','Explain that it is temporary.'],['Protect the eye','Tell the patient not to rub the eye. Close it and cover it with **two eye patches**.'],['Observe','Watch until the blink returns, usually within an hour.'],['Going home','The patient must be **escorted home and must not drive** that day. Phone them later in the day.'],['Review','Medical review if not fully recovered in **12 hours**.']]],
+['h','Failed local anaesthetic'],
+['cards',[['Patient factors','Anatomy. Physiology, such as infection and inflammation. Psychology.'],['Clinician factors','Technique, dosage and site.'],['Drug factors','Storage and interactions.']],'Three groups of reasons a block fails.'],
+['p','Anaesthesia works better in **relaxed patients**. For a history of failed LA, consider sedation or pre-operative analgesia.'],
+['saq',{q:'After an inferior alveolar nerve block your patient cannot close one eye. Outline your management. (4 marks)',m:4,h:'Stop, talk, protect something, and decide how they get home and when a doctor is needed.',
+ pts:[['Stop treatment, explain and reassure that it is temporary','stop|reassur|temporary|explain'],['Tell the patient not to rub the eye; close it and cover with two eye patches','eye|patch|cover'],['Observe until the blink returns (usually within an hour); escort home, no driving, phone later that day','observe|blink|escort|driv|phone'],['Medical review if not fully recovered within 12 hours','12|medical review|doctor|gp']]}],
+['mcq','Roughly what share of inferior alveolar nerve blocks give a positive aspiration?',['1%','5%','15%','40%'],2,'Which is why aspiration before injecting matters.','More than one in ten, fewer than one in five.'],
+]);
+
+ADD('rest-prevention','Restorative Dentistry in Prevention (DS3101 Wk 3), iatrogenic damage slides',[
+['h','Iatrogenic damage from restorations'],
+['p','A restoration can damage the **periodontal tissues** if it is not placed properly. Respect the **biological width**. Restore teeth so the patient can control plaque every day: **smooth margins and no overhangs**. A perfectly smooth join between material and tooth is probably impossible, but take the time to do your best.'],
+['mcq','Which feature of a restoration is most likely to cause iatrogenic periodontal damage?',['A polished occlusal surface','An overhanging margin that invades the biological width','A shade one tab too light','Slightly reduced occlusal contact'],1,'Overhangs and rough margins hold plaque where the patient cannot clean.','Think about where plaque would be trapped next to the gum.'],
+]);
+
 /* More lecture slides matched from the PDFs in Downloads. [image key, lecture, page] */
 Object.assign(SLIDE,{
 "endo-access:9": [
