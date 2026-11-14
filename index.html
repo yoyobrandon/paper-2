@@ -535,7 +535,7 @@ select.tm-pill{max-width:190px;padding-right:10px}select.tm-pill option{color:#1
 @media (max-width:760px){.dm{grid-template-columns:minmax(0,1fr)}.dm .dm-thread{display:none}.dm.open .dm-list{display:none}.dm.open .dm-thread{display:grid}.dm-head .btn{display:inline-flex}.dm-list{box-shadow:none;max-height:none}}
 
 /* ===== introduction overlay (one deliberate dark look) ===== */
-.in{position:fixed;inset:0;z-index:1000;background:#05060d;color:#f5f6fb;font-family:-apple-system,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color-scheme:dark;display:flex;flex-direction:column;overflow:hidden}
+div#intro{position:fixed;inset:0;z-index:1000;background:#05060d;color:#f5f6fb;font-family:-apple-system,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color-scheme:dark;display:flex;flex-direction:column;overflow:hidden}
 .in-skip{position:absolute;z-index:2;top:max(14px,env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));appearance:none;border:0;font:inherit;font-size:13px;color:#f5f6fb;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);border-radius:999px;padding:7px 14px;cursor:pointer}
 .in-skip:hover{background:rgba(255,255,255,.2)}
 .in-track{position:relative;flex:1;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;min-height:0}
@@ -637,6 +637,23 @@ select.tm-pill{max-width:190px;padding-right:10px}select.tm-pill option{color:#1
 .lo-lec{margin-top:12px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--sc)}
 .lo-list{margin:6px 0 0;padding-left:20px;display:grid;gap:4px}
 .lo-none{margin:8px 0 0;font-size:13px}
+
+.tm-try{margin-top:16px}
+.tm-ans{display:block;width:100%;min-height:84px;resize:vertical;font:inherit;font-size:15.5px;line-height:1.5;color:#f5f6fb;background:rgba(0,0,0,.26);border:0;border-radius:18px;padding:12px 14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);outline:none}
+.tm-ans::placeholder{color:rgba(245,246,251,.5)}
+.tm-ans:focus{box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
+.tm-tryrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}
+.tm-mark{appearance:none;font:inherit;font-size:13.5px;font-weight:600;color:#0a0c18;border:0;border-radius:999px;padding:9px 16px;background:hsl(var(--h,210) 85% 78%);cursor:pointer}
+.tm-mark:active{transform:scale(.96)}
+.tm-note{font-size:13px;opacity:.8}
+.tm-score{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.tm-score b{font-size:22px;font-variant-numeric:tabular-nums}
+.tm-meter{flex:1;height:8px;border-radius:8px;background:rgba(255,255,255,.14);overflow:hidden}
+.tm-meter i{display:block;height:100%;border-radius:8px;background:hsl(var(--h,210) 85% 72%)}
+.tm-rev ul{margin:0 0 10px;padding-left:20px;display:grid;gap:4px}
+.tm-rev h5+ul,.tm-rev h5+p{margin-top:0}
+.tm-rev ul+h5,.tm-rev .tm-score+h5{margin-top:10px}
+.tm-ov{appearance:none;font:inherit;font-size:12px;color:#f5f6fb;border:0;border-radius:999px;padding:2px 9px;margin-left:4px;background:rgba(255,255,255,.14);cursor:pointer}
 </style>
 <div class="app">
 <aside class="side">
@@ -1422,17 +1439,30 @@ function pageTimer(){tmStop();const c=tmCfg(),view=$('#view');
     if(c.slides){const w=p.filter(x=>SLIDE[x.id]&&IMG[SLIDE[x.id][0]]);if(w.length)p=w}
     for(let i=p.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[p[i],p[j]]=[p[j],p[i]]}return p}
   function chime(){if(!c.sound)return;try{const A=X.ac||(X.ac=new (window.AudioContext||window.webkitAudioContext)());[[660,0],[880,.18]].forEach(([f,t])=>{const o=A.createOscillator(),g=A.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,A.currentTime+t);g.gain.linearRampToValueAtTime(.12,A.currentTime+t+.03);g.gain.exponentialRampToValueAtTime(.0001,A.currentTime+t+.7);o.connect(g);g.connect(A.destination);o.start(A.currentTime+t);o.stop(A.currentTime+t+.75)})}catch(e){}}
-  function next(auto){if(!X.queue.length)X.queue=pool();const it=X.queue.pop();if(!it)return;X.it=it;X.n++;X.end=Date.now()+c.min*60000;X.left=c.min*60000;
+  function next(auto){if(!X.queue.length)X.queue=pool();const it=X.queue.pop();if(!it)return;X.it=it;X.n++;X.res=null;X.end=Date.now()+c.min*60000;X.left=c.min*60000;
     const d=it.b[1],mx=d.m||d.pts.length,s=SMAP[it.t.s],sl=SLIDE[it.id],has=sl&&IMG[sl[0]];
     const card=q('#tmCard');card.classList.remove('in');void card.offsetWidth;
     card.style.setProperty('--h',s.h);
     card.innerHTML='<div class="tm-bar"><i id="tmBar"></i></div><div class="tm-meta"><span class="tm-chip">'+esc(s.name)+'</span><span>'+esc(it.t.t)+'</span><span class="tm-left" id="tmLeft"></span></div>'
      +'<div class="tm-q">'+fmt(d.q)+'</div>'+(QIMG[it.id]&&IMG[QIMG[it.id][0]]?'<img class="tm-qimg" alt="'+esc(QIMG[it.id][1])+'" src="'+IMG[QIMG[it.id][0]]+'">':'')
+     +'<div class="tm-try"><textarea class="tm-ans" id="tmAns" rows="3" placeholder="Type your answer here, then check it against the answer key." aria-label="Your answer"></textarea><div class="tm-tryrow"><button data-a="mark" class="tm-mark">Check my answer</button><span class="tm-note" id="tmNote"></span></div></div>'
      +'<div class="tm-rev" id="tmRev" hidden></div>'
      +'<div class="tm-act tm-ui"><button data-a="hint">Hint</button><button data-a="slide">'+(has?'View lecture slide':'Lecture source')+'</button><button data-a="ans">Model answer</button><button data-a="pause">Pause</button><button data-a="next" class="pri">Next question</button></div>';
     card.classList.add('in');q('#tmSheet').hidden=true;if(auto)chime();tick()}
   function rev(kind){const d=X.it.b[1],r=q('#tmRev');if(!r.hidden&&r.dataset.k===kind){r.hidden=true;return}r.dataset.k=kind;r.hidden=false;
     r.innerHTML=kind==='hint'?'<h5>Hint</h5><p>'+esc(HINT[X.it.id]||'No hint for this one.')+'</p>':'<h5>Model answer</h5>'+(d.model?'<p>'+fmt(d.model)+'</p>':'<ol>'+d.pts.map(p=>'<li>'+fmt(p[0])+'</li>').join('')+'</ol>')+'<p class="tm-fine">From the answer key built from your lecture slides.</p>'}
+  function mark(){const it=X.it,d=it.b[1],mx=d.m||d.pts.length,ta=q('#tmAns'),tx=ta.value.trim(),note=q('#tmNote');
+    if(tx.split(/\s+/).length<3){note.textContent='Write at least a few words first so there is something to mark.';ta.focus();return}
+    note.textContent='';X.res=markSAQ(d,tx);showRes()}
+  function showRes(){const it=X.it,d=it.b[1],mx=d.m||d.pts.length,res=X.res,ov=res.ov||[],hit=res.hit.concat(ov),miss=res.miss.filter(x=>!ov.includes(x)),sc=Math.min(hit.length,mx),r=q('#tmRev');
+    record(it.id,{t:'s',sc,mx,miss,mis:res.mis,a:q('#tmAns').value.slice(0,2500)});
+    let h='<h5>Your mark</h5><div class="tm-score"><b>'+sc+' / '+mx+'</b><span class="tm-meter"><i style="width:'+(sc/mx*100)+'%"></i></span></div>';
+    if(res.mis.length)h+='<h5>Where you were misled</h5><ul>'+res.mis.map(k=>'<li>'+fmt(d.traps[k][1])+'</li>').join('')+'</ul>';
+    if(hit.length)h+='<h5>You covered</h5><ul class="tm-hit">'+hit.map(k=>'<li>'+fmt(d.pts[k][0])+'</li>').join('')+'</ul>';
+    if(miss.length)h+='<h5>What you are missing</h5><ul class="tm-miss">'+miss.map(k=>'<li>'+fmt(d.pts[k][0])+' <button class="tm-ov" data-ov="'+k+'" title="The marker looks for key terms. Use this if you wrote the point in different words.">I did say this</button></li>').join('')+'</ul>';
+    else h+='<p>Every marking point is covered.</p>';
+    h+='<p class="tm-fine">Marked against the answer key by key terms and saved to your progress. Missed points go to My gaps.</p>';
+    r.dataset.k='mark';r.hidden=false;r.innerHTML=h}
   function slide(){const sh=q('#tmSheet'),it=X.it,sl=SLIDE[it.id],has=sl&&IMG[sl[0]];
     sh.innerHTML='<div class="tm-sheet-in"><div class="tm-sheet-h"><div><b>'+(has?esc(sl[1]):'Lecture source')+'</b><span>'+(has?'Slide '+sl[2]+' of the PDF in your Downloads':esc(it.t.t))+'</span></div><button data-a="close" aria-label="Close">Close</button></div>'
      +(has?'<img alt="Lecture slide" src="'+IMG[sl[0]]+'">':'<div class="tm-nosl"><p>This answer comes from:</p><p class="tm-src">'+esc(it.t.src||'')+'</p><p class="tm-fine">There is no slide image for this lecture in the app, because its slides are not among the PDFs in your Downloads. The notes page below is written from those slides.</p></div>')
@@ -1444,7 +1474,9 @@ function pageTimer(){tmStop();const c=tmCfg(),view=$('#view');
     const foc=(X.paused||Date.now())-X.start;q('#tmSub').textContent=(X.paused?'Paused':'Focused for '+mmss(foc))+' · question '+X.n;
     const left=X.paused?X.left:X.end-Date.now(),tot=c.min*60000,f=Math.max(0,Math.min(1,left/tot)),bar=q('#tmBar');
     if(bar){bar.style.transform='scaleX('+f+')';const low=f<.2;el.classList.toggle('low',low&&!X.paused);q('#tmLeft').textContent=(low?'Time nearly up · ':'Next question in ')+mmss(left)}
-    if(!X.paused&&left<=0)next(true)}
+    const ta=q('#tmAns'),hold=!X.paused&&left<=0&&ta&&(ta.value.trim()||X.res);
+    if(hold){const l=q('#tmLeft');if(l)l.textContent=X.res?'Time is up · press Next question when ready':'Time is up · finish and check your answer'}
+    else if(!X.paused&&left<=0)next(true)}
   function setUi(){q('#tmMin').textContent=c.min+' min';q('#tmSubj').value=c.subj;q('[data-a="slides"]').classList.toggle('on',c.slides);q('[data-a="sound"]').classList.toggle('on',c.sound)}
   function act(a){if(a==='less'||a==='more'){let i=TMSTEPS.indexOf(c.min);if(i<0)i=3;i=Math.max(0,Math.min(TMSTEPS.length-1,i+(a==='more'?1:-1)));c.min=TMSTEPS[i];tmSave(c);X.end=Date.now()+c.min*60000;X.left=c.min*60000;setUi();tick()}
     else if(a==='slides'){c.slides=!c.slides;tmSave(c);X.queue=[];setUi();next()}
@@ -1452,19 +1484,20 @@ function pageTimer(){tmStop();const c=tmCfg(),view=$('#view');
     else if(a==='full'){const d=document;if(d.fullscreenElement)d.exitFullscreen().catch(()=>{});else if(el.requestFullscreen)el.requestFullscreen().catch(()=>{})}
     else if(a==='exit'){location.hash='#home'}
     else if(a==='hint'||a==='ans')rev(a)
+    else if(a==='mark')mark()
     else if(a==='slide')slide()
     else if(a==='close')q('#tmSheet').hidden=true
     else if(a==='pause')pause()
     else if(a==='next'){if(X.paused)pause();next()}}
-  el.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){act(b.dataset.a);return}if(e.target.id==='tmSheet')q('#tmSheet').hidden=true;if(e.target.closest('.tm-open'))return});
+  el.addEventListener('click',e=>{const o=e.target.closest('[data-ov]');if(o&&X.res){X.res.ov=(X.res.ov||[]).concat(+o.dataset.ov);showRes();return}const b=e.target.closest('[data-a]');if(b){act(b.dataset.a);return}if(e.target.id==='tmSheet')q('#tmSheet').hidden=true;if(e.target.closest('.tm-open'))return});
   q('#tmSubj').onchange=e=>{c.subj=e.target.value;tmSave(c);X.queue=[];next()};
   X.key=e=>{if(/input|textarea|select/i.test(e.target.tagName))return;const k=e.key.toLowerCase();
     if(k==='escape'){if(!q('#tmSheet').hidden)q('#tmSheet').hidden=true;else if(!document.fullscreenElement)act('exit')}
     else if(k===' '){e.preventDefault();pause()}else if(k==='arrowright'||k==='n')act('next');else if(k==='s')slide();else if(k==='a')rev('ans');else if(k==='h')rev('hint');else if(k==='f')act('full');wake()};
   document.addEventListener('keydown',X.key);
   X.hash=()=>{if(cur()!=='timer')tmStop()};window.addEventListener('hashchange',X.hash);
-  function wake(){el.classList.remove('idle');clearTimeout(X.idle);X.idle=setTimeout(()=>{if(q('#tmSheet').hidden&&q('#tmRev').hidden)el.classList.add('idle')},9000)}
-  ['mousemove','pointerdown','touchstart'].forEach(ev=>el.addEventListener(ev,wake,{passive:true}));
+  function wake(){el.classList.remove('idle');clearTimeout(X.idle);X.idle=setTimeout(()=>{if(q('#tmSheet').hidden&&q('#tmRev').hidden&&document.activeElement!==q('#tmAns'))el.classList.add('idle')},9000)}
+  ['mousemove','pointerdown','touchstart','input'].forEach(ev=>el.addEventListener(ev,wake,{passive:true}));
   try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(l=>{if(TMX===X)X.lock=l;else l.release()},()=>{})}catch(e){}
   setUi();next();wake();X.iv=setInterval(tick,250)}
 
