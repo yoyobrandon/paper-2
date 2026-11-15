@@ -1182,14 +1182,20 @@ function splitR(){const o={};SUBJ.forEach(s=>o[s.id]={});Object.keys(st.r).forEa
 function slim(part){let str=stable({r:part});if(str.length<200000)return {r:part};const r={};Object.keys(part).forEach(k=>{r[k]=Object.assign({},part[k]);if(r[k].a)r[k].a=r[k].a.slice(0,300)});return {r}}
 function metaBody(){return {papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0,metaAt:st.metaAt||0,z:st.z||{},iv:st.iv||0,av:st.av||0,tt:st.tt||{}}}
 function localSave(){try{localStorage.setItem(ukey(acc.cur),JSON.stringify(st))}catch(e){storeWarn()}}
+const PROG_N=5;
 function cloudQueue(){if(!CL.on||CL.ro)return;clearTimeout(CL.t);CL.t=setTimeout(cloudFlush,2500)}
 async function cloudFlush(){if(!CL.on||CL.ro||!CL.ready)return;if(CL.busy){CL.again=true;return}CL.busy=true;clearTimeout(CL.t);setSync('busy');
-  try{const base=CL.db.collection('data/users/'+CL.uid),parts=splitR();
+  try{const base=CL.db.collection('data/users/'+CL.uid),parts=splitR(),now=Date.now(),fin=CL.final;
+    const snap={};Object.keys(st.r).forEach(k=>snap[k]=stable(st.r[k]));let nCh=0;if(CL.recSnap){const ks=new Set(Object.keys(snap).concat(Object.keys(CL.recSnap)));ks.forEach(k=>{if(snap[k]!==CL.recSnap[k])nCh++})}
+    const mc0=stable(Object.assign({},metaBody(),{tt:0}));CL.progN=nCh;
+    const progDue=fin||!CL.recSnap||mc0!==CL.pCore||nCh>=PROG_N||(nCh>0&&now-(CL.progW||0)>300000);
+    if(!progDue){if(nCh>0)CL.later=true}else{CL.progW=now;
     for(const s of SUBJ){const body=slim(parts[s.id]),str=stable(body);if(str!==(CL.cloudStr[s.id]||stable({r:{}}))){await base.doc('p_'+s.id).set(body);CL.cloudStr[s.id]=str}}
+    CL.recSnap=snap;CL.pCore=mc0;CL.progN=0}
     const core=stable({papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0});if(core!==CL.coreStr){if(CL.coreStr!==undefined){st.metaAt=Date.now();localSave()}CL.coreStr=core}
-    const now=Date.now(),fin=CL.final,mb=metaBody(),ms=stable(mb),mcore=stable(Object.assign({},mb,{tt:0}));const metaDue=fin||mcore!==CL.metaCore||now-(CL.metaW||0)>300000;if(!metaDue&&ms!==CL.cloudStr.meta)CL.later=true;if(metaDue&&ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||mb.iv||mb.av||Object.keys(mb.z).length||Object.keys(mb.tt).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms;CL.metaCore=mcore;CL.metaW=now}
+    const mb=metaBody(),ms=stable(mb),mcore=stable(Object.assign({},mb,{tt:0}));const metaDue=fin||mcore!==CL.metaCore||now-(CL.metaW||0)>300000;if(!metaDue&&ms!==CL.cloudStr.meta)CL.later=true;if(metaDue&&ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||mb.iv||mb.av||Object.keys(mb.z).length||Object.keys(mb.tt).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms;CL.metaCore=mcore;CL.metaW=now}
     const sc=scoreFrom(st.r),sb={p:+sc.p.toFixed(4),done:sc.done,full:sc.full,n:sc.n,subj:sc.subj,tt:ttClean(st.tt)},ss=stable(sb);
-    const scDue=fin||CL.scoreStr===undefined||now-(CL.scW||0)>300000;if(ss!==CL.scoreStr&&!scDue)CL.later=true;
+    const scDue=progDue||CL.scoreStr===undefined||now-(CL.scW||0)>300000;if(ss!==CL.scoreStr&&!scDue)CL.later=true;
     if(ss!==CL.scoreStr&&scDue){CL.scW=now;await CL.db.doc('scores/'+CL.uid).set(Object.assign({at:new Date().toISOString().slice(0,10)},sb));CL.scoreStr=ss}
     setSync('ok')}
   catch(e){const c=e&&e.code;if(c==='invalid_argument'){CL.ro=true;setSync('ro')}else if(c==='quota_exceeded')setSync('full');else setSync(c==='unavailable'?'offline':'err')}
@@ -1226,14 +1232,18 @@ async function cloudInit(){if(!(window.claude&&typeof claude.use==='function'))r
   if(acc.cur!==cid){acc.cur=cid;st={r:{},seen:{},last:null,theme:st.theme};try{const x=JSON.parse(localStorage.getItem(ukey(cid))||'null');if(x&&x.r)st=Object.assign(st,x)}catch(e){}}
   saveAcc();const o=$('#auth');if(o)o.remove();
   const slow=setTimeout(()=>{if(!CL.ready)setSync('offline')},10000);
-  db.collection('data/users/'+uid).onSnapshot(s=>{clearTimeout(slow);try{cloudMerge(s)}catch(e){console.error(e)}},e=>{clearTimeout(slow);setSync(e&&e.code==='revoked'?'ro':'offline')});
-  scoresLoad(true);
+  db.collection('data/users/'+uid).onSnapshot(s=>{if(!CL.ready&&s.metadata&&s.metadata.fromCache)return;clearTimeout(slow);try{cloudMerge(s)}catch(e){console.error(e)}},e=>{clearTimeout(slow);setSync(e&&e.code==='revoked'?'ro':'offline')});
+  if(/^(leaderboard|stats)$/.test(cur()))scoresLoad();
   const fin=()=>{CL.final=true;clearTimeout(CL.t);clearTimeout(CL.t3);cloudFlush().then(()=>{CL.final=false},()=>{CL.final=false})};
   window.addEventListener('pagehide',fin);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')fin()});
   return true}
-function scoresLoad(force){if(!CL.on||!CL.db)return;if(!force&&Date.now()-(CL.scAt||0)<300000)return;CL.scAt=Date.now();const db=CL.db,user=CL.user;
+const SC_TTL=600000,SC_KEY='ds4102-p2-scores-cache';
+function scoresLoad(force){if(!CL.on||!CL.db)return;const now=Date.now();if(!force&&now-(CL.scAt||0)<SC_TTL)return;
+  if(!force){try{const k=JSON.parse(localStorage.getItem(SC_KEY)||'null');if(k&&k.uid===CL.uid&&now-k.at<SC_TTL&&k.m){CL.scAt=k.at;CL.scores=k.m;Object.assign(CL.names,k.n||{});return}}catch(e){}}
+  CL.scAt=now;const db=CL.db,user=CL.user;
   db.collection('scores').limit(500).get().then(s=>{const m={};s.docs.forEach(d=>{const x=d.data();if(x&&typeof x.p==='number')m[d.id]=x});CL.scores=m;
-    user.profiles(Object.keys(m)).then(ps=>{Object.keys(ps||{}).forEach(id=>{CL.names[id]=ps[id]&&ps[id].name||''});if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard()},()=>{});
+    const keep=()=>{try{const n={};Object.keys(m).forEach(i=>{if(CL.names[i])n[i]=CL.names[i]});localStorage.setItem(SC_KEY,JSON.stringify({uid:CL.uid,at:CL.scAt,m,n}))}catch(e){}};keep();
+    user.profiles(Object.keys(m)).then(ps=>{Object.keys(ps||{}).forEach(id=>{CL.names[id]=ps[id]&&ps[id].name||''});keep();if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard()},()=>{});
     if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard();if(cur()==='stats')pageStats()},()=>{CL.scAt=0})}
 function cloudEntries(){const out=[],mine=scoreFrom(st.r);const ids=new Set(Object.keys(CL.scores));ids.add(CL.uid);
   ids.forEach(id=>{const me=id===CL.uid,x=me?mine:CL.scores[id];out.push({name:me?acc.users[acc.cur].name:(CL.names[id]||'Someone'),me,kind:'cloud',p:x.p,done:x.done||0,full:x.full||0,n:x.n||mine.n,subj:x.subj||{}})});return out}
@@ -6093,11 +6103,11 @@ Object.assign(IMG,{"av19": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAA
 
 /* ===== website mode: the app's own username and password accounts, synced through Firebase ===== */
 (function(){if(typeof FB_CONFIG==='undefined'||!FB_CONFIG||typeof firebase==='undefined')return;
-  firebase.initializeApp(FB_CONFIG);const auth=firebase.auth(),fs=firebase.firestore();
+  firebase.initializeApp(FB_CONFIG);const auth=firebase.auth(),fs=firebase.firestore();try{fs.enablePersistence({synchronizeTabs:true}).catch(()=>{})}catch(e){}
   try{fs.settings({ignoreUndefinedProperties:true,merge:true})}catch(e){}
   const DOMAIN='@ds4102.example.com';
   SYNCMSG.ok='Synced to your account';SYNCMSG.ro='Could not save to the cloud. Progress stays on this device for now.';
-  let done,creating=false,names={},namesAt=0;const ready=new Promise(r=>{done=r});
+  let done,creating=false,names={},namesAt=0;try{const k=JSON.parse(localStorage.getItem('ds4102-p2-names')||'null');if(k&&k.n){names=k.n;namesAt=k.at||0}}catch(e){}const ready=new Promise(r=>{done=r});
   const MSG={'auth/email-already-in-use':'That username is taken. Pick another, or sign in.','auth/weak-password':'Use a password of at least 6 characters.','auth/network-request-failed':'No connection. Check the internet and try again.','auth/too-many-requests':'Too many tries. Wait a minute and try again.','auth/operation-not-allowed':'Accounts are not switched on yet for this site.'};
   function card(mode){let o=$('#auth');if(!o){o=document.createElement('div');o.id='auth';o.className='auth';document.body.appendChild(o)}
     const nw=mode==='new';
@@ -6116,18 +6126,18 @@ Object.assign(IMG,{"av19": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAA
   auth.onAuthStateChanged(u=>{if(creating)return;if(u)finish(u);else card('in')});
   const db={doc:p=>fs.doc(p),collection:p=>fs.collection(p)};
   const user={me:async()=>{const u=await ready;return {id:u.uid,name:u.displayName||''}},id:async()=>(await ready).uid,
-    profiles:async ids=>{if(Date.now()-namesAt>600000||ids.some(i=>!(i in names))){const s=await fs.collection('names').limit(1000).get();names={};s.docs.forEach(d=>{names[d.id]=String((d.data()||{}).name||'').slice(0,20)});namesAt=Date.now()}
+    profiles:async ids=>{if(Date.now()-namesAt>1800000||ids.some(i=>!(i in names))){const s=await fs.collection('names').limit(1000).get();names={};s.docs.forEach(d=>{names[d.id]=String((d.data()||{}).name||'').slice(0,20)});namesAt=Date.now();try{localStorage.setItem('ds4102-p2-names',JSON.stringify({at:namesAt,n:names}))}catch(e){}}
       const out={};ids.forEach(i=>{out[i]={id:i,name:names[i]||''}});return out}};
   window.claude={use:async n=>{await ready;return n==='db'?db:n==='user'?user:null}};
   /* ----- presence: a heartbeat on the names doc ----- */
-  const ACTIVE=5*60000;let unsub=null,tick=null,people={};
+  const ACTIVE=10*60000;let unsub=null,tick=null,people={};
   function beat(){const u=auth.currentUser;if(!u||document.hidden)return;fs.doc('names/'+u.uid).set({name:u.displayName||'',seen:Date.now()}).catch(()=>{})}
-  ready.then(()=>{beat();setInterval(beat,120000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)beat()})});
+  ready.then(()=>{beat();setInterval(beat,240000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)beat()})});
   function leave(){if(unsub){unsub();unsub=null}clearInterval(tick);tick=null;dmDraw=null}
   function ago(t){if(!t)return 'not seen yet';const s=Math.max(0,(Date.now()-t)/1000);if(s<90)return 'just now';if(s<3600)return Math.round(s/60)+' min ago';if(s<86400)return Math.round(s/3600)+' h ago';return Math.round(s/86400)+' d ago'}
   const need=title=>{view().className='page';view().innerHTML='<div class="thead"><div class="eyebrow">Community</div><h1>'+title+'</h1><p class="lead">Sign in to use this.</p></div>'};
   function pagePeople(){if(!CL.on)return need('People');
-    view().className='page';view().innerHTML='<div class="thead"><div class="eyebrow">Community</div><h1>People</h1><p class="lead">Who is studying right now. Active means the app has been open in the last 5 minutes.</p></div><div id="ppl"></div>';
+    view().className='page';view().innerHTML='<div class="thead"><div class="eyebrow">Community</div><h1>People</h1><p class="lead">Who is studying right now. Active means the app has been open in the last 10 minutes.</p></div><div id="ppl"></div>';
     const draw=()=>{const el=$('#ppl');if(!el)return leave();const now=Date.now(),all=Object.keys(people).map(id=>Object.assign({id},people[id])).sort((a,b)=>(b.seen||0)-(a.seen||0)),on=all.filter(p=>now-(p.seen||0)<ACTIVE),off=all.filter(p=>now-(p.seen||0)>=ACTIVE);
       const row=(p,a)=>'<div class="lb-row'+(p.id===CL.uid?' me':'')+'"><span class="av">'+esc(initials(p.name||'?'))+'</span><span class="lb-name"><b>'+esc(p.name||'Someone')+(p.id===CL.uid?' <em>you</em>':'')+'</b><small>'+(a?'Active now':'Last active '+ago(p.seen))+'</small></span>'+(p.id===CL.uid?'':'<button class="btn sm" data-msg="'+esc(p.id)+'">Message</button>')+'<i class="pdot'+(a?' on':'')+'"></i></div>';
       el.innerHTML='<h2 class="sec">Active now · '+on.length+'</h2><div class="card lb">'+(on.map(p=>row(p,1)).join('')||'<p class="mut">Nobody is active right now.</p>')+'</div><h2 class="sec">Inactive · '+off.length+'</h2><div class="card lb">'+(off.map(p=>row(p,0)).join('')||'<p class="mut">Nobody is inactive.</p>')+'</div>';$$('[data-msg]',el).forEach(b=>b.onclick=()=>openDM(b.dataset.msg))};
