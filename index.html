@@ -796,6 +796,71 @@ div#ad.on{opacity:1}
 .kd-c .dz-src{white-space:normal}
 .kd-grid{align-items:start}
 @media (min-width:700px){.kd-tabs{flex-wrap:wrap;overflow:visible}}
+
+.cp-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.cp-row button{appearance:none;border:0;font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:transparent;box-shadow:0 0 0 1px var(--line2);border-radius:999px;padding:5px 11px;cursor:pointer}
+.cp-row button:hover{color:var(--ink)}
+.cp-row button.on{background:var(--accent);color:#fff;box-shadow:none}
+.cp-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start;margin:6px 0 12px}
+@media (max-width:760px){.cp-wrap{grid-template-columns:minmax(0,1fr)}}
+.cp-fig{min-width:0}
+.cp-fig svg{display:block;width:100%;max-width:460px;height:auto;margin:0 auto;background:var(--surface2);border-radius:14px;box-shadow:0 0 0 .5px var(--line2)}
+.cp-side{display:grid;gap:8px;min-width:0}
+.cp-sl{display:grid;gap:10px;margin:0}
+.cp-sl .sl{flex:none}
+.cp-chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);cursor:pointer}
+.cp-t{font-size:8.5px;font-weight:650;fill:var(--ink);paint-order:stroke;stroke:var(--surface2);stroke-width:2.5px;stroke-linejoin:round}
+.cp-lt{font-size:8px;fill:var(--muted)}
+.cp-info{fill:var(--info)}.cp-warn{fill:var(--warn)}.cp-ok{fill:var(--ok)}.cp-sc{fill:var(--sc)}
+.cp-bone{fill:var(--hover)}
+.cp-b{fill:none}
+.cp-tooth{fill:var(--surface);stroke:var(--muted)}
+.cp-ghost{opacity:.55}
+.cp-lm{cursor:pointer;outline:none}
+.cp-hit{fill:transparent}
+.cp-dot{fill:var(--ink)}
+.cp-lm.on .cp-dot{fill:var(--accent)}
+.cp-lm.on .cp-lt{fill:var(--accent)}
+.cp-lm:focus-visible .cp-hit{stroke:var(--accent);stroke-width:1.2}
+#csvg [data-ly]{transition:opacity .2s}
+.cp-mx{fill:color-mix(in srgb,var(--info) 13%,transparent)}
+.cp-md{fill:color-mix(in srgb,var(--warn) 13%,transparent)}
+.cp-tooth{stroke-width:1.4}
+
+.er-svg{display:block;width:100%;max-width:640px;height:auto;margin:10px auto 6px;border-radius:14px;box-shadow:0 0 0 .5px var(--line2)}
+.er-bg{fill:var(--surface2)}
+.er-bone{fill:color-mix(in srgb,var(--warn) 7%,transparent)}
+.er-gum{fill:none;stroke:color-mix(in srgb,var(--bad) 55%,transparent);stroke-width:2.2}
+.er-mid{stroke:var(--line2);stroke-dasharray:3 3}
+.er-lt{font-size:8.5px;fill:var(--muted)}
+.er-ageb{font-size:11px;font-weight:700;fill:var(--accent)}
+.er-t{cursor:pointer;outline:none}
+.er-cr{stroke-width:1.2}
+.er-root{stroke-width:1}
+.er-t.p .er-cr,.er-t.p .er-root{fill:var(--surface);stroke:var(--muted)}
+.er-t.q .er-cr,.er-t.q .er-root{fill:color-mix(in srgb,var(--info) 18%,var(--surface));stroke:var(--info)}
+.er-t.e .er-cr{fill:color-mix(in srgb,var(--warn) 35%,var(--surface));stroke:var(--warn)}
+.er-t.g{opacity:.45}
+.er-t.g .er-cr{stroke-dasharray:2 2}
+.er-t.on .er-cr{stroke:var(--accent);stroke-width:2.4}
+.er-t:focus-visible .er-cr{stroke:var(--accent);stroke-width:2.4}
+.er-lb{font-size:8.5px;font-weight:700;fill:var(--ink);text-anchor:middle;pointer-events:none}
+.er-age{display:flex;gap:12px;align-items:center;margin:6px 0}
+.er-play{appearance:none;border:0;width:38px;height:38px;flex:none;border-radius:50%;background:var(--accent);color:#fff;font-size:14px;cursor:pointer}
+.er-key{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin:2px 0 4px}
+.er-key i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.er-key .k-p{background:var(--surface);box-shadow:0 0 0 1px var(--muted)}
+.er-key .k-q{background:color-mix(in srgb,var(--info) 18%,var(--surface));box-shadow:0 0 0 1px var(--info)}
+.er-key .k-e{background:color-mix(in srgb,var(--warn) 35%,var(--surface));box-shadow:0 0 0 1px var(--warn)}
+.er-key .k-g{background:transparent;box-shadow:0 0 0 1px var(--muted);opacity:.5}
+.er-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:6px}
+.er-row span{display:grid;gap:1px;font-size:13.5px}
+.er-row i{font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.er-note{font-size:12.5px;color:var(--muted);margin:8px 0 0}
+.er-q{margin:8px 0 2px}
+#eopt button.bad{background:var(--bad);color:#fff;box-shadow:none}
+#enx{margin-top:8px}
+#enx[hidden],#eexp[hidden],#eqz[hidden]{display:none!important}
 </style>
 <div class="app">
 <aside class="side">
@@ -1390,6 +1455,105 @@ function dzMount(el){const gs=[...new Set(DZ.map(d=>d.g))];
   $$('[data-dzw]',el).forEach(b=>b.onclick=()=>{DZS.w=+b.dataset.dzw;DZS.age=ages[DZS.w];$('#dzw').value=DZS.w;$('#dza').value=DZS.age;dzDraw()});
   $$('[data-dzg]',el).forEach(a=>a.onclick=e=>{e.preventDefault();DZS.q='';$('#dzq').value='';dzDraw();const t=document.getElementById(a.dataset.dzg);if(t)t.scrollIntoView({behavior:'smooth',block:'start'})});
   dzDraw()}
+
+// Eruption chronology (Tooth Eruption and Exfoliation, DS3101 Wk 5: Kronfeld/Logan tables)
+const ER={
+ P:{u:{A:['4 mo in utero','Five sixths','1½ mo','7½ mo','1½ yr',7.5],B:['4½ mo in utero','Two thirds','2½ mo','9 mo','2 yr',9],C:['5 mo in utero','One third','9 mo','18 mo','3¼ yr',18],D:['5 mo in utero','Cusps united','6 mo','14 mo','2½ yr',14],E:['6 mo in utero','Cusp tips still isolated','11 mo','24 mo','3 yr',24]},
+    l:{A:['4½ mo in utero','Three fifths','2½ mo','6 mo','1½ yr',6],B:['4½ mo in utero','Three fifths','3 mo','7 mo','1½ yr',7],C:['5 mo in utero','One third','9 mo','16 mo','3¼ yr',16],D:['5 mo in utero','Cusps united','5½ mo','12 mo','2¼ yr',12],E:['6 mo in utero','Cusp tips still isolated','10 mo','20 mo','3 yr',20]}},
+ Q:{u:{1:['3-4 mo','4-5 yr','7-8 yr','10 yr',7,8,.3],2:['10-12 mo','4-5 yr','8-9 yr','11 yr',8,9,.9],3:['4-5 mo','6-7 yr','11-12 yr','13-15 yr',11,12,.4],4:['1½-1¾ yr','5-6 yr','10-11 yr','12-13 yr',10,11,1.5],5:['2-2¼ yr','6-7 yr','10-12 yr','12-14 yr',10,12,2],6:['At birth (sometimes a trace of enamel)','2½-3 yr','6-7 yr','9-10 yr',6,7,0],7:['2½-3 yr','7-8 yr','12-13 yr','14-16 yr',12,13,2.5],8:['7-9 yr','12-16 yr','17-21 yr','18-25 yr',17,21,7]},
+    l:{1:['3-4 mo','4-5 yr','6-7 yr','9 yr',6,7,.3],2:['3-4 mo','4-5 yr','7-8 yr','10 yr',7,8,.3],3:['4-5 mo','6-7 yr','9-10 yr','12-14 yr',9,10,.4],4:['1¾-2 yr','5-6 yr','10-12 yr','12-13 yr',10,12,1.75],5:['2¼-2½ yr','6-7 yr','11-12 yr','13-14 yr',11,12,2.25],6:['At birth (sometimes a trace of enamel)','2½-3 yr','6-7 yr','9-10 yr',6,7,0],7:['2½-3 yr','7-8 yr','11-13 yr','14-15 yr',11,13,2.5],8:['8-10 yr','12-16 yr','17-21 yr','18-25 yr',17,21,8]}},
+ PRED:{1:'A',2:'B',3:'C',4:'D',5:'E'},
+ NAME:{1:'central incisor',2:'lateral incisor',3:'canine',4:'first premolar',5:'second premolar',6:'first molar',7:'second molar',8:'third molar',A:'central incisor',B:'lateral incisor',C:'canine',D:'first molar',E:'second molar'},
+ W:{8:29,7:29,6:31,5:22,4:22,3:22,2:19,1:22}
+};
+ER.steps=(()=>{const a=[];for(let m=0;m<36;m++)a.push(m/12);for(let y=3;y<=25.01;y+=.5)a.push(y);return a})();
+ER.fmt=a=>{if(a<3){const m=Math.round(a*12);return m+' month'+(m===1?'':'s')}const w=Math.floor(a),h=a-w>.3;return w+(h?'½':'')+' years'};
+// state of one slot at age a (years): what is in the mouth and what is developing
+ER.slot=(arch,n,a)=>{
+  const q=ER.Q[arch][n],pl=ER.PRED[n],p=pl&&ER.P[arch][pl];
+  const perm=a>=q[5]?'in':a>=q[4]?'erupting':a>=q[6]?'germ':'none';
+  let prim=null;if(p){const e=p[5]/12;prim=perm==='erupting'||perm==='in'?'shed':a>=e?'in':a>=e-2/12?'erupting':'germ'}
+  return{perm,prim,pl};
+};
+ER.fdi=(arch,side,n,prim)=>{const quad=arch==='u'?(side==='R'?1:2):(side==='R'?4:3);return prim?(quad+4)+''+('ABCDE'.indexOf(n)+1):quad+''+n};
+
+W.erupt=function(el){
+  const QZ=[[10/12,[4/12,10/12,1.5,3]],[1.5,[10/12,1.5,2.5,4]],[3,[1.5,3,6.5,8]],[6.5,[3,6.5,9,12.5]],[8.5,[6.5,8.5,11,13]],[11.5,[8.5,11.5,14,19]],[14,[9.5,11.5,14,19]],[19,[9.5,12.5,15,19]]];
+  let ai=ER.steps.indexOf(6.5),sel=null,mode=0,q=null,ans=null;
+  el.innerHTML='<h4>Eruption ages: watch the mouth change</h4><div class="sub">Drag the age, or press play. Tap any tooth for its row in the chronology tables (Tooth Eruption and Exfoliation, DS3101 Wk 5). In <b>Guess the age</b> the chart hides the age and you work it out.</div>'
+   +'<div class="cp-row" id="emd"><button data-m="0" class="on">Explore by age</button><button data-m="1">Guess the age</button></div>'
+   +'<div id="eexp"><div class="er-age"><button class="er-play" id="eply" aria-label="Play">▶</button><label class="sl" style="flex:1"><span>Age: <output id="eao"></output></span><input type="range" id="eag" min="0" max="'+(ER.steps.length-1)+'" step="1" value="'+ai+'"></label></div></div>'
+   +'<svg id="esvg" viewBox="0 0 420 262" class="er-svg" role="img" aria-label="Upper and lower teeth at the chosen age"></svg>'
+   +'<div class="er-key"><span><i class="k-p"></i>Primary</span><span><i class="k-q"></i>Permanent</span><span><i class="k-e"></i>Erupting now</span><span><i class="k-g"></i>Developing in bone</span></div>'
+   +'<div id="eqz" hidden><div class="er-q"><b>How old is this child?</b> Assume average timing.</div><div class="cp-row" id="eopt"></div><div id="efb"></div><button class="btn" id="enx" hidden>Another one</button></div>'
+   +'<div class="out" id="eout"></div>'
+   +'<div class="out" id="etooth"></div>'
+   +'<p class="er-note">Exfoliation ages are not on your slides. Here a primary tooth stays until its successor starts to erupt. The slides add that girls erupt permanent teeth about 6 months earlier than boys, with no sex difference for primary teeth.</p>';
+  const svg=$('#esvg',el);
+  function shape(kind,x,w,top,h,up,cls,lab,key){
+    // crown drawn from top (gum side) to occlusal edge; up=true for upper arch (occlusal edge at bottom)
+    const y0=up?top:top+h,y1=up?top+h:top,dy=up?1:-1,r=Math.min(6,w/3);
+    let d;
+    if(kind==='i')d='M'+x+' '+y0+'L'+(x+w)+' '+y0+'L'+(x+w-1)+' '+(y1-dy*3)+'Q'+(x+w/2)+' '+(y1+dy*1)+' '+(x+1)+' '+(y1-dy*3)+'Z';
+    else if(kind==='c')d='M'+x+' '+y0+'L'+(x+w)+' '+y0+'L'+(x+w-1)+' '+(y1-dy*9)+'L'+(x+w/2)+' '+(y1+dy*1)+'L'+(x+1)+' '+(y1-dy*9)+'Z';
+    else{const n=kind==='m'?3:2;let s='M'+x+' '+y0+'L'+(x+w)+' '+y0+'L'+(x+w)+' '+(y1-dy*4);for(let i=n;i>=1;i--){const cx=x+w*(i-.5)/n;s+='Q'+cx+' '+(y1+dy*2)+' '+(x+w*(i-1)/n)+' '+(y1-dy*(i>1?3:4))}d=s+'Z'}
+    const rt=up?'<path d="M'+(x+w*.2)+' '+y0+'L'+(x+w*.35)+' '+(y0-h*.9)+'L'+(x+w*.65)+' '+(y0-h*.9)+'L'+(x+w*.8)+' '+y0+'Z" class="er-root '+cls+'"/>':'<path d="M'+(x+w*.2)+' '+y0+'L'+(x+w*.35)+' '+(y0+h*.9)+'L'+(x+w*.65)+' '+(y0+h*.9)+'L'+(x+w*.8)+' '+y0+'Z" class="er-root '+cls+'"/>';
+    return '<g class="er-t '+cls+(key===sel?' on':'')+'" data-k="'+key+'" tabindex="0" role="button">'+rt+'<path d="'+d+'" class="er-cr"/><text x="'+(x+w/2)+'" y="'+(up?top+h/2+3:top+h/2+5)+'" class="er-lb">'+lab+'</text></g>';
+  }
+  const kindQ=n=>n<=2?'i':n==3?'c':n<=5?'p':'m',kindP=l=>l<='B'?'i':l=='C'?'c':'m';
+  function draw(a,hideAge){
+    let h='<rect x="0" y="0" width="420" height="262" class="er-bg"/>';
+    h+='<path d="M6 104 Q210 94 414 104 L414 0 L6 0 Z" class="er-bone"/><path d="M6 158 Q210 168 414 158 L414 262 L6 262 Z" class="er-bone"/>';
+    h+='<path d="M6 104 Q210 94 414 104" class="er-gum"/><path d="M6 158 Q210 168 414 158" class="er-gum"/>';
+    h+='<line x1="210" y1="6" x2="210" y2="256" class="er-mid"/><text x="12" y="16" class="er-lt">Patient\'s right</text><text x="408" y="16" class="er-lt" text-anchor="end">Patient\'s left</text><text x="12" y="252" class="er-lt">Upper on top, lower below</text>';
+    const order=[8,7,6,5,4,3,2,1];
+    for(const arch of ['u','l']){const up=arch==='u';
+      for(const side of ['R','L']){let x=side==='R'?6:212;const seq=side==='R'?order:[...order].reverse();
+        for(const n of seq){const w=ER.W[n],s=ER.slot(arch,n,a),kQ=kindQ(n);
+          // permanent tooth
+          const keyQ=arch+side+n,lq=ER.fdi(arch,side,n,false);
+          const ch=26;
+          if(s.perm==='in')h+=shape(kQ,x+1,w-2,up?102:132,ch,up,'q',lq,keyQ);
+          else if(s.perm==='erupting')h+=shape(kQ,x+1,w-2,up?88:146,ch,up,'q e',lq,keyQ);
+          else if(s.perm==='germ')h+=shape(kQ,x+2,w-4,up?(s.pl?44:58):(s.pl?192:178),ch-4,up,'q g',lq,keyQ);
+          // primary tooth
+          if(s.pl&&s.prim!=='shed'){const pw=Math.round(w*(s.pl>='D'?1:.82)),px=x+(w-pw)/2,kP=kindP(s.pl),keyP=arch+side+s.pl,lp=ER.fdi(arch,side,s.pl,true);
+            if(s.prim==='in')h+=shape(kP,px+1,pw-2,up?104:136,22,up,'p',lp,keyP);
+            else if(s.prim==='erupting')h+=shape(kP,px+1,pw-2,up?92:148,22,up,'p e',lp,keyP);
+            else h+=shape(kP,px+2,pw-4,up?74:170,18,up,'p g',lp,keyP)}
+          x+=w}}}
+    h+=hideAge?'':'<text x="210" y="17" class="er-ageb" text-anchor="middle">'+ER.fmt(a)+'</text>';
+    svg.innerHTML=h;
+    $$('.er-t',svg).forEach(g=>{const go=()=>{sel=g.dataset.k;info();draw(a,hideAge)};g.onclick=go;g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}}});
+  }
+  function info(){
+    const o=$('#etooth',el);if(!sel){o.innerHTML='<b class="h">Tap a tooth</b>You will see when it starts to calcify, how much enamel is formed at birth, when the enamel and root are complete, and when it erupts.';return}
+    const arch=sel[0],side=sel[1],k=sel.slice(2),prim=isNaN(+k),r=prim?ER.P[arch][k]:ER.Q[arch][k],nm=(arch==='u'?'Upper ':'Lower ')+(prim?'primary ':'permanent ')+ER.NAME[k];
+    o.innerHTML='<b class="h">'+nm+' ('+ER.fdi(arch,side,k,prim)+')</b><div class="er-row">'
+      +[['Hard tissue begins',r[0]]].concat(prim?[['Enamel at birth',r[1]],['Enamel complete',r[2]],['Eruption',r[3]],['Root complete',r[4]]]:[['Enamel complete',r[1]],['Eruption',r[2]],['Root complete',r[3]]]).map(x=>'<span><i>'+x[0]+'</i>'+x[1]+'</span>').join('')+'</div>';
+  }
+  function summary(a){
+    const now=[],last=[];const tag=(arch,n,prim)=>(arch==='u'?'upper ':'lower ')+ER.NAME[n]+(prim?' (primary)':'');
+    for(const arch of ['u','l'])for(const n of [1,2,3,4,5,6,7,8]){const s=ER.slot(arch,n,a);if(s.perm==='erupting')now.push(tag(arch,n));if(s.pl&&s.prim==='erupting')now.push(tag(arch,s.pl,true))}
+    const cnt={p:0,q:0},vis={p:0,q:0};for(const arch of ['u','l'])for(const n of [1,2,3,4,5,6,7,8]){const s=ER.slot(arch,n,a);if(s.perm==='in')cnt.q+=2;if(s.perm==='in'||s.perm==='erupting')vis.q++;if(s.pl&&s.prim==='in')cnt.p+=2;if(s.pl&&(s.prim==='in'||s.prim==='erupting'))vis.p++}
+    const stage=vis.q===0?(vis.p?'Primary dentition':'Gum pads, no teeth yet'):vis.p?'Mixed dentition':'Permanent dentition';
+    return '<b class="h">'+stage+': '+cnt.p+' primary and '+cnt.q+' permanent teeth fully erupted</b>'+(now.length?'Erupting now: '+now.join(', ')+'.':'Nothing is mid-eruption at this age.');
+  }
+  function setAge(i){ai=i;const a=ER.steps[i];$('#eag',el).value=i;$('#eao',el).textContent=ER.fmt(a);draw(a,false);$('#eout',el).innerHTML=summary(a)}
+  $('#eag',el).oninput=e=>{stop();setAge(+e.target.value)};
+  let tm=null;function stop(){if(tm){clearInterval(tm);tm=null;$('#eply',el).textContent='▶';$('#eply',el).setAttribute('aria-label','Play')}}
+  $('#eply',el).onclick=()=>{if(tm){stop();return}if(ai>=ER.steps.length-1)ai=0;$('#eply',el).textContent='❚❚';$('#eply',el).setAttribute('aria-label','Pause');tm=setInterval(()=>{if(!el.isConnected||ai>=ER.steps.length-1){stop();return}setAge(ai+1)},ai<36?120:260)};
+  function newQ(){const pool=QZ.filter(x=>!q||x!==q);q=pool[Math.floor(Math.random()*pool.length)];ans=null;
+    $('#eopt',el).innerHTML=q[1].map((x,i)=>'<button data-o="'+i+'">'+ER.fmt(x)+'</button>').join('');$('#efb',el).innerHTML='';$('#enx',el).hidden=true;
+    draw(q[0],true);$('#eout',el).innerHTML='<b class="h">Clues</b>Look at which teeth are fully up, which are part-way through the gum (amber), and which primary teeth are still there.';
+    $$('#eopt button',el).forEach(b=>b.onclick=()=>{if(ans!==null)return;ans=+b.dataset.o;const ok=q[1][ans]===q[0];
+      $$('#eopt button',el).forEach(x=>{const v=q[1][+x.dataset.o];x.classList.toggle('on',v===q[0]);if(+x.dataset.o===ans&&!ok)x.classList.add('bad')});
+      $('#efb',el).innerHTML='<div class="out '+(ok?'ok':'warn')+'"><b class="h">'+(ok?'Correct':'Not quite')+': about '+ER.fmt(q[0])+'</b>'+summary(q[0]).replace(/<b class="h">(.*?)<\/b>/,'$1. ')+'</div>';
+      draw(q[0],false);$('#enx',el).hidden=false})}
+  $('#enx',el).onclick=newQ;
+  $$('#emd button',el).forEach(b=>b.onclick=()=>{mode=+b.dataset.m;$$('#emd button',el).forEach(x=>x.classList.toggle('on',x===b));stop();$('#eexp',el).hidden=!!mode;$('#eqz',el).hidden=!mode;sel=null;info();if(mode)newQ();else setAge(ai)});
+  setAge(ai);info();
+};
 
 /* ===== introduction: shown once per account after an update (one deliberate dark look, like the timer) ===== */
 const INTRO_V=1;
@@ -3087,6 +3251,9 @@ kw:['Delayed eruption','Natal and neonatal teeth','Riga-Fede disease','Ankylosis
 b:[
 ['p','**Eruption** is movement of the tooth from its developmental position to its functional position. Phases: pre-eruptive (crown forming in the crypt), prefunctional eruptive (root forming, emergence) and functional (in occlusion).'],
 ['cmp',[['Delayed eruption: local causes',['Supernumerary tooth','Dilaceration or other root anomaly','Crowding','Cyst','Gingival fibromatosis']],['Delayed eruption: systemic causes',['Hypothyroidism, hypopituitarism, hypoparathyroidism','Down syndrome','Rickets','Cleidocranial dysplasia']],['Premature exfoliation',['Hypophosphatasia','Prepubertal periodontitis','Cyclic neutropenia, Chediak-Higashi','Loss under 5 without trauma needs investigating']]]],
+['h','Eruption ages'],
+['ul',['**Primary sequence**: A, B, D, C, E. **Permanent sequence**: first molar, incisors, canines, premolars, second molar, third molar (the upper canine usually comes after the premolars).','**Mandibular teeth erupt before their maxillary counterparts.** Variation in sequence and timing is not necessarily a concern.','Girls erupt permanent teeth about **6 months earlier** than boys; there is no sex difference for primary teeth.']],
+['w','erupt'],
 ['p','Localise an unerupted incisor with **parallax**: two views and the SLOB rule.'],
 ['h','Teeth in infancy'],
 ['p','**Natal** teeth are present at birth, **neonatal** teeth erupt in the first 30 days. About 1 in 2000 to 3000 births, usually mandibular central incisors, and mostly true primary teeth. Complications: Riga-Fede ulceration of the tongue, feeding difficulty, aspiration if very mobile. Leave them unless mobile or traumatic.'],
@@ -3178,17 +3345,95 @@ b:[
 S('ortho','Orthodontics',285,'Assessment and referral, the developing dentition, space management, removable and functional appliances, headgear, crossbites, fixed appliances, aligners, retention, risks, and cleft and craniofacial conditions.');
 
 W.ceph=function(el){
-  const N=[['SNA',81,3,'Maxilla to cranial base',['retrusive maxilla','normal maxilla','protrusive maxilla']],['SNB',78,3,'Mandible to cranial base',['retrognathic mandible','normal mandible','prognathic mandible']],['MMPA',27,4,'Maxillary to mandibular plane angle',['low angle: reduced lower face height, deep bite tendency','average vertical pattern','high angle: long face, open bite tendency']],['UI to maxillary plane',109,6,'Upper incisor inclination',['retroclined upper incisors','normal upper incisors','proclined upper incisors']],['LI to mandibular plane',93,6,'Lower incisor inclination',['retroclined lower incisors','normal lower incisors','proclined lower incisors']]];
-  el.innerHTML='<h4>Cephalometric interpreter</h4><div class="sub">Type in the values from the stem. Norms are the ones on your slides.</div><div class="tw"><table><thead><tr><th>Measure</th><th>Norm</th><th>Value</th><th>Meaning</th></tr></thead><tbody>'+N.map((n,i)=>'<tr><td>'+n[0]+'<br><span class="muted" style="font-weight:400;font-size:12px">'+n[3]+'</span></td><td>'+n[1]+' ± '+n[2]+'°</td><td><input type="number" data-i="'+i+'" value="'+n[1]+'" style="width:70px"></td><td id="m'+i+'"></td></tr>').join('')+'<tr><td>ANB<br><span class="muted" style="font-weight:400;font-size:12px">SNA minus SNB</span></td><td>3 ± 2°</td><td id="anb"></td><td id="ma"></td></tr></tbody></table></div><div class="out" id="o"></div>';
-  function up(){const v=N.map((n,i)=>+$('[data-i="'+i+'"]',el).value);const cls=N.map((n,i)=>v[i]<n[1]-n[2]?0:v[i]>n[1]+n[2]?2:1);N.forEach((n,i)=>{$('#m'+i,el).innerHTML=(cls[i]===1?'':'<b>')+n[4][cls[i]]+(cls[i]===1?'':'</b>')});
+  const N=[['SNA',81,3,'Maxilla to cranial base',['retrognathic maxilla','normal maxilla','prognathic maxilla'],60,100],['SNB',78,3,'Mandible to cranial base',['retrognathic mandible','normal mandible','prognathic mandible'],60,100],['MMPA',27,4,'Maxillary to mandibular plane angle',['low angle: short face (brachyfacial), deep bite tendency','average vertical pattern','high angle: long face (dolichofacial), open bite tendency'],10,45],['UI to maxillary plane',109,6,'Upper incisor inclination',['retroclined upper incisors','normal upper incisors','proclined upper incisors'],85,135],['LI to mandibular plane',93,6,'Lower incisor inclination',['retroclined lower incisors','normal lower incisors','proclined lower incisors'],70,120]];
+  const PR=[['Normal',[81,78,27,109,93]],['Class III, small maxilla',[71,78,27,109,93]],['Class III, big mandible',[81,88,27,109,93]],['Class ? (slide 50)',[81,70,27,109,93]],['SAQ: 82, 74, MMPA 21',[82,74,21,109,93]]];
+  const LM={S:['Sella','The mid-point of the cavity of sella turcica.'],N:['Nasion','The anterior point of the intersection between the nasal and frontal bones.'],A:['Point A','The innermost point on the contour of the premaxilla between anterior nasal spine and the incisor tooth.'],B:['Point B','The innermost point on the contour of the mandible between the incisor tooth and the bony chin.'],ANS:['ANS (anterior nasal spine)','The tip of the anterior nasal spine.'],PNS:['PNS (posterior nasal spine)','The tip of the posterior spine of the palatine bone, at the junction of the hard and soft palates.'],Pog:['Pogonion','The most anterior point on the contour of the chin.'],Me:['Menton','The most inferior point on the mandibular symphysis (the bottom of the chin).'],Go:['Gonion','The midpoint of the contour connecting the ramus and body of the mandible.'],UIt:['Upper incisor tip','Dental landmark. The line from the apex through the tip is the long axis used for the UI angle.'],UIa:['Upper incisor apex','Dental landmark. Joined to the tip it gives the upper incisor long axis.'],LIt:['Lower incisor tip','Dental landmark. The line from the apex through the tip is the long axis used for the LI angle.'],LIa:['Lower incisor apex','Dental landmark. Joined to the tip it gives the lower incisor long axis.']};
+  const LY=[['All lines','all'],['Sagittal: SNA, SNB, ANB','sag'],['Vertical: MMPA','ver'],['Incisors','den']];
+  let v=N.map(n=>n[1]),ly='all',ghost=false,sel='A';
+  const sl=N.map((n,i)=>'<label class="sl"><span>'+n[0]+': <output id="co'+i+'">'+n[1]+'</output>°</span><input type="range" id="cs'+i+'" min="'+n[5]+'" max="'+n[6]+'" step="1" value="'+n[1]+'"></label>').join('');
+  el.innerHTML='<h4>Cephalometric tracing and interpreter</h4><div class="sub">Drag the sliders or type values from the stem, and the tracing redraws. Tap a landmark for its definition. Norms are the Eastman standards on your Cephalometrics slides (DS3101 Wk 8).</div>'
+   +'<div class="cp-row" id="cpre">'+PR.map((p,i)=>'<button data-p="'+i+'"'+(i?'':' class="on"')+'>'+p[0]+'</button>').join('')+'</div>'
+   +'<div class="cp-wrap"><div class="cp-fig"><svg id="csvg" viewBox="-84 -104 290 356" role="img" aria-label="Lateral cephalometric tracing"></svg>'
+   +'<div class="cp-row" id="clay">'+LY.map((l,i)=>'<button data-l="'+l[1]+'"'+(i?'':' class="on"')+'>'+l[0]+'</button>').join('')+'</div>'
+   +'<label class="cp-chk"><input type="checkbox" id="cgh"> Overlay the norm, superimposed on S-N</label></div>'
+   +'<div class="cp-side"><div class="ctl cp-sl">'+sl+'</div><div class="out" id="clm"></div></div></div>'
+   +'<div class="tw"><table><thead><tr><th>Measure</th><th>Norm</th><th>Value</th><th>Meaning</th></tr></thead><tbody>'+N.map((n,i)=>'<tr><td>'+n[0]+'<br><span class="muted" style="font-weight:400;font-size:12px">'+n[3]+'</span></td><td>'+n[1]+' ± '+n[2]+'°</td><td><input type="number" data-i="'+i+'" value="'+n[1]+'" style="width:70px"></td><td id="m'+i+'"></td></tr>').join('')
+   +'<tr><td>ANB<br><span class="muted" style="font-weight:400;font-size:12px">SNA minus SNB</span></td><td>3 ± 2°</td><td id="anb"></td><td id="ma"></td></tr>'
+   +'<tr><td>Inter-incisal angle<br><span class="muted" style="font-weight:400;font-size:12px">Worked out from the tracing</span></td><td>135 ± 10°</td><td id="iia"></td><td id="mi"></td></tr></tbody></table></div><div class="out" id="o"></div>';
+  const R=Math.PI/180,c7=Math.cos(7*R),s7=Math.sin(7*R);
+  const rot=p=>[p[0]*c7+p[1]*s7,-p[0]*s7+p[1]*c7];
+  const add=(p,q)=>[p[0]+q[0],p[1]+q[1]],mul=(d,k)=>[d[0]*k,d[1]*k],dir=a=>[Math.cos(a*R),Math.sin(a*R)];
+  const f=n=>Math.round(n*10)/10;
+  function geo(x){
+    const[SNA,SNB,MM,UI,LI]=x,mx=8,mn=8+MM;
+    const S=[0,0],Nn=[140,0],A=add(Nn,mul(dir(180-SNA),110)),B=add(Nn,mul(dir(180-SNB),190));
+    const p=dir(mx),ANS=add(A,[12,-16]),PNS=add(ANS,mul(p,-105));
+    const Pog=add(B,[8,24]),Me=add(B,[-2,42]),m=dir(mn),Go=add(Me,mul(m,-150)),Co=[-6,28];
+    const dU=dir(188-UI),UIa=add(A,[-8,12]),UIt=add(UIa,mul(dU,46));
+    const dL=dir(180+mn+LI),LIa=add(B,[-12,14]),LIt=add(LIa,mul(dL,50));
+    const Pr=add(A,[5,22]),Id=add(B,[9,-14]);
+    return{S,N:Nn,A,B,ANS,PNS,Pog,Me,Go,Co,UIa,UIt,LIa,LIt,Pr,Id,p,m,dU,dL,mn};
+  }
+  const P=q=>{const r=rot(q);return f(r[0])+' '+f(r[1])};
+  const ln=(a,b,c,w,da)=>'<line x1="'+f(rot(a)[0])+'" y1="'+f(rot(a)[1])+'" x2="'+f(rot(b)[0])+'" y2="'+f(rot(b)[1])+'" class="'+c+'" stroke-width="'+(w||1.6)+'"'+(da?' stroke-dasharray="'+da+'"':'')+' stroke-linecap="round"/>';
+  function arc(c,a1,a2,r,cl){let s='',n=18;for(let i=0;i<=n;i++){const a=a1+(a2-a1)*i/n;s+=(i?'L':'M')+P(add(c,mul(dir(a),r)))}return '<path d="'+s+'" class="'+cl+' f-none" stroke-width="1.4"/>'}
+  function ang(d){return Math.atan2(d[1],d[0])/R}
+  function tx(q,t,cl,dx,dy){const r=rot(q);return '<text x="'+f(r[0]+(dx||0))+'" y="'+f(r[1]+(dy||0))+'" class="cp-t '+(cl||'')+'">'+t+'</text>'}
+  function bone(g,cl){
+    const cr='M'+P([-58,-6])+'C'+P([-60,-70])+' '+P([60,-120])+' '+P([128,-74])+'C'+P([150,-52])+' '+P([146,-18])+' '+P(g.N);
+    const na='M'+P(g.N)+'Q'+P([150,8])+' '+P([160,22]);
+    const st='M'+P([-14,-6])+'Q'+P([-15,12])+' '+P([0,12])+'Q'+P([14,12])+' '+P([13,-6]);
+    const mx='M'+P(g.PNS)+'L'+P(g.ANS)+'Q'+P(add(g.A,[3,-6]))+' '+P(g.A)+'Q'+P(add(g.A,[1,12]))+' '+P(g.Pr)+'L'+P(add(g.Pr,[-62,4]))+'Q'+P(add(g.PNS,[2,20]))+' '+P(g.PNS)+'Z';
+    const md='M'+P(g.Co)+'Q'+P(add(g.Go,[-6,-30]))+' '+P(g.Go)+'Q'+P(add(g.Me,mul(g.m,-70)))+' '+P(g.Me)+'Q'+P(add(g.Pog,[2,14]))+' '+P(g.Pog)+'Q'+P(add(g.B,[6,8]))+' '+P(g.B)+'Q'+P(add(g.B,[2,-8]))+' '+P(g.Id)+'L'+P(add(g.Go,[62,-44]))+'L'+P(add(g.Go,[58,-92]))+'Q'+P(add(g.Go,[40,-70]))+' '+P(add(g.Co,[10,4]))+'Z';
+    return '<g class="'+cl+'"><path d="'+cr+'" class="f-none" stroke-width="1.6"/><path d="'+na+'" class="f-none" stroke-width="1.6"/><path d="'+st+'" class="f-none" stroke-width="1.6"/><path d="'+mx+'" class="cp-bone'+(cl.indexOf('cp-b')>=0?' cp-mx':'')+'" stroke-width="1.4"/><path d="'+md+'" class="cp-bone'+(cl.indexOf('cp-b')>=0?' cp-md':'')+'" stroke-width="1.4"/></g>';
+  }
+  function tooth(a,t,d,w,cl){const n=[-d[1],d[0]],c=add(a,mul(d,30));return '<path d="M'+P(a)+'Q'+P(add(add(a,mul(d,14)),mul(n,w)))+' '+P(add(c,mul(n,w)))+'L'+P(t)+'L'+P(add(c,mul(n,-w)))+'Q'+P(add(add(a,mul(d,14)),mul(n,-w)))+' '+P(a)+'Z" class="'+cl+'" stroke-width="1.2"/>'}
+  function inter(p1,d1,p2,d2){const den=d1[0]*d2[1]-d1[1]*d2[0];if(Math.abs(den)<1e-6)return null;const t=((p2[0]-p1[0])*d2[1]-(p2[1]-p1[1])*d2[0])/den;return add(p1,mul(d1,t))}
+  function draw(){
+    const g=geo(v),o=geo(N.map(n=>n[1]));let h='';
+    if(ghost)h+='<g class="cp-ghost">'+bone(o,'s-mut')+ln(o.S,o.N,'s-mut',1.2,'4 3')+ln(o.N,o.A,'s-mut',1.2,'4 3')+ln(o.N,o.B,'s-mut',1.2,'4 3')+'</g>';
+    h+=bone(g,'s-line cp-b');
+    h+='<g class="cp-den">'+tooth(g.UIa,g.UIt,g.dU,6.5,'cp-tooth')+tooth(g.LIa,g.LIt,g.dL,5.5,'cp-tooth')+'</g>';
+    let sag=ln(g.S,g.N,'s-ink',1.8)+ln(g.N,add(g.N,mul(dir(180-v[0]),128)),'s-info',1.8)+ln(g.N,add(g.N,mul(dir(180-v[1]),200)),'s-warn',1.8);
+    sag+=arc(g.N,180,180-v[0],26,'s-info')+arc(g.N,180-v[0],180-v[1],40,'s-warn');
+    sag+=tx(add(g.N,mul(dir(180-v[0]/2),30)),'SNA '+v[0]+'°','cp-info',-50,4)+tx(add(g.N,mul(dir(180-v[1]),46)),'SNB '+v[1]+'°','cp-warn',-56,10)+tx(add(g.N,[0,0]),'ANB '+(v[0]-v[1])+'°','cp-warn',8,52);
+    let ver=ln(add(g.PNS,mul(g.p,-30)),add(g.ANS,mul(g.p,8)),'s-ok',1.8)+ln(add(g.Go,mul(g.m,-30)),add(g.Me,mul(g.m,8)),'s-ok',1.8);
+    const X=inter(g.PNS,g.p,g.Go,g.m);
+    if(X&&rot(X)[0]>-60&&rot(X)[1]<250){ver+=ln(g.PNS,X,'s-ok',1.1,'3 3')+ln(g.Go,X,'s-ok',1.1,'3 3')+arc(X,8,g.mn,22,'s-ok')+tx(X,'MMPA '+v[2]+'°','cp-ok',-10,-8)}
+    else ver+=ln(g.PNS,add(g.PNS,mul(g.p,-40)),'s-ok',1.1,'3 3')+ln(g.Go,add(g.Go,mul(g.m,-40)),'s-ok',1.1,'3 3')+tx(g.Go,'MMPA '+v[2]+'°','cp-ok',-34,24);
+    let den='';
+    const XU=inter(g.UIa,g.dU,g.PNS,g.p);if(XU){den+=ln(XU,add(g.UIt,mul(g.dU,6)),'s-sc',1.3,'4 2')+arc(XU,188,188-v[3],12,'s-sc')+tx(XU,'UI '+v[3]+'°','cp-sc',-46,-4)}
+    const XL=inter(g.LIa,g.dL,g.Go,g.m);if(XL){den+=ln(XL,add(g.LIt,mul(g.dL,6)),'s-sc',1.3,'4 2')+arc(XL,180+g.mn,180+g.mn+v[4],12,'s-sc')+tx(XL,'LI '+v[4]+'°','cp-sc',-44,14)}
+    h+='<g data-ly="ver">'+ver+'</g><g data-ly="sag">'+sag+'</g><g data-ly="den">'+den+'</g>';
+    const pts=['S','N','A','B','ANS','PNS','Pog','Me','Go','UIt','UIa','LIt','LIa'],lab={UIt:'',UIa:'',LIt:'',LIa:''},off={S:[-8,-8],N:[6,-6],A:[6,2],B:[-16,2],ANS:[4,-5],PNS:[-14,-6],Pog:[6,4],Me:[-4,13],Go:[-18,10]};
+    h+=pts.map(k=>{const r=rot(g[k]),on=k===sel;const t=lab[k]===''?'':'<text x="'+f(r[0]+(off[k]||[5,-5])[0])+'" y="'+f(r[1]+(off[k]||[5,-5])[1])+'" class="cp-t cp-lt">'+k+'</text>';return '<g class="cp-lm'+(on?' on':'')+'" data-k="'+k+'" tabindex="0" role="button" aria-label="'+LM[k][0]+'"><circle cx="'+f(r[0])+'" cy="'+f(r[1])+'" r="6.5" class="cp-hit"/><circle cx="'+f(r[0])+'" cy="'+f(r[1])+'" r="'+(on?4:2.8)+'" class="cp-dot"/>'+t+'</g>'}).join('');
+    const svg=$('#csvg',el);svg.innerHTML=h;
+    $$('[data-ly]',svg).forEach(x=>x.style.opacity=ly==='all'||x.dataset.ly===ly?1:.15);
+    $$('.cp-den',svg).forEach(x=>x.style.opacity=ly==='all'||ly==='den'?1:.45);
+    $$('.cp-lm',svg).forEach(x=>{const go=()=>{sel=x.dataset.k;draw()};x.onclick=go;x.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}}});
+    $('#clm',el).innerHTML='<b class="h">'+LM[sel][0]+'</b>'+LM[sel][1];
+    const iia=Math.round(Math.abs(((ang(mul(g.dU,-1))-ang(mul(g.dL,-1)))%360+540)%360-180));
+    $('#iia',el).innerHTML='<b>'+iia+'°</b>';$('#mi',el).innerHTML=iia<125?'<b>Acute: proclined incisors</b>':iia>145?'<b>Obtuse: retroclined incisors, deep bite tendency</b>':'normal';
+    return iia;
+  }
+  function up(){
+    const cls=N.map((n,i)=>v[i]<n[1]-n[2]?0:v[i]>n[1]+n[2]?2:1);N.forEach((n,i)=>{$('#m'+i,el).innerHTML=(cls[i]===1?'':'<b>')+n[4][cls[i]]+(cls[i]===1?'':'</b>')});
     const anb=v[0]-v[1];$('#anb',el).innerHTML='<b>'+anb+'°</b>';const sk=anb>5?'Class II':anb<1?'Class III':'Class I';$('#ma',el).innerHTML='<b>Skeletal '+sk+'</b>';
     let s='<b class="h">Skeletal '+sk+(cls[2]===0?', low angle':cls[2]===2?', high angle':', average vertical proportions')+'</b>';
-    if(sk==='Class II')s+=cls[1]===0?'The discrepancy comes mainly from a retrognathic mandible. ':cls[0]===2?'The discrepancy comes mainly from a protrusive maxilla. ':'';
-    if(sk==='Class III')s+=cls[0]===0?'The discrepancy comes mainly from a retrusive maxilla. ':cls[1]===2?'The discrepancy comes mainly from a prognathic mandible. ':'';
+    if(sk==='Class II')s+=cls[1]===0&&cls[0]===2?'Both jaws contribute: a prognathic maxilla and a retrognathic mandible. ':cls[1]===0?'The discrepancy comes mainly from a retrognathic mandible. ':cls[0]===2?'The discrepancy comes mainly from a prognathic maxilla. ':'';
+    if(sk==='Class III')s+=cls[0]===0&&cls[1]===2?'Both jaws contribute: a retrognathic maxilla and a prognathic mandible. ':cls[0]===0?'The discrepancy comes mainly from a retrognathic maxilla. ':cls[1]===2?'The discrepancy comes mainly from a prognathic mandible. ':'';
     if(sk==='Class II'&&cls[4]===2)s+='Proclined lower incisors are dento-alveolar compensation: do not procline them further. ';
     if(sk==='Class III'&&(cls[3]===2||cls[4]===0))s+='Proclined uppers and retroclined lowers are compensation camouflaging the skeletal pattern. ';
-    $('#o',el).innerHTML=s}
-  $$('input',el).forEach(i=>i.oninput=up);up()};
+    if(sk!=='Class I'&&cls[0]===1&&cls[1]===1)s+='SNA and SNB are each within range, but together they give an abnormal ANB. ';
+    $('#o',el).innerHTML=s;draw()}
+  function setV(i,x,src){x=Math.max(N[i][5],Math.min(N[i][6],Math.round(+x)));if(isNaN(x))return;v[i]=x;$('#cs'+i,el).value=x;$('#co'+i,el).textContent=x;if(src!=='num')$('[data-i="'+i+'"]',el).value=x}
+  N.forEach((n,i)=>{$('#cs'+i,el).oninput=e=>{setV(i,e.target.value);clrP();up()}});
+  $$('input[data-i]',el).forEach(inp=>inp.oninput=()=>{if(inp.value==='')return;const i=+inp.dataset.i;v[i]=+inp.value;$('#cs'+i,el).value=v[i];$('#co'+i,el).textContent=v[i];clrP();up()});
+  function clrP(){$$('#cpre button',el).forEach(b=>b.classList.remove('on'))}
+  $$('#cpre button',el).forEach(b=>b.onclick=()=>{PR[+b.dataset.p][1].forEach((x,i)=>setV(i,x));clrP();b.classList.add('on');up()});
+  $$('#clay button',el).forEach(b=>b.onclick=()=>{ly=b.dataset.l;$$('#clay button',el).forEach(x=>x.classList.toggle('on',x===b));draw()});
+  $('#cgh',el).onchange=e=>{ghost=e.target.checked;draw()};
+  up()};
 
 W.screw=function(el){
   el.innerHTML=`<h4>Expansion screw and spring arithmetic</h4><div class="sub">Two calculations examiners like.</div><div class="split"><div><div class="ctl">${slider('q','Quarter turns',0,24,1,4,'')}</div><div class="out" id="a"></div></div><div><div class="ctl">${slider('d','Spring activation',1,4,0.5,3,' mm')}${seg('w',['0.5 mm wire','0.7 mm wire'],0)}</div><div class="out" id="b"></div></div></div>`;
@@ -3236,6 +3481,8 @@ T({id:'ortho-developing',s:'ortho',t:'The developing dentition and space managem
 src:'Self-Correcting Anomalies (Dr Mani, DS4102 Wk 3); Space Management (Abdalla, DS4101 Wk 4); Balance and Compensation guideline (DS4101 Wk 4)',
 kw:['Self-correcting anomaly','Terminal plane','Flush terminal plane','Leeway space','Primate space','Incisor liability','Ugly duckling stage','Balancing extraction','Compensating extraction','Space maintainer','Band and loop','Lingual arch','Transpalatal arch','Nance button','Ectopic first permanent molar','Digit sucking','Hay rake','Infantile swallow'],
 b:[
+['h','Eruption ages'],
+['w','erupt'],
 ['p','A **self-correcting anomaly** (transient malocclusion) arises in the developing dentition and corrects without treatment.'],
 ['tbl',['Stage','What you see','Why it corrects'],[['Gum pads','Anterior open bite; infantile swallow','Primary incisors erupt at 6 to 7 months; solids start at about 1 year.'],['Primary dentition','Deep bite','Primary molars finish erupting and incisors wear.'],['8 to 11 years','Ugly duckling: flared, spaced upper incisors','Canines erupt and pressure shifts from roots to crowns. Investigate if the diastema exceeds 3 mm.']]],
 ['h','Terminal plane to molar class'],
