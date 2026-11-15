@@ -763,6 +763,39 @@ div#ad.on{opacity:1}
 .dz-fix{display:grid;gap:6px;font-size:13.5px;line-height:1.45}
 .dz-fix>div{display:grid;gap:1px}
 .dz-fine{margin:0;font-size:12px;color:var(--muted)}
+
+.mtabs{display:flex;gap:4px;padding:4px;margin:4px 0 18px;border-radius:14px;background:var(--hover);box-shadow:inset 0 0 0 .5px var(--edge);overflow-x:auto;scrollbar-width:none}
+.mtabs::-webkit-scrollbar{display:none}
+.mtabs button{appearance:none;border:0;font:inherit;font-size:13.5px;font-weight:600;color:var(--muted);background:transparent;border-radius:10px;padding:8px 14px;cursor:pointer;white-space:nowrap;flex:1 0 auto}
+.mtabs button:hover{color:var(--ink)}
+.mtabs button.on{background:var(--glass2);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12),0 0 0 .5px var(--edge)}
+.kd{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
+.kd-top{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}.kd-top p{margin:0}
+.kd-tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin}
+.kd-tabs button{appearance:none;border:0;font:inherit;font-size:13px;font-weight:600;color:var(--muted);background:transparent;box-shadow:0 0 0 1px var(--edge);border-radius:999px;padding:7px 14px;cursor:pointer;white-space:nowrap}
+.kd-tabs button:hover{color:var(--ink)}
+.kd-tabs button.on{background:var(--accent);color:#fff;box-shadow:none}
+.kd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px}
+.kd-c{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-content:start;padding:14px;border-radius:16px;background:var(--glass2);box-shadow:0 0 0 .5px var(--edge);min-width:0;font-size:13.5px;line-height:1.5}
+.kd-c.dz-tg{box-shadow:inset 0 0 0 1.5px hsl(38 85% 55%/.55)}
+.kd-c p{margin:0}
+.kd-ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.kd-s{font-size:11.5px;color:var(--muted)}
+.kd-w{color:var(--muted)}
+.kd-rx{display:grid;gap:2px;padding:10px 12px;border-radius:12px;background:var(--hover);font-size:13px}
+.kd-rx span{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kd-tw{overflow-x:auto;min-width:0}
+.kd-t{width:100%;border-collapse:collapse;font-size:12.5px}
+.kd-t th{text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--edge)}
+.kd-t td{padding:6px 8px;border-bottom:.5px solid var(--edge);vertical-align:top;font-variant-numeric:tabular-nums}
+.kd-t tr.on td{background:var(--hover);font-weight:700}
+.kd-calcs{display:grid;gap:8px}
+.kd-cn{font-size:12px;display:block;margin-bottom:3px}
+.kd-c a{color:var(--accent)}
+.kd-c .dz-n{flex-wrap:wrap}
+.kd-c .dz-src{white-space:normal}
+.kd-grid{align-items:start}
+@media (min-width:700px){.kd-tabs{flex-wrap:wrap;overflow:visible}}
 </style>
 <div class="app">
 <aside class="side">
@@ -1392,6 +1425,77 @@ function showIntro(){if($('#intro'))return;const site=!!window.SITE,nT=TOP.lengt
   o.addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.skip!==undefined)close();else if(t.dataset.dot)go(+t.dataset.dot);else if(t.dataset.go)close(t.dataset.go);else if(t.id==='inNext')at>=S.length-1?close('home'):go(at+1)});
   set(0)}
 
+/* ===== Medications > Children: paediatric doses split into small sub-tabs ===== */
+/* Each card: h title, s source key ('tg' = Therapeutic Guidelines, otherwise a lecture name), b body (html), c optional calc(w,age) -> html */
+const KDS={w:20,age:6,tab:'start'};
+try{const k=JSON.parse(localStorage.getItem('ds4102-p2-kids')||'null');if(k){if(k.w)KDS.w=k.w;if(k.age!==undefined)KDS.age=k.age;if(k.tab)KDS.tab=k.tab}}catch(e){}
+function kdKeep(){try{localStorage.setItem('ds4102-p2-kids',JSON.stringify(KDS))}catch(e){}}
+const KDTG='Therapeutic Guidelines · not from your lectures';
+const kdL=t=>'<ul class="kd-ul">'+t.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+const kdDz=n=>DZ.find(d=>d.n===n);
+function kdCalc(n,w,age){const d=kdDz(n);if(!d||!w)return '';const c=dzCalc(d,w,age===''?'':age);
+  if(c.no)return '<div class="dz-out no">'+esc(c.no)+'</div>';
+  return '<div class="dz-out"><span>For '+w+' kg'+(age!==''?', '+age+' yr':'')+'</span><b>'+esc(c.v)+'</b>'+(c.cap?'<em>Capped at the adult maximum</em>':'')+(c.liq?c.liq.map(l=>'<small>'+esc(l)+'</small>').join(''):'')+'</div>'}
+const r0=x=>Math.round(x*10)/10;
+const KIDS=[
+ {id:'start',t:'Start here',cards:[
+  {h:'Doses go by weight',s:'Antimicrobials in Clinical Practice (DS3101 Wk 9); Maxillofacial Infections in Children (DS4101 Wk 8)',b:kdL(['Work out every child dose from body weight in kilograms.','A child dose never goes above the adult dose, however heavy the child.','Ask first whether a drug is needed at all. Treating the source comes first.'])},
+  {h:'What goes on a script for a child',s:'Prescribing in Clinical Dental Practice (DS3101 Wk 7); Script Writing Information Session (DS4101 Wk 13)',b:kdL(['The child\'s <b>age and weight</b>, as well as full name and address.','The generic drug name, strength and form. For young children, a liquid such as amoxicillin 250 mg/5 mL.','Dose in mL, route and how often, in plain English. Never "take as directed".','How long, and the total quantity to supply.'])+'<div class="kd-rx"><span>Example, 20 kg child</span>Amoxicillin 250 mg/5 mL oral suspension. Give 6 mL orally every 8 hours for 5 days. Total 100 mL.</div>'},
+  {h:'Medically compromised children',s:'Antimicrobials in Clinical Practice (DS3101 Wk 9)',b:'<p>Some heart conditions need antibiotic cover before procedures that make the gum bleed. The full adult and child table, including Therapeutic Guidelines doses, is on the <a href="#prophylaxis">Antibiotic prophylaxis</a> page.</p>'},
+  {h:'How to use these tabs',s:'',b:'<p>Set the weight and age once at the top. Every tab then works out its doses for that child. Cards with an amber edge come from Therapeutic Guidelines because your slides give no child dose.</p>'}]},
+ {id:'pain',t:'Pain relief',cards:[
+  {h:'The approach',s:'Analgesics in Clinical Practice (DS3101 Wk 8)',b:kdL(['Treat the cause first. Pain relief is an add-on.','For strong pain, give paracetamol and an anti-inflammatory regularly together.','Lowest dose that works, for the shortest time.','Your slides give no child doses for any pain reliever.'])},
+  {h:'Paracetamol',s:'tg',b:'<p class="dz-rule">15 mg/kg, up to 1000 mg, every 4 to 6 hours. Maximum 4 doses in 24 hours. For a child with obesity, use ideal body weight.</p>',c:(w,a)=>kdCalc('Paracetamol',w,a)},
+  {h:'Ibuprofen',s:'tg',b:'<p class="dz-rule">5 to 10 mg/kg, up to 400 mg, every 6 to 8 hours. Maximum 3 doses in 24 hours. Not under 3 months. Review after 3 days.</p><p class="kd-w"><b>Your slides:</b> avoid NSAIDs in asthma, as they can cause severe bronchospasm.</p>',c:(w,a)=>kdCalc('Ibuprofen',w,a)},
+  {h:'Opioids',s:'tg',b:'<p>Oxycodone is not for children under 16 unless a specialist prescribes it.</p>'}]},
+ {id:'la',t:'Local anaesthetic',cards:[
+  {h:'The numbers to know',s:'Local Anaesthesia Part 2 (DS3101 Wk 4)',b:kdL(['2% means 20 mg in every mL, so a 2.2 mL cartridge of 2% lidocaine holds 44 mg.','4% articaine holds 88 mg in a 2.2 mL cartridge.','Maximum: lidocaine with adrenaline 7 mg/kg (never over 500 mg), articaine 7 mg/kg, prilocaine 6 to 8 mg/kg.','With two anaesthetics, the total must stay under the lower of the two maximums.'])},
+  {h:'Maximum cartridges for this child',s:'Local Anaesthesia Part 2 (DS3101 Wk 4)',b:'<p class="dz-rule">Worked out from 7 mg/kg and 2.2 mL cartridges. In practice stay well below these.</p>',c:(w,age)=>{if(!w)return '';const rows=[...new Set([10,15,20,25,30,40,+w])].filter(x=>x>0).sort((a,b)=>a-b);
+    return '<div class="kd-tw"><table class="kd-t"><thead><tr><th>Weight</th><th>Lidocaine 2%</th><th>Articaine 4%</th></tr></thead><tbody>'+rows.map(x=>{const mg=Math.min(7*x,500);return '<tr'+(x==w?' class="on"':'')+'><td>'+x+' kg</td><td>'+Math.min(7*x,500)+' mg · '+r0(Math.floor(mg/44*10)/10)+'</td><td>'+(age!==''&&+age<4?'Not under 4 years':(7*x)+' mg · '+r0(Math.floor(7*x/88*10)/10))+'</td></tr>'}).join('')+'</tbody></table></div>'}},
+  {h:'Warnings for children',s:'Local Anaesthesia Part 2 (DS3101 Wk 4)',b:kdL(['Children bite or chew a numb lip or cheek. Warn the child and the parent before they leave.','Overdose signs: tinnitus, light-headedness, numbness around the mouth, metallic taste, slurred speech, twitching, then seizures and breathing problems.','In an inflamed area, give more solution or block further away, but stay under the maximum.'])},
+  {h:'Age limits',s:'tg',b:kdL(['Articaine: not under 4 years.','Mepivacaine: 3 to 6 years 1.8 mL, 6 to 14 years 2.7 mL, 14 to 17 years 4.4 mL. Not under 3 years.','Prilocaine 3% with felypressin: 9 mg/kg. Prilocaine 4% plain: 6 mg/kg.'])}]},
+ {id:'abx',t:'Antibiotics',cards:[
+  {h:'Before you prescribe',s:'Antimicrobials in Clinical Practice (DS3101 Wk 9)',b:kdL(['Ask whether an antibiotic is needed at all. Remove the source first: extraction, pulpectomy or drainage.','Keep the course short and review in 48 to 72 hours.'])},
+  {h:'Child doses from your slides',s:'Maxillofacial Infections in Children (DS4101 Wk 8)',b:'<div class="kd-tw"><table class="kd-t"><thead><tr><th>Drug</th><th>Dose</th></tr></thead><tbody><tr><td>Amoxicillin (first choice)</td><td>15 mg/kg, up to 500 mg, every 8 hours, 5 days</td></tr><tr><td>Phenoxymethylpenicillin</td><td>12.5 mg/kg, up to 500 mg, every 6 hours, 5 days</td></tr><tr><td>Clindamycin (penicillin allergy)</td><td>7.5 mg/kg, up to 300 mg, every 8 hours, 5 days</td></tr><tr><td>Metronidazole (with a penicillin)</td><td>10 mg/kg, up to 400 mg, every 12 hours, 5 days</td></tr><tr><td>Amoxicillin with clavulanic acid</td><td>From 2 months: 22.5 mg/kg amoxicillin, up to 875 mg, every 12 hours, 5 days</td></tr></tbody></table></div>',
+   c:(w,a)=>{if(!w)return '';return '<div class="kd-calcs">'+[['Amoxicillin','Amoxicillin'],['Phenoxymethylpenicillin','Penicillin V'],['Clindamycin','Clindamycin'],['Metronidazole','Metronidazole'],['Amoxicillin with clavulanic acid','Amoxicillin with clavulanic acid']].map(x=>'<div><b class="kd-cn">'+x[1]+'</b>'+kdCalc(x[0],w,a)+'</div>').join('')+'</div>'}},
+  {h:'Facial swelling: when to send to hospital',s:'Maxillofacial Infections in Children (DS4101 Wk 8)',b:'<p>Infections spread faster in children (wider marrow spaces, tooth germs, growth centres), and they dehydrate quickly. Admit for IV antibiotics and drainage under GA if any of these:</p>'+kdL(['Fever over 38.5°C or a toxic look','Dehydration, or not eating or drinking','Trismus, trouble swallowing or breathing, raised floor of mouth','Swelling around the eye','Oral antibiotics have not worked'])},
+  {h:'Avulsed permanent tooth',s:'Avulsion (DS3102 Wk 8)',b:kdL(['Systemic antibiotic: doxycycline, or amoxicillin for children under 12 because tetracyclines stain developing teeth.','Open apex, before replanting: soak the root in doxycycline or minocycline, 1 mg in 20 mL saline, for 5 minutes. This helps the pulp revascularise.','Check tetanus status.'])},
+  {h:'Heart conditions that need cover',s:'tg',b:'<p>Amoxicillin 50 mg/kg, up to 2 g, by mouth 60 minutes before. Your slide gives adult doses only. See <a href="#prophylaxis">Antibiotic prophylaxis</a> for allergy options.</p>',c:(w,a)=>kdCalc('Amoxicillin (prophylaxis)',w,a)}]},
+ {id:'mouth',t:'Thrush and cold sores',cards:[
+  {h:'Your slides',s:'Antimicrobials in Clinical Practice (DS3101 Wk 9); Labial Mucosa (DS3101 Wk 10)',b:kdL(['Thrush can follow inhaled steroids or antibiotics, so look for the cause too.','Primary herpetic gingivostomatitis is mostly rest, fluids and pain relief. Antivirals only if severe.','Your slides give no child doses for antifungals or antivirals.'])},
+  {h:'Miconazole 2% gel',s:'tg',b:'<p>Child: 1.25 mL four times a day after food, for 7 to 14 days. Babies: 1 mL two to four times a day after feeds.</p>'},
+  {h:'Nystatin 100,000 units/mL liquid',s:'tg',b:'<p>1 mL four times a day, usually for 7 days and for 2 days after symptoms go.</p>'},
+  {h:'No child dose given',s:'tg',b:'<p>Amphotericin B lozenges, fluconazole and aciclovir have no child dose in the guideline extract. Famciclovir is not used in children.</p>'}]},
+ {id:'sed',t:'Sedation and GA',cards:[
+  {h:'Nitrous oxide with oxygen',s:'Nitrous Oxide and GA (DS4101 Wk 2)',b:kdL(['For anxious but cooperative children who can breathe through the nose, usually 4 years and over and ASA I or II. Also helps gagging and long appointments.','Start with 100% oxygen for 2 to 5 minutes, then raise nitrous oxide in small steps. Usual range 20 to 50%.','Finish with 100% oxygen for 3 to 5 minutes to prevent diffusion hypoxia.','Avoid with a blocked nose or cold, COPD, middle ear problems, B12 deficiency, or a child who will not cooperate.'])},
+  {h:'Oral midazolam',s:'Anxiety Management (DS3101 Wk 4); Sedation Techniques (DS3102 Wk 2)',b:'<p class="dz-rule">0.075 mg/kg by mouth, given by paediatric dentists. Flumazenil reverses it and must be on hand.</p>',c:(w,a)=>kdCalc('Midazolam by mouth (paediatric dentists)',w,a)},
+  {h:'When to refer for GA',s:'Nitrous Oxide and GA (DS4101 Wk 2)',b:kdL(['Very young or precooperative child with a lot of treatment','Behaviour management and sedation have failed','Special needs or a medical condition','Acute infection that stops LA working'])},
+  {h:'Oral benzodiazepines',s:'tg',b:'<p>Temazepam, lorazepam and diazepam premedication have no child dose given.</p>'}]},
+ {id:'fl',t:'Fluoride',cards:[
+  {h:'Toothpaste by age',s:'Fluorides (DS3101 Wk 2); The Child Patient',b:'<div class="kd-tw"><table class="kd-t"><thead><tr><th>Age</th><th>Fluorides lecture</th><th>Child Patient lecture</th></tr></thead><tbody><tr><td>6 to 18 months</td><td>None, or up to 500 ppm (rice grain)</td><td>None unless advised</td></tr><tr><td>18 months to 2 years</td><td>None, or up to 500 ppm (rice grain)</td><td>500 to 550 ppm, pea size</td></tr><tr><td>2 to 5 years</td><td>1000 ppm, pea size</td><td>500 to 550 ppm, pea size</td></tr><tr><td>6 years and over</td><td>1500 ppm</td><td>1000 to 1500 ppm</td></tr></tbody></table></div><p class="mut">Spit, do not rinse. The two lectures differ a little, so learn both.</p>'},
+  {h:'Varnish (Duraphat, 22,500 ppm)',s:'Fluorides (DS3101 Wk 2)',b:kdL(['18 months to 6 years: 0.25 mL','6 to 14 years: 0.4 mL','15 to 17 years: up to 0.75 mL','At least every 6 months for raised caries risk. No brushing for a few hours afterwards.'])},
+  {h:'Silver diamine fluoride 38%',s:'ART and Silver Fluoride (DS3101 Wk 13)',b:'<p class="dz-rule">Safe dose: one drop per 10 kg of body weight. Stains decay black for good.</p>',c:w=>w?'<div class="dz-out"><span>For '+w+' kg</span><b>'+r0(Math.floor(w/10*10)/10)+' drops at most</b></div>':''},
+  {h:'Swallowed too much fluoride',s:'Fluorides (DS3101 Wk 2)',b:'<p class="dz-rule">Probably toxic dose is about 5 mg of fluoride per kg. Give milk to bind the fluoride and get emergency care. Gels are not used in very young children because they swallow too much.</p>',c:w=>w?'<div class="dz-out"><span>For '+w+' kg</span><b>'+r0(5*w)+' mg fluoride</b><small>About '+r0(5*w)+' g of 1000 ppm toothpaste, or '+r0(5*w/1.5)+' g of 1500 ppm (worked out from 5 mg/kg)</small></div>':''},
+  {h:'Gels and rinses',s:'Fluorides (DS3101 Wk 2)',b:kdL(['Rinse: 0.05% sodium fluoride daily, or 0.2% weekly.','Gel: about 12,300 ppm, every 3 to 6 months depending on risk. Not for very young children.'])}]},
+ {id:'em',t:'Emergencies',cards:[
+  {h:'Anaphylaxis: adrenaline autoinjector',s:'tg',b:'<p class="dz-rule">Into the outer thigh. Under 7.5 kg use 1 in 1000 at 10 micrograms/kg. 7.5 to 20 kg 150 micrograms. Over 20 to 50 kg 300 micrograms. Over 50 kg 500 micrograms. Repeat every 5 minutes if needed.</p>',c:(w,a)=>kdCalc('Adrenaline autoinjector (anaphylaxis)',w,a)},
+  {h:'Anaphylaxis: adrenaline 1 in 1000 ampoule',s:'tg',b:'<p class="dz-rule">10 micrograms/kg (0.01 mL/kg), up to 500 micrograms, into the outer thigh.</p>',c:(w,a)=>kdCalc('Adrenaline 1 in 1000 (anaphylaxis)',w,a)},
+  {h:'Asthma attack',s:'tg',b:'<p>Salbutamol 4 puffs through a spacer, one at a time, then 4 more if little better. Same as an adult. Your slides say 2 puffs. Sit the child upright.</p>'},
+  {h:'Your slides',s:'Medically Compromised Patient 1, 2 and 3 (DS3101)',b:kdL(['Oxygen 15 L/min for any emergency.','Low blood sugar: 15 g of glucose by mouth if conscious.','Seizure over 3 minutes: recovery position and oxygen first. Your slides give adult drug doses only.','Glucagon and seizure medicines have no child dose on the slides.'])}]}];
+function kdDraw(){const el=$('#kdp');if(!el)return;const tab=KIDS.find(x=>x.id===KDS.tab)||KIDS[0],w=Math.max(0,+KDS.w||0),age=KDS.age;
+  $$('#kdtabs button').forEach(b=>{const on=b.dataset.kd===tab.id;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+  el.innerHTML='<div class="kd-grid">'+tab.cards.map(c=>{const tg=c.s==='tg';return '<div class="kd-c'+(tg?' dz-tg':'')+'"><div class="dz-n"><b>'+esc(c.h)+'</b>'+(c.s?'<span class="dz-src'+(tg?' tg':'')+'">'+(tg?KDTG:'Your slides')+'</span>':'')+'</div>'+c.b+(c.c?c.c(w,age):'')+(c.s&&!tg?'<p class="kd-s">'+esc(c.s)+'</p>':'')+'</div>'}).join('')+'</div>'}
+function kidsMount(el){
+  el.innerHTML='<div class="kd"><div class="kd-top"><p class="mut">Children\'s doses in small sections. Set the child once and every section works out its doses.</p>'
+   +'<div class="dz-in"><label>Weight <span><input id="kdw" type="number" inputmode="decimal" min="1" max="120" step="0.5" value="'+KDS.w+'"> kg</span></label><label>Age <span><input id="kda" type="number" inputmode="decimal" min="0" max="18" step="0.5" placeholder="Any" value="'+KDS.age+'"> years</span></label></div>'
+   +'<div class="dz-quick">'+[[10,1],[15,3],[20,6],[30,9],[45,13]].map(x=>'<button data-kdw="'+x[0]+'" data-kda="'+x[1]+'">'+x[1]+' yr, '+x[0]+' kg</button>').join('')+'</div></div>'
+   +'<div class="kd-tabs" id="kdtabs" role="tablist">'+KIDS.map(t=>'<button role="tab" data-kd="'+t.id+'">'+esc(t.t)+'</button>').join('')+'</div>'
+   +'<div id="kdp" role="tabpanel"></div><p class="dz-fine">A study aid, not a prescribing tool. Check the current Therapeutic Guidelines before prescribing.</p></div>';
+  $('#kdw').oninput=e=>{KDS.w=e.target.value;kdKeep();kdDraw()};$('#kda').oninput=e=>{KDS.age=e.target.value;kdKeep();kdDraw()};
+  $$('[data-kdw]',el).forEach(b=>b.onclick=()=>{KDS.w=+b.dataset.kdw;KDS.age=+b.dataset.kda;$('#kdw').value=KDS.w;$('#kda').value=KDS.age;kdKeep();kdDraw()});
+  $$('#kdtabs button',el).forEach(b=>b.onclick=()=>{KDS.tab=b.dataset.kd;kdKeep();kdDraw();b.scrollIntoView({block:'nearest',inline:'nearest'})});
+  kdDraw()}
+
 
 /* ===== learning objectives, copied from the objectives slide of each lecture in Downloads ===== */
 const LOBJ=[
@@ -1554,10 +1658,14 @@ MEDS.forEach(g=>g.items.forEach(m=>{if(MTG[m.n])m.tg=MTG[m.n]}));
 const RXRULES=['Your name, address, phone, qualifications and prescriber number.','Patient\'s full name and address. Date of birth for drugs of dependence. Age and weight for children.','The date, and your signature.','Drug name in full (generic name), strength, form, dose, route and how often, in plain English. Never write "take as directed".','How long to take it, and the quantity to supply.','No more than 3 items on one script, and only 1 if it is a drug of dependence.','Dentists cannot write repeats, cannot prescribe authority items, and cannot prescribe for themselves.'];
 function pageMeds(){view().className='page';
   let h='<div class="thead"><div class="eyebrow">Quick reference</div><h1>Medications</h1><p class="lead">Every drug named in your Paper 2 lectures, with the adult dose and the child dose side by side. Where the slides give no dose, the card says so rather than guessing.</p></div>';
-  h+='<div id="dzbox"></div><h2 class="sec">Every drug</h2>';h+='<div class="med-bar"><input type="search" id="medq" placeholder="Search a drug or a use" autocomplete="off"><div class="med-chips"><button class="on" data-g="">All</button>'+MEDS.map((g,i)=>'<button data-g="'+i+'">'+esc(g.g)+'</button>').join('')+'</div></div><div id="medl"></div>';
-  h+='<h2 class="sec">Writing the prescription</h2><div class="card"><ul class="med-rules">'+RXRULES.map(r=>'<li>'+esc(r)+'</li>').join('')+'</ul><div class="med-rx"><div><b>Adult example</b><span>Amoxicillin 500 mg capsules. Take 1 capsule every 8 hours for 5 days. 15 (fifteen) capsules.</span></div><div><b>Child example (20 kg)</b><span>Amoxicillin 250 mg/5 mL oral suspension. Give 6 mL orally every 8 hours for 5 days. Total 100 mL.</span></div><div><b>Schedules</b><span>S2 pharmacy medicine. S3 pharmacist only. S4 prescription only, such as antibiotics. S8 controlled drug, such as oxycodone and morphine.</span></div></div><p class="med-src">Source: '+esc(MSRC.sc)+'; '+esc(MSRC.pr)+'</p></div>';
-  h+='<p class="mut med-note">This page is a study summary of your lecture slides. It is not a prescribing guide. Always check Therapeutic Guidelines before prescribing for a patient.</p>';
-  view().innerHTML=h;dzMount($('#dzbox'));let grp='';
+  const MT=[['all','Every drug'],['calc','Dose calculator'],['kids','Children'],['rx','Writing a script']];let mt='all';try{mt=localStorage.getItem('ds4102-p2-medtab')||'all'}catch(e){}if(!MT.some(x=>x[0]===mt))mt='all';
+  h+='<div class="mtabs" role="tablist">'+MT.map(x=>'<button role="tab" data-mt="'+x[0]+'">'+x[1]+'</button>').join('')+'</div>';
+  h+='<div data-mp="calc"><div id="dzbox"></div></div><div data-mp="kids"><div id="kidsbox"></div></div><div data-mp="all">';h+='<div class="med-bar"><input type="search" id="medq" placeholder="Search a drug or a use" autocomplete="off"><div class="med-chips"><button class="on" data-g="">All</button>'+MEDS.map((g,i)=>'<button data-g="'+i+'">'+esc(g.g)+'</button>').join('')+'</div></div><div id="medl"></div>';
+  h+='</div><div data-mp="rx"><h2 class="sec">Writing the prescription</h2><div class="card"><ul class="med-rules">'+RXRULES.map(r=>'<li>'+esc(r)+'</li>').join('')+'</ul><div class="med-rx"><div><b>Adult example</b><span>Amoxicillin 500 mg capsules. Take 1 capsule every 8 hours for 5 days. 15 (fifteen) capsules.</span></div><div><b>Child example (20 kg)</b><span>Amoxicillin 250 mg/5 mL oral suspension. Give 6 mL orally every 8 hours for 5 days. Total 100 mL.</span></div><div><b>Schedules</b><span>S2 pharmacy medicine. S3 pharmacist only. S4 prescription only, such as antibiotics. S8 controlled drug, such as oxycodone and morphine.</span></div></div><p class="med-src">Source: '+esc(MSRC.sc)+'; '+esc(MSRC.pr)+'</p></div>';
+  h+='<p class="mut med-note">This page is a study summary of your lecture slides. It is not a prescribing guide. Always check Therapeutic Guidelines before prescribing for a patient.</p></div>';
+  view().innerHTML=h;dzMount($('#dzbox'));kidsMount($('#kidsbox'));let grp='';
+  const showT=t=>{mt=t;$$('[data-mt]').forEach(b=>{const on=b.dataset.mt===t;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});$$('[data-mp]').forEach(p=>p.hidden=p.dataset.mp!==t);try{localStorage.setItem('ds4102-p2-medtab',t)}catch(e){}};
+  $$('[data-mt]').forEach(b=>b.onclick=()=>showT(b.dataset.mt));showT(mt);
   const row=(l,t)=>t?'<div class="med-r"><span>'+l+'</span><p>'+esc(t)+'</p></div>':'';
   const drow=(l,t,k)=>'<div class="med-r med-d'+(t.indexOf('Not given')===0?' med-nd':'')+'"><span>'+l+'</span><p>'+esc(t)+'</p></div>';
   const draw=()=>{const q=$('#medq').value.trim().toLowerCase();let out='';
