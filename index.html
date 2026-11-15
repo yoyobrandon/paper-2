@@ -1025,13 +1025,13 @@ function route(){const c=cur();$('.app').classList.remove('nav-open');
   else if(c==='traps')collect('trap','Exam traps','The answers that feel right and lose marks.',(t,b)=>'<div class="blk"><div class="note trap">'+fmt(b[1])+'</div></div>');
   else if(c==='sources')pageSources();
   else if(c==='gaps')pageGaps();
-  else if(c==='leaderboard')pageLeaderboard();
+  else if(c==='leaderboard'){scoresLoad();pageLeaderboard()}
   else if(c==='paper')pagePaper();
   else if(c==='drill')pageDrill();
   else if(c==='timer')pageTimer();
   else if(c==='intro'){pageHome();showIntro()}
   else if(c==='meds')pageMeds();
-  else if(c==='stats')pageStats();
+  else if(c==='stats'){scoresLoad();pageStats()}
   else if(c==='objectives')pageLO();
   else if(c==='prophylaxis')pagePx();
   else pageHome();
@@ -1187,12 +1187,13 @@ async function cloudFlush(){if(!CL.on||CL.ro||!CL.ready)return;if(CL.busy){CL.ag
   try{const base=CL.db.collection('data/users/'+CL.uid),parts=splitR();
     for(const s of SUBJ){const body=slim(parts[s.id]),str=stable(body);if(str!==(CL.cloudStr[s.id]||stable({r:{}}))){await base.doc('p_'+s.id).set(body);CL.cloudStr[s.id]=str}}
     const core=stable({papers:st.papers||[],paper:st.paper||null,resetAt:st.resetAt||0});if(core!==CL.coreStr){if(CL.coreStr!==undefined){st.metaAt=Date.now();localSave()}CL.coreStr=core}
-    const mb=metaBody(),ms=stable(mb);if(ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||mb.iv||mb.av||Object.keys(mb.z).length||Object.keys(mb.tt).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms}
+    const now=Date.now(),fin=CL.final,mb=metaBody(),ms=stable(mb),mcore=stable(Object.assign({},mb,{tt:0}));const metaDue=fin||mcore!==CL.metaCore||now-(CL.metaW||0)>300000;if(!metaDue&&ms!==CL.cloudStr.meta)CL.later=true;if(metaDue&&ms!==CL.cloudStr.meta&&(mb.metaAt||mb.papers.length||mb.paper||mb.resetAt||mb.iv||mb.av||Object.keys(mb.z).length||Object.keys(mb.tt).length)){await base.doc('meta').set(mb);CL.cloudStr.meta=ms;CL.metaCore=mcore;CL.metaW=now}
     const sc=scoreFrom(st.r),sb={p:+sc.p.toFixed(4),done:sc.done,full:sc.full,n:sc.n,subj:sc.subj,tt:ttClean(st.tt)},ss=stable(sb);
-    if(ss!==CL.scoreStr){await CL.db.doc('scores/'+CL.uid).set(Object.assign({at:new Date().toISOString().slice(0,10)},sb));CL.scoreStr=ss}
+    const scDue=fin||CL.scoreStr===undefined||now-(CL.scW||0)>300000;if(ss!==CL.scoreStr&&!scDue)CL.later=true;
+    if(ss!==CL.scoreStr&&scDue){CL.scW=now;await CL.db.doc('scores/'+CL.uid).set(Object.assign({at:new Date().toISOString().slice(0,10)},sb));CL.scoreStr=ss}
     setSync('ok')}
   catch(e){const c=e&&e.code;if(c==='invalid_argument'){CL.ro=true;setSync('ro')}else if(c==='quota_exceeded')setSync('full');else setSync(c==='unavailable'?'offline':'err')}
-  CL.busy=false;if(CL.again){CL.again=false;cloudQueue()}}
+  CL.busy=false;if(CL.again){CL.again=false;cloudQueue()}else if(CL.later){CL.later=false;clearTimeout(CL.t3);CL.t3=setTimeout(cloudFlush,300500)}}
 function cloudThen(fn){if(CL.on&&!CL.ro&&CL.ready){const t=setTimeout(fn,4000);const go=()=>cloudFlush().then(()=>{clearTimeout(t);fn()},()=>{clearTimeout(t);fn()});if(CL.busy){CL.again=false;const w=setInterval(()=>{if(!CL.busy){clearInterval(w);go()}},100)}else go()}else fn()}
 function cloudMerge(snap){let changed=false,meta=null;const cloudR={};
   snap.docs.forEach(d=>{const x=d.data();if(!x)return;if(d.id==='meta'){meta=JSON.parse(JSON.stringify(x));CL.cloudStr.meta=stable(meta)}else if(d.id.indexOf('p_')===0){const r=JSON.parse(JSON.stringify(x.r||{}));CL.cloudStr[d.id.slice(2)]=stable({r});Object.assign(cloudR,r)}});
@@ -1226,11 +1227,14 @@ async function cloudInit(){if(!(window.claude&&typeof claude.use==='function'))r
   saveAcc();const o=$('#auth');if(o)o.remove();
   const slow=setTimeout(()=>{if(!CL.ready)setSync('offline')},10000);
   db.collection('data/users/'+uid).onSnapshot(s=>{clearTimeout(slow);try{cloudMerge(s)}catch(e){console.error(e)}},e=>{clearTimeout(slow);setSync(e&&e.code==='revoked'?'ro':'offline')});
-  db.collection('scores').limit(500).onSnapshot(s=>{const m={};s.docs.forEach(d=>{const x=d.data();if(x&&typeof x.p==='number')m[d.id]=x});CL.scores=m;
-    user.profiles(Object.keys(m)).then(ps=>{Object.keys(ps||{}).forEach(id=>{CL.names[id]=ps[id]&&ps[id].name||''});if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard()},()=>{});
-    if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard();if(cur()==='stats')pageStats()},()=>{});
-  window.addEventListener('pagehide',()=>{if(CL.t){clearTimeout(CL.t);cloudFlush()}});
+  scoresLoad(true);
+  const fin=()=>{CL.final=true;clearTimeout(CL.t);clearTimeout(CL.t3);cloudFlush().then(()=>{CL.final=false},()=>{CL.final=false})};
+  window.addEventListener('pagehide',fin);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')fin()});
   return true}
+function scoresLoad(force){if(!CL.on||!CL.db)return;if(!force&&Date.now()-(CL.scAt||0)<300000)return;CL.scAt=Date.now();const db=CL.db,user=CL.user;
+  db.collection('scores').limit(500).get().then(s=>{const m={};s.docs.forEach(d=>{const x=d.data();if(x&&typeof x.p==='number')m[d.id]=x});CL.scores=m;
+    user.profiles(Object.keys(m)).then(ps=>{Object.keys(ps||{}).forEach(id=>{CL.names[id]=ps[id]&&ps[id].name||''});if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard()},()=>{});
+    if(cur()==='leaderboard'&&!(document.activeElement&&/textarea|select/i.test(document.activeElement.tagName)))pageLeaderboard();if(cur()==='stats')pageStats()},()=>{CL.scAt=0})}
 function cloudEntries(){const out=[],mine=scoreFrom(st.r);const ids=new Set(Object.keys(CL.scores));ids.add(CL.uid);
   ids.forEach(id=>{const me=id===CL.uid,x=me?mine:CL.scores[id];out.push({name:me?acc.users[acc.cur].name:(CL.names[id]||'Someone'),me,kind:'cloud',p:x.p,done:x.done||0,full:x.full||0,n:x.n||mine.n,subj:x.subj||{}})});return out}
 
@@ -6112,7 +6116,7 @@ Object.assign(IMG,{"av19": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAA
   auth.onAuthStateChanged(u=>{if(creating)return;if(u)finish(u);else card('in')});
   const db={doc:p=>fs.doc(p),collection:p=>fs.collection(p)};
   const user={me:async()=>{const u=await ready;return {id:u.uid,name:u.displayName||''}},id:async()=>(await ready).uid,
-    profiles:async ids=>{if(Date.now()-namesAt>30000){const s=await fs.collection('names').limit(1000).get();names={};s.docs.forEach(d=>{names[d.id]=String((d.data()||{}).name||'').slice(0,20)});namesAt=Date.now()}
+    profiles:async ids=>{if(Date.now()-namesAt>600000||ids.some(i=>!(i in names))){const s=await fs.collection('names').limit(1000).get();names={};s.docs.forEach(d=>{names[d.id]=String((d.data()||{}).name||'').slice(0,20)});namesAt=Date.now()}
       const out={};ids.forEach(i=>{out[i]={id:i,name:names[i]||''}});return out}};
   window.claude={use:async n=>{await ready;return n==='db'?db:n==='user'?user:null}};
   /* ----- presence: a heartbeat on the names doc ----- */
