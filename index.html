@@ -1330,7 +1330,8 @@ async function cloudInit(){if(!(window.claude&&typeof claude.use==='function'))r
   if(acc.cur!==cid){acc.cur=cid;st={r:{},seen:{},last:null,theme:st.theme};try{const x=JSON.parse(localStorage.getItem(ukey(cid))||'null');if(x&&x.r)st=Object.assign(st,x)}catch(e){}}
   saveAcc();const o=$('#auth');if(o)o.remove();
   const slow=setTimeout(()=>{if(!CL.ready)setSync('offline')},10000);
-  db.collection('data/users/'+uid).onSnapshot(s=>{if(!CL.ready&&s.metadata&&s.metadata.fromCache)return;clearTimeout(slow);try{cloudMerge(s)}catch(e){console.error(e)}},e=>{clearTimeout(slow);setSync(e&&e.code==='revoked'?'ro':'offline')});
+  let cw=null;const take=s=>{clearTimeout(cw);clearTimeout(slow);try{cloudMerge(s)}catch(e){console.error(e)}};
+  db.collection('data/users/'+uid).onSnapshot(s=>{if(!CL.ready&&s.metadata&&s.metadata.fromCache){clearTimeout(cw);cw=setTimeout(()=>{if(!CL.ready)take(s)},3000);return}take(s)},e=>{clearTimeout(slow);setSync(e&&e.code==='revoked'?'ro':'offline')});
   if(/^(leaderboard|stats)$/.test(cur()))scoresLoad();
   const fin=()=>{CL.final=true;clearTimeout(CL.t);clearTimeout(CL.t3);cloudFlush().then(()=>{CL.final=false},()=>{CL.final=false})};
   window.addEventListener('pagehide',fin);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')fin()});
