@@ -861,6 +861,58 @@ div#ad.on{opacity:1}
 #eopt button.bad{background:var(--bad);color:#fff;box-shadow:none}
 #enx{margin-top:8px}
 #enx[hidden],#eexp[hidden],#eqz[hidden]{display:none!important}
+
+#xd{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));color:#fff;opacity:0;transition:opacity .5s ease;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,"Noto Sans","Noto Naskh Arabic","Geeza Pro","Noto Sans Devanagari","Kohinoor Devanagari",sans-serif;color-scheme:dark}
+#xd.in{opacity:1}#xd.out{opacity:0}
+.xd-bg{position:absolute;inset:0;overflow:hidden;background:#07060f}
+.xd-bg i{position:absolute;width:62vmax;height:62vmax;border-radius:50%;filter:blur(70px);opacity:.75;mix-blend-mode:screen;will-change:transform}
+.xd-bg .b1{background:radial-gradient(circle,#ff2d78 0,transparent 62%);left:-18vmax;top:-22vmax;animation:xdA 19s ease-in-out infinite alternate}
+.xd-bg .b2{background:radial-gradient(circle,#0a84ff 0,transparent 62%);right:-20vmax;top:-10vmax;animation:xdB 23s ease-in-out infinite alternate}
+.xd-bg .b3{background:radial-gradient(circle,#30d158 0,transparent 60%);left:5vmax;bottom:-30vmax;animation:xdC 21s ease-in-out infinite alternate;opacity:.55}
+.xd-bg .b4{background:radial-gradient(circle,#ffb340 0,transparent 60%);right:-8vmax;bottom:-26vmax;animation:xdA 26s ease-in-out infinite alternate-reverse;opacity:.6}
+.xd-ring{position:absolute;left:50%;top:50%;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;background:conic-gradient(from 0deg,transparent 0 20%,rgba(255,255,255,.07) 25%,transparent 32% 60%,rgba(255,255,255,.05) 66%,transparent 72%);animation:xdSpin 40s linear infinite}
+.xd-stars s{position:absolute;left:var(--x);top:var(--y);width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(255,255,255,.6);opacity:0;animation:xdTw var(--d) ease-in-out var(--w) infinite}
+@keyframes xdA{to{transform:translate(18vmax,14vmax) scale(1.15)}}
+@keyframes xdB{to{transform:translate(-16vmax,20vmax) scale(.9)}}
+@keyframes xdC{to{transform:translate(22vmax,-12vmax) scale(1.2)}}
+@keyframes xdSpin{to{transform:rotate(360deg)}}
+@keyframes xdTw{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:.9;transform:scale(1)}}
+.xd-card{position:relative;width:min(1080px,100%);max-height:100%;display:flex;border-radius:30px;background:rgba(22,20,34,.42);-webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 0 0 .5px rgba(255,255,255,.18),0 30px 80px rgba(0,0,0,.45);transform:translateY(24px) scale(.96);filter:blur(6px);transition:transform .8s cubic-bezier(.2,.9,.2,1),filter .8s ease}
+#xd.in .xd-card{transform:none;filter:none}
+#xd.out .xd-card{transform:scale(.97)}
+.xd-scroll{overflow-y:auto;padding:clamp(22px,4vw,46px);display:grid;gap:18px;justify-items:center;text-align:center;-webkit-overflow-scrolling:touch}
+.xd-eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+#xd-h{margin:0;font-size:clamp(32px,6vw,62px);line-height:1.04;font-weight:800;letter-spacing:-.03em;text-wrap:balance;background:linear-gradient(100deg,#fff 0%,#ffd6e8 30%,#cfe6ff 55%,#fff 80%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:xdSh 7s ease-in-out infinite}
+@keyframes xdSh{0%,100%{background-position:0 0}50%{background-position:100% 0}}
+.xd-lead{margin:0;max-width:60ch;font-size:clamp(15px,1.9vw,18px);line-height:1.5;color:rgba(255,255,255,.86)}
+.xd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%;margin-top:6px}
+@media (max-width:860px){.xd-grid{grid-template-columns:minmax(0,1fr)}}
+.xd-b{position:relative;display:grid;gap:10px;align-content:start;padding:20px 18px;border-radius:22px;background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 0 0 .5px rgba(255,255,255,.12);text-align:center;opacity:0;transform:translateY(16px);animation:xdIn .9s cubic-bezier(.2,.9,.2,1) forwards;animation-delay:calc(.35s + var(--i)*.14s);overflow:hidden;min-width:0}
+.xd-b::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(140deg,var(--k1),transparent 45%,var(--k2));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.8;pointer-events:none}
+.xd-a{--k1:#30d158;--k2:#0a84ff}.xd-b.xd-b{--k1:#0a84ff;--k2:#bf5af2}.xd-c{--k1:#ff9f0a;--k2:#ff2d78}
+.xd-b.xd-b:not(.xd-a):not(.xd-c){--k1:#64d2ff;--k2:#bf5af2}
+@keyframes xdIn{to{opacity:1;transform:none}}
+.xd-top{display:flex;align-items:center;justify-content:center;gap:8px}
+.xd-sym{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;font-size:22px;background:linear-gradient(140deg,var(--k1),var(--k2));box-shadow:0 6px 20px rgba(0,0,0,.3);animation:xdP 4s ease-in-out infinite;animation-delay:calc(var(--i)*.6s)}
+@keyframes xdP{50%{transform:scale(1.08)}}
+.xd-faith{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.xd-hi{margin:0;font-size:clamp(19px,2.2vw,22px);font-weight:700;line-height:1.4;color:#fff}
+.xd-hi[lang=ar]{font-size:clamp(24px,2.8vw,28px);line-height:1.6}
+.xd-en{margin:0;font-size:13px;line-height:1.45;color:rgba(255,255,255,.72);font-style:italic}
+.xd-pr{display:grid;gap:4px;padding-top:10px;border-top:.5px solid rgba(255,255,255,.16)}
+.xd-orig{margin:0;font-size:16px;line-height:1.55;color:rgba(255,255,255,.95);font-weight:600}
+.xd-orig[lang=ar]{font-size:21px;line-height:1.8}
+.xd-orig[lang=hi]{font-size:16.5px;line-height:1.7}
+.xd-src{display:block;margin-top:2px;font-style:normal;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.xd-go{appearance:none;border:0;margin-top:8px;padding:14px 30px;border-radius:999px;font:inherit;font-size:16px;font-weight:700;color:#0b0b14;background:#fff;cursor:pointer;box-shadow:0 10px 30px rgba(255,255,255,.18);transition:transform .2s ease,box-shadow .2s ease}
+.xd-go:hover{transform:translateY(-1px) scale(1.02);box-shadow:0 14px 36px rgba(255,255,255,.26)}
+.xd-go:focus-visible{outline:3px solid #0a84ff;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.xd-bg i,.xd-ring,.xd-stars s,#xd-h,.xd-sym{animation:none}.xd-stars s{opacity:.5}.xd-b{animation-duration:.01s;animation-delay:0s}.xd-card{transition:none}}
+.xd-card{max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px)}
+.xd-scroll{min-height:0;width:100%}
+.xd-x{position:absolute;top:12px;right:12px;z-index:2;appearance:none;border:0;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:18px;line-height:1;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.xd-x:hover{background:rgba(255,255,255,.24)}
+.xd-b.xd-a{--k1:#30d158;--k2:#0a84ff}.xd-b.xd-c{--k1:#ff9f0a;--k2:#ff2d78}
 </style>
 <div class="app">
 <aside class="side">
@@ -1555,6 +1607,60 @@ W.erupt=function(el){
   $$('#emd button',el).forEach(b=>b.onclick=()=>{mode=+b.dataset.m;$$('#emd button',el).forEach(x=>x.classList.toggle('on',x===b));stop();$('#eexp',el).hidden=!!mode;$('#eqz',el).hidden=!mode;sel=null;info();if(mode)newQ();else setAge(ai)});
   setAge(ai);info();
 };
+
+// Exam-day blessing: shown once per signed-in account on 16 Nov 2026 (Brisbane time)
+(function(){
+  const DAY='2026-11-16',KEY='ds4102-p2-examday-'+DAY;
+  const bne=()=>new Date(Date.now()+10*3600e3).toISOString().slice(0,10);
+  const force=/[?&]examday=1/.test(location.search);
+  const B=[
+    {sym:'☪',faith:'Islam',lang:'ar',dir:'rtl',hi:'بالتوفيق والنجاح بإذن الله',hiEn:'Success and good fortune to you, by the will of Allah.',
+     pr:'رَبِّ اشْرَحْ لِي صَدْرِي، وَيَسِّرْ لِي أَمْرِي',prEn:'“My Lord, expand for me my chest, and ease for me my task.”',src:'Qur’an 20:25–26',
+     pr2:'رَبِّ زِدْنِي عِلْمًا',pr2En:'“My Lord, increase me in knowledge.”',src2:'Qur’an 20:114',c:'a'},
+    {sym:'✝',faith:'Christianity',lang:'el',dir:'ltr',hi:'May Christ bless you and steady your hand today.',hiEn:'',
+     pr:'Πάντα ἰσχύω ἐν τῷ ἐνδυναμοῦντί με Χριστῷ',prEn:'“I can do all things through Christ which strengtheneth me.”',src:'Philippians 4:13',
+     pr2:'Deus te benedicat et custodiat',pr2En:'“May God bless you and keep you.”',src2:'Latin blessing, after Numbers 6:24',c:'b'},
+    {sym:'ॐ',faith:'Hinduism',lang:'hi',dir:'ltr',hi:'भगवान आपको आशीर्वाद दें, आप ज़रूर सफल होंगे',hiEn:'May God bless you. You will surely succeed.',
+     pr:'सरस्वति नमस्तुभ्यं वरदे कामरूपिणि। विद्यारम्भं करिष्यामि सिद्धिर्भवतु मे सदा॥',prEn:'“Salutations to you, Goddess Saraswati, giver of boons. As I begin this learning, may success always be mine.”',src:'Saraswati Vandana',
+     pr2:'ॐ गं गणपतये नमः',pr2En:'“Om, salutations to Lord Ganesha, remover of obstacles.”',src2:'Ganesha mantra',c:'c'}
+  ];
+  const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  function show(name){
+    if(document.getElementById('xd'))return;
+    const first=String(name||'').trim().split(/\s+/)[0]||'';
+    const o=document.createElement('div');o.id='xd';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','xd-h');
+    o.innerHTML='<div class="xd-bg" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><div class="xd-ring"></div><div class="xd-stars">'+Array.from({length:26},(_,i)=>'<s style="--x:'+(Math.random()*100).toFixed(1)+'%;--y:'+(Math.random()*100).toFixed(1)+'%;--d:'+(4+Math.random()*6).toFixed(1)+'s;--w:'+(i*.37%5).toFixed(2)+'s"></s>').join('')+'</div></div>'
+     +'<div class="xd-card"><button class="xd-x" type="button" aria-label="Close">✕</button><div class="xd-scroll">'
+     +'<div class="xd-eyebrow">Exam day · DS4102 Paper 2</div>'
+     +'<h2 id="xd-h">Good luck today'+(first?', <span class="xd-name"></span>':'')+'.</h2>'
+     +'<p class="xd-lead">You have put in the work. Breathe, read every stem twice, and trust what you know. Whatever you believe, we are all wishing you the very best.</p>'
+     +'<div class="xd-grid">'+B.map((b,i)=>'<section class="xd-b xd-'+b.c+'" style="--i:'+i+'"><div class="xd-top"><span class="xd-sym" aria-hidden="true">'+b.sym+'</span><span class="xd-faith">'+b.faith+'</span></div>'
+       +'<p class="xd-hi" lang="'+b.lang+'" dir="'+b.dir+'">'+esc(b.hi)+'</p>'+(b.hiEn?'<p class="xd-en">'+esc(b.hiEn)+'</p>':'')
+       +'<div class="xd-pr"><p class="xd-orig" lang="'+b.lang+'" dir="'+b.dir+'">'+esc(b.pr)+'</p><p class="xd-en">'+esc(b.prEn)+' <span class="xd-src">'+esc(b.src)+'</span></p></div>'
+       +'<div class="xd-pr"><p class="xd-orig" lang="'+(b.c==='b'?'la':b.lang)+'" dir="'+b.dir+'">'+esc(b.pr2)+'</p><p class="xd-en">'+esc(b.pr2En)+' <span class="xd-src">'+esc(b.src2)+'</span></p></div></section>').join('')+'</div>'
+     +'<button class="xd-go" type="button">Thank you, let’s go</button></div></div>';
+    document.body.appendChild(o);
+    const nm=o.querySelector('.xd-name');if(nm)nm.textContent=first;
+    const prev=document.activeElement,btn=o.querySelector('.xd-go');
+    const close=()=>{o.classList.add('out');document.removeEventListener('keydown',kd);setTimeout(()=>{o.remove();try{prev&&prev.focus&&prev.focus()}catch(e){}},420)};
+    const kd=e=>{if(e.key==='Escape')close();if(e.key==='Tab'){e.preventDefault();(document.activeElement===btn?o.querySelector('.xd-x'):btn).focus()}};
+    btn.onclick=close;o.querySelector('.xd-x').onclick=close;document.addEventListener('keydown',kd);
+    requestAnimationFrame(()=>{o.classList.add('in');setTimeout(()=>btn.focus({preventScroll:true}),60)});
+  }
+  function check(){
+    try{
+      if(typeof acc==='undefined'||!acc||!acc.cur||!acc.users[acc.cur])return false;
+      if(!force&&bne()!==DAY)return true;
+      const k=KEY+':'+acc.cur;
+      if(!force&&localStorage.getItem(k))return true;
+      if(!force)localStorage.setItem(k,'1');
+      show(acc.users[acc.cur].name);return true;
+    }catch(e){return true}
+  }
+  if(!force&&bne()>DAY)return;
+  let n=0;const t=setInterval(()=>{if(check()||++n>900)clearInterval(t)},1500);
+  setTimeout(check,900);
+})();
 
 /* ===== introduction: shown once per account after an update (one deliberate dark look, like the timer) ===== */
 const INTRO_V=1;
