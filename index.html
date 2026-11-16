@@ -913,6 +913,17 @@ div#ad.on{opacity:1}
 .xd-x{position:absolute;top:12px;right:12px;z-index:2;appearance:none;border:0;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:18px;line-height:1;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .xd-x:hover{background:rgba(255,255,255,.24)}
 .xd-b.xd-a{--k1:#30d158;--k2:#0a84ff}.xd-b.xd-c{--k1:#ff9f0a;--k2:#ff2d78}
+
+.xd-ask{display:grid;gap:14px;justify-items:center;margin-top:4px;padding:20px 22px;border-radius:22px;background:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 0 0 .5px rgba(255,255,255,.12);animation:xdIn .9s cubic-bezier(.2,.9,.2,1) .3s both;max-width:520px}
+.xd-ask p{margin:0;font-size:16px;line-height:1.5;color:rgba(255,255,255,.9)}
+.xd-ab{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.xd-ab button{appearance:none;border:0;font:inherit;font-size:15px;font-weight:700;padding:12px 24px;border-radius:999px;cursor:pointer;transition:transform .2s ease}
+.xd-ab button:hover{transform:translateY(-1px) scale(1.02)}
+.xd-yes{color:#0b0b14;background:#fff}
+.xd-no{color:#fff;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.3)}
+.xd-ab button:focus-visible{outline:3px solid #0a84ff;outline-offset:3px}
+.xd-best{margin:0;font-size:clamp(17px,2.2vw,21px);font-weight:600;color:#fff;animation:xdIn .8s cubic-bezier(.2,.9,.2,1) both}
+#xd [hidden]{display:none!important}
 </style>
 <div class="app">
 <aside class="side">
@@ -1633,19 +1644,23 @@ W.erupt=function(el){
      +'<div class="xd-card"><button class="xd-x" type="button" aria-label="Close">✕</button><div class="xd-scroll">'
      +'<div class="xd-eyebrow">Exam day · DS4102 Paper 2</div>'
      +'<h2 id="xd-h">Good luck today'+(first?', <span class="xd-name"></span>':'')+'.</h2>'
-     +'<p class="xd-lead">You have put in the work. Breathe, read every stem twice, and trust what you know. Whatever you believe, we are all wishing you the very best.</p>'
-     +'<div class="xd-grid">'+B.map((b,i)=>'<section class="xd-b xd-'+b.c+'" style="--i:'+i+'"><div class="xd-top"><span class="xd-sym" aria-hidden="true">'+b.sym+'</span><span class="xd-faith">'+b.faith+'</span></div>'
+     +'<p class="xd-lead">You have put in the work. Breathe, read every stem twice, and trust what you know.</p>'
+     +'<div class="xd-ask"><p>Are you religious? If you are, we have a few blessings and prayers for you today.</p><div class="xd-ab"><button class="xd-yes" type="button">Yes, show me</button><button class="xd-no" type="button">No thanks</button></div></div>'
+     +'<p class="xd-best" hidden>We are all wishing you the very best. Go get it.</p>'
+     +'<div class="xd-grid" hidden>'+B.map((b,i)=>'<section class="xd-b xd-'+b.c+'" style="--i:'+i+'"><div class="xd-top"><span class="xd-sym" aria-hidden="true">'+b.sym+'</span><span class="xd-faith">'+b.faith+'</span></div>'
        +'<p class="xd-hi" lang="'+b.lang+'" dir="'+b.dir+'">'+esc(b.hi)+'</p>'+(b.hiEn?'<p class="xd-en">'+esc(b.hiEn)+'</p>':'')
        +'<div class="xd-pr"><p class="xd-orig" lang="'+b.lang+'" dir="'+b.dir+'">'+esc(b.pr)+'</p><p class="xd-en">'+esc(b.prEn)+' <span class="xd-src">'+esc(b.src)+'</span></p></div>'
        +'<div class="xd-pr"><p class="xd-orig" lang="'+(b.c==='b'?'la':b.lang)+'" dir="'+b.dir+'">'+esc(b.pr2)+'</p><p class="xd-en">'+esc(b.pr2En)+' <span class="xd-src">'+esc(b.src2)+'</span></p></div></section>').join('')+'</div>'
-     +'<button class="xd-go" type="button">Thank you, let’s go</button></div></div>';
+     +'<button class="xd-go" type="button" hidden>Thank you, let’s go</button></div></div>';
     document.body.appendChild(o);
     const nm=o.querySelector('.xd-name');if(nm)nm.textContent=first;
     const prev=document.activeElement,btn=o.querySelector('.xd-go');
     const close=()=>{o.classList.add('out');document.removeEventListener('keydown',kd);setTimeout(()=>{o.remove();try{prev&&prev.focus&&prev.focus()}catch(e){}},420)};
-    const kd=e=>{if(e.key==='Escape')close();if(e.key==='Tab'){e.preventDefault();(document.activeElement===btn?o.querySelector('.xd-x'):btn).focus()}};
+    const kd=e=>{if(e.key==='Escape')close();if(e.key==='Tab'){const f=[...o.querySelectorAll('button')].filter(b=>!b.closest('[hidden]')&&!b.hidden);const i=f.indexOf(document.activeElement);e.preventDefault();f[(i+(e.shiftKey?-1:1)+f.length)%f.length].focus()}};
+    const pick=yes=>{o.querySelector('.xd-ask').hidden=true;if(yes)o.querySelector('.xd-grid').hidden=false;else o.querySelector('.xd-best').hidden=false;btn.hidden=false;setTimeout(()=>btn.focus({preventScroll:true}),40)};
+    o.querySelector('.xd-yes').onclick=()=>pick(true);o.querySelector('.xd-no').onclick=()=>pick(false);
     btn.onclick=close;o.querySelector('.xd-x').onclick=close;document.addEventListener('keydown',kd);
-    requestAnimationFrame(()=>{o.classList.add('in');setTimeout(()=>btn.focus({preventScroll:true}),60)});
+    requestAnimationFrame(()=>{o.classList.add('in');setTimeout(()=>o.querySelector('.xd-yes').focus({preventScroll:true}),60)});
   }
   function check(){
     try{
